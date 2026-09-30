@@ -56,11 +56,11 @@
             "issued": {
                 "date-parts": [
                     [
-                        2025
+                        2026
                     ]
                 ]
             },
-            "note": "R package version 0.43",
+            "note": "R package version 0.48",
             "title": "Bookdown: Authoring books and technical documents with r markdown",
             "title-short": "Bookdown",
             "type": "book"
@@ -77,11 +77,11 @@
             "issued": {
                 "date-parts": [
                     [
-                        2025
+                        2026
                     ]
                 ]
             },
-            "note": "R package version 1.51",
+            "note": "R package version 1.52",
             "title": "Knitr: A general-purpose package for dynamic report generation in r",
             "title-short": "Knitr",
             "type": "book"
@@ -138,18 +138,18 @@
             "issued": {
                 "date-parts": [
                     [
-                        2024
+                        2026
                     ]
                 ]
             },
-            "note": "R package version 2.29",
+            "note": "R package version 2.32",
             "title": "Rmarkdown: Dynamic documents for r",
             "title-short": "Rmarkdown",
             "type": "book"
         },
         {
             "ISBN": "978-1138700109",
-            "URL": "https://bookdown.org/yihui/bookdown",
+            "URL": "https://pkg.yihui.org/bookdown/",
             "author": [
                 {
                     "family": "Xie",
@@ -231,7 +231,7 @@
         },
         {
             "ISBN": "9781138359338",
-            "URL": "https://bookdown.org/yihui/rmarkdown",
+            "URL": "https://pkg.yihui.org/rmarkdown-book/",
             "author": [
                 {
                     "family": "Xie",
@@ -262,7 +262,7 @@
         },
         {
             "ISBN": "9780367563837",
-            "URL": "https://bookdown.org/yihui/rmarkdown-cookbook",
+            "URL": "https://pkg.yihui.org/rmarkdown-cookbook/",
             "author": [
                 {
                     "family": "Xie",

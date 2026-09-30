@@ -1,55 +1,52 @@
 --- 
-title: "A Minimal Book Example"
-author: "John Doe"
-date: "`r Sys.Date()`"
+title: |
+  ![](image/CBW_logo.png){height=100px}
+  
+  Cancer Workshop 2026 - Module 8: Pathway Enrichment Analysis
+author: "Veronique Voisin"
+date: "October 2026"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib, packages.bib]
 # url: your book url like https://bookdown.org/yihui/bookdown
 # cover-image: path to the social sharing image like images/cover.jpg
 description: |
-  This is a minimal example of using the bookdown package to write a book.
-  The HTML output format for this example is bookdown::gitbook,
-  set in the _output.yml file.
+  This module will cover how to use differential expression output to generate pathway enrichment results.
 link-citations: yes
 github-repo: rstudio/bookdown-demo
 ---
 
-# About
 
-This is a _sample_ book written in **Markdown**. You can use anything that Pandoc's Markdown supports; for example, a math equation $a^2 + b^2 = c^2$.
+<img src="image/CBW_logo.png" style="width:250px; float:right; margin: 0 0 10px 15px;"/>
 
-## Usage 
+**This work is licensed under a [Creative Commons Attribution-ShareAlike 4.0 Unported License](https://creativecommons.org/licenses/by-sa/4.0/deed.en). This means that you are able to copy, share and modify the work, as long as the result is distributed under the same license.**
 
-Each **bookdown** chapter is an .Rmd file, and each .Rmd file can contain one (and only one) chapter. A chapter *must* start with a first-level heading: `# A good chapter`, and can contain one (and only one) first-level heading.
 
-Use second-level and higher headings within chapters like: `## A short section` or `### An even shorter section`.
+This module will cover how to use differential expression output to generate pathway enrichment results.
 
-The `index.Rmd` file is required, and is also your first book chapter. It will be the homepage when you render the book.
+# Presentation of the dataset {-}
 
-## Render book
+* This module is a continuation of the transcriptomics module 6 and we will use the same dataset. This dataset contains bulk RNA-seq data of a model of breast cancer. The gene counts were deposited to the Gene Expression Omnibus (GEO) database under accession ***GSE222367*** and are publicly available.
 
-You can render the HTML version of this example book without changing anything:
+* RNA was extracted from MCF7, a breast cancer cell line under different conditions: parental cell line and cell line samples resistant to the drugs palbociclib or abemaciclib.
 
-1. Find the **Build** pane in the RStudio IDE, and
+* Biological replicates were available for each condition.
 
-1. Click on **Build Book**, then select your output format, or select "All formats" if you'd like to use multiple formats from the same book source files.
+* RNA-seq library was prepared and sequenced using an Illumina HiSeq 2500 sequencer.
 
-Or build the book from the R console:
+* Sequence reads were mapped to the human reference genome (Gencode GRCh38) using TopHat as aligner.
 
-```{r, eval=FALSE}
-bookdown::render_book()
+* The BAM files with mapped reads for each sample were sorted and then used as input for HTSeq 0.11.0 in order to generate read count data at the gene level.
+
+* We retrieved the gene counts and performed differential expression analysis using a negative binomial generalized linear model, followed by pathway enrichment analysis.
+
+
+
+```{r fig-mychart, echo=FALSE, fig.cap="GEO dataset", out.width="60%"}
+knitr::include_graphics("image/GEOscreenshot.png")
 ```
 
-To render this example to PDF as a `bookdown::pdf_book`, you'll need to install XeLaTeX. You are recommended to install TinyTeX (which includes XeLaTeX): <https://yihui.org/tinytex/>.
 
-## Preview book
-
-As you work, you may start a local server to live preview this HTML book. This preview will update as you edit the book when you save individual .Rmd files. You can start the server in a work session by using the RStudio add-in "Preview book", or from the R console:
-
-```{r eval=FALSE}
-bookdown::serve_book()
-```
 
 
 ```{r include=FALSE}

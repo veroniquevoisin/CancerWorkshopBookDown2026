@@ -4,32 +4,25 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>A Minimal Book Example</title>
-  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
-The HTML output format for this example is bookdown::gitbook,
-set in the _output.yml file.</p>" />
-  <meta name="generator" content="bookdown 0.43 and GitBook 2.6.7" />
+  <title> Cancer Workshop 2026 - Module 8: Pathway Enrichment Analysis | _main.knit</title>
+  <meta name="description" content="This module will cover how to use differential expression output to generate pathway enrichment results." />
+  <meta name="generator" content="bookdown 0.48 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="A Minimal Book Example" />
+  <meta property="og:title" content=" Cancer Workshop 2026 - Module 8: Pathway Enrichment Analysis | _main.knit" />
   <meta property="og:type" content="book" />
   
-  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
-The HTML output format for this example is bookdown::gitbook,
-set in the _output.yml file.</p>" />
+  <meta property="og:description" content="This module will cover how to use differential expression output to generate pathway enrichment results." />
   <meta name="github-repo" content="rstudio/bookdown-demo" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="A Minimal Book Example" />
+  <meta name="twitter:title" content=" Cancer Workshop 2026 - Module 8: Pathway Enrichment Analysis | _main.knit" />
   
-  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
-The HTML output format for this example is bookdown::gitbook,
-set in the _output.yml file.</p>" />
+  <meta name="twitter:description" content="This module will cover how to use differential expression output to generate pathway enrichment results." />
   
 
-<meta name="author" content="John Doe" />
+<meta name="author" content="Veronique Voisin" />
 
 
-<meta name="date" content="2026-09-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -37,7 +30,7 @@ set in the _output.yml file.</p>" />
   
   
 
-<link rel="next" href="hello-bookdown.html"/>
+<link rel="next" href="differential-expression.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -58,6 +51,8 @@ set in the _output.yml file.</p>" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -129,29 +124,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 </style>
-<style type="text/css">
-/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}
-</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -169,42 +141,42 @@ div.csl-indent {
 <li><a href="./">A Minimal Book Example</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Presentation of the dataset</a></li>
+<li class="chapter" data-level="" data-path="differential-expression.html"><a href="differential-expression.html"><i class="fa fa-check"></i>Differential Expression</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#usage"><i class="fa fa-check"></i><b>1.1</b> Usage</a></li>
-<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#render-book"><i class="fa fa-check"></i><b>1.2</b> Render book</a></li>
-<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#preview-book"><i class="fa fa-check"></i><b>1.3</b> Preview book</a></li>
-</ul></li>
-<li class="chapter" data-level="2" data-path="hello-bookdown.html"><a href="hello-bookdown.html"><i class="fa fa-check"></i><b>2</b> Hello bookdown</a>
+<li class="chapter" data-level="0.1" data-path="differential-expression.html"><a href="differential-expression.html#install-and-load-libraries"><i class="fa fa-check"></i><b>0.1</b> Install and load libraries</a></li>
+<li class="chapter" data-level="0.2" data-path="differential-expression.html"><a href="differential-expression.html#data-used-for-this-comparison"><i class="fa fa-check"></i><b>0.2</b> Data used for this comparison</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="hello-bookdown.html"><a href="hello-bookdown.html#a-section"><i class="fa fa-check"></i><b>2.1</b> A section</a>
+<li class="chapter" data-level="0.2.1" data-path="differential-expression.html"><a href="differential-expression.html#generate-a-dge-object"><i class="fa fa-check"></i><b>0.2.1</b> generate a DGE object</a></li>
+</ul></li>
+<li class="chapter" data-level="0.3" data-path="differential-expression.html"><a href="differential-expression.html#filter-low-count-genes-and-tmm-normalize"><i class="fa fa-check"></i><b>0.3</b> Filter low-count genes and TMM-normalize</a></li>
+<li class="chapter" data-level="0.4" data-path="differential-expression.html"><a href="differential-expression.html#design-0-group-and-named-contrast"><i class="fa fa-check"></i><b>0.4</b> Design (~0 + group) and named contrast</a></li>
+<li class="chapter" data-level="0.5" data-path="differential-expression.html"><a href="differential-expression.html#dispersion-estimation-and-quasi-likelihood-glm"><i class="fa fa-check"></i><b>0.5</b> Dispersion estimation and quasi-likelihood GLM</a></li>
+<li class="chapter" data-level="0.6" data-path="differential-expression.html"><a href="differential-expression.html#calculating-ranking-score-and-export-full-results"><i class="fa fa-check"></i><b>0.6</b> Calculating ranking score and export full results</a></li>
+<li class="chapter" data-level="0.7" data-path="differential-expression.html"><a href="differential-expression.html#result-output"><i class="fa fa-check"></i><b>0.7</b> Result output</a></li>
+<li class="chapter" data-level="0.8" data-path="differential-expression.html"><a href="differential-expression.html#version-of-packages-and-r"><i class="fa fa-check"></i><b>0.8</b> Version of packages and R</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="pathway-enrichment-analysis-using-a-defined-genelist.html"><a href="pathway-enrichment-analysis-using-a-defined-genelist.html"><i class="fa fa-check"></i>Pathway Enrichment Analysis using a defined genelist</a>
 <ul>
-<li class="chapter" data-level="" data-path="hello-bookdown.html"><a href="hello-bookdown.html#an-unnumbered-section"><i class="fa fa-check"></i>An unnumbered section</a></li>
-</ul></li>
-</ul></li>
-<li class="chapter" data-level="3" data-path="cross.html"><a href="cross.html"><i class="fa fa-check"></i><b>3</b> Cross-references</a>
+<li class="chapter" data-level="0.9" data-path="pathway-enrichment-analysis-using-a-defined-genelist.html"><a href="pathway-enrichment-analysis-using-a-defined-genelist.html#introduction"><i class="fa fa-check"></i><b>0.9</b> Introduction</a></li>
+<li class="chapter" data-level="0.10" data-path="pathway-enrichment-analysis-using-a-defined-genelist.html"><a href="pathway-enrichment-analysis-using-a-defined-genelist.html#goal-of-the-exercise-1"><i class="fa fa-check"></i><b>0.10</b> Goal of the exercise 1</a></li>
+<li class="chapter" data-level="0.11" data-path="pathway-enrichment-analysis-using-a-defined-genelist.html"><a href="pathway-enrichment-analysis-using-a-defined-genelist.html#data"><i class="fa fa-check"></i><b>0.11</b> Data</a></li>
+<li class="chapter" data-level="0.12" data-path="pathway-enrichment-analysis-using-a-defined-genelist.html"><a href="pathway-enrichment-analysis-using-a-defined-genelist.html#exercise-1"><i class="fa fa-check"></i><b>0.12</b> Exercise 1 - prepare the gene lists</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="cross.html"><a href="cross.html#chapters-and-sub-chapters"><i class="fa fa-check"></i><b>3.1</b> Chapters and sub-chapters</a></li>
-<li class="chapter" data-level="3.2" data-path="cross.html"><a href="cross.html#captioned-figures-and-tables"><i class="fa fa-check"></i><b>3.2</b> Captioned figures and tables</a></li>
+<li class="chapter" data-level="0.12.1" data-path="pathway-enrichment-analysis-using-a-defined-genelist.html"><a href="pathway-enrichment-analysis-using-a-defined-genelist.html#step-1---install-and-load-libraries"><i class="fa fa-check"></i><b>0.12.1</b> Step 1 - Install and Load libraries</a></li>
+<li class="chapter" data-level="0.12.2" data-path="pathway-enrichment-analysis-using-a-defined-genelist.html"><a href="pathway-enrichment-analysis-using-a-defined-genelist.html#step-2---prepare-the-define-gene-lists"><i class="fa fa-check"></i><b>0.12.2</b> Step 2 - Prepare the define gene lists</a></li>
+<li class="chapter" data-level="0.12.3" data-path="pathway-enrichment-analysis-using-a-defined-genelist.html"><a href="pathway-enrichment-analysis-using-a-defined-genelist.html#step-3---run-gprofiler"><i class="fa fa-check"></i><b>0.12.3</b> Step 3 - Run g:Profiler</a></li>
+<li class="chapter" data-level="0.12.4" data-path="pathway-enrichment-analysis-using-a-defined-genelist.html"><a href="pathway-enrichment-analysis-using-a-defined-genelist.html#clear-visualization-of-the-results"><i class="fa fa-check"></i><b>0.12.4</b> Clear visualization of the results</a></li>
+<li class="chapter" data-level="0.12.5" data-path="pathway-enrichment-analysis-using-a-defined-genelist.html"><a href="pathway-enrichment-analysis-using-a-defined-genelist.html#step-4---explore-top-table-of-results"><i class="fa fa-check"></i><b>0.12.5</b> Step 4 - Explore top table of results</a></li>
+<li class="chapter" data-level="0.12.6" data-path="pathway-enrichment-analysis-using-a-defined-genelist.html"><a href="pathway-enrichment-analysis-using-a-defined-genelist.html#step-5---filter-results-by-geneset-size"><i class="fa fa-check"></i><b>0.12.6</b> Step 5 - Filter results by geneset size</a></li>
+<li class="chapter" data-level="0.12.7" data-path="pathway-enrichment-analysis-using-a-defined-genelist.html"><a href="pathway-enrichment-analysis-using-a-defined-genelist.html#step-6---run-gprofiler-with-your-own-genesets-example-using-baderlab-genesets"><i class="fa fa-check"></i><b>0.12.7</b> Step 6 - Run g:profiler with your own genesets (example using BaderLab genesets)</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="parts.html"><a href="parts.html"><i class="fa fa-check"></i><b>4</b> Parts</a></li>
-<li class="chapter" data-level="5" data-path="footnotes-and-citations.html"><a href="footnotes-and-citations.html"><i class="fa fa-check"></i><b>5</b> Footnotes and citations</a>
+<li class="chapter" data-level="0.13" data-path="pathway-enrichment-analysis-using-a-defined-genelist.html"><a href="pathway-enrichment-analysis-using-a-defined-genelist.html#exercise-2---visualization"><i class="fa fa-check"></i><b>0.13</b> Exercise 2 - visualization</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="footnotes-and-citations.html"><a href="footnotes-and-citations.html#footnotes"><i class="fa fa-check"></i><b>5.1</b> Footnotes</a></li>
-<li class="chapter" data-level="5.2" data-path="footnotes-and-citations.html"><a href="footnotes-and-citations.html#citations"><i class="fa fa-check"></i><b>5.2</b> Citations</a></li>
+<li class="chapter" data-level="0.13.1" data-path="pathway-enrichment-analysis-using-a-defined-genelist.html"><a href="pathway-enrichment-analysis-using-a-defined-genelist.html#step-2---dot-plot-with-segment"><i class="fa fa-check"></i><b>0.13.1</b> Step 2 - Dot plot with segment</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="blocks.html"><a href="blocks.html"><i class="fa fa-check"></i><b>6</b> Blocks</a>
-<ul>
-<li class="chapter" data-level="6.1" data-path="blocks.html"><a href="blocks.html#equations"><i class="fa fa-check"></i><b>6.1</b> Equations</a></li>
-<li class="chapter" data-level="6.2" data-path="blocks.html"><a href="blocks.html#theorems-and-proofs"><i class="fa fa-check"></i><b>6.2</b> Theorems and proofs</a></li>
-<li class="chapter" data-level="6.3" data-path="blocks.html"><a href="blocks.html#callout-blocks"><i class="fa fa-check"></i><b>6.3</b> Callout blocks</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="sharing-your-book.html"><a href="sharing-your-book.html"><i class="fa fa-check"></i><b>7</b> Sharing your book</a>
-<ul>
-<li class="chapter" data-level="7.1" data-path="sharing-your-book.html"><a href="sharing-your-book.html#publishing"><i class="fa fa-check"></i><b>7.1</b> Publishing</a></li>
-<li class="chapter" data-level="7.2" data-path="sharing-your-book.html"><a href="sharing-your-book.html#pages"><i class="fa fa-check"></i><b>7.2</b> 404 pages</a></li>
-<li class="chapter" data-level="7.3" data-path="sharing-your-book.html"><a href="sharing-your-book.html#metadata-for-sharing"><i class="fa fa-check"></i><b>7.3</b> Metadata for sharing</a></li>
-</ul></li>
+<li class="chapter" data-level="" data-path="ranked-gene-list.html"><a href="ranked-gene-list.html"><i class="fa fa-check"></i>Ranked gene list</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -218,7 +190,8 @@ div.csl-indent {
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">A Minimal Book Example</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"><p><img src="image/CBW_logo.png" height="100" /></p>
+<p>Cancer Workshop 2026 - Module 8: Pathway Enrichment Analysis</p></a>
           </h1>
         </div>
 
@@ -227,36 +200,29 @@ div.csl-indent {
 
             <section class="normal" id="section-">
 <div id="header">
-<h1 class="title">A Minimal Book Example</h1>
-<p class="author"><em>John Doe</em></p>
-<p class="date"><em>2026-09-19</em></p>
+<h1 class="title"><p><img src="image/CBW_logo.png" height="100" /></p>
+<p>Cancer Workshop 2026 - Module 8: Pathway Enrichment Analysis</p></h1>
+<p class="author"><em>Veronique Voisin</em></p>
+<p class="date"><em>October 2026</em></p>
 </div>
-<div id="about" class="section level1 hasAnchor" number="1">
-<h1><span class="header-section-number">Chapter 1</span> About<a href="index.html#about" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>This is a <em>sample</em> book written in <strong>Markdown</strong>. You can use anything that Pandoc’s Markdown supports; for example, a math equation <span class="math inline">\(a^2 + b^2 = c^2\)</span>.</p>
-<div id="usage" class="section level2 hasAnchor" number="1.1">
-<h2><span class="header-section-number">1.1</span> Usage<a href="index.html#usage" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Each <strong>bookdown</strong> chapter is an .Rmd file, and each .Rmd file can contain one (and only one) chapter. A chapter <em>must</em> start with a first-level heading: <code># A good chapter</code>, and can contain one (and only one) first-level heading.</p>
-<p>Use second-level and higher headings within chapters like: <code>## A short section</code> or <code>### An even shorter section</code>.</p>
-<p>The <code>index.Rmd</code> file is required, and is also your first book chapter. It will be the homepage when you render the book.</p>
+<div id="presentation-of-the-dataset" class="section level1 unnumbered hasAnchor">
+<h1>Presentation of the dataset<a href="index.html#presentation-of-the-dataset" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<ul>
+<li><p>This module is a continuation of the transcriptomics module 6 and we will use the same dataset. This dataset contains bulk RNA-seq data of a model of breast cancer. The gene counts were deposited to the Gene Expression Omnibus (GEO) database under accession <strong><em>GSE222367</em></strong> and are publicly available.</p></li>
+<li><p>RNA was extracted from MCF7, a breast cancer cell line under different conditions: parental cell line and cell line samples resistant to the drugs palbociclib or abemaciclib.</p></li>
+<li><p>Biological replicates were available for each condition.</p></li>
+<li><p>RNA-seq library was prepared and sequenced using an Illumina HiSeq 2500 sequencer.</p></li>
+<li><p>Sequence reads were mapped to the human reference genome (Gencode GRCh38) using TopHat as aligner.</p></li>
+<li><p>The BAM files with mapped reads for each sample were sorted and then used as input for HTSeq 0.11.0 in order to generate read count data at the gene level.</p></li>
+<li><p>We retrieved the gene counts and performed differential expression analysis using a negative binomial generalized linear model, followed by pathway enrichment analysis.</p></li>
+</ul>
+<div class="figure"><span style="display:block;" id="fig:fig-mychart"></span>
+<img src="image/GEOscreenshot.png" alt="GEO dataset" width="60%" />
+<p class="caption">
+Figure 1: GEO dataset
+</p>
 </div>
-<div id="render-book" class="section level2 hasAnchor" number="1.2">
-<h2><span class="header-section-number">1.2</span> Render book<a href="index.html#render-book" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>You can render the HTML version of this example book without changing anything:</p>
-<ol style="list-style-type: decimal">
-<li><p>Find the <strong>Build</strong> pane in the RStudio IDE, and</p></li>
-<li><p>Click on <strong>Build Book</strong>, then select your output format, or select “All formats” if you’d like to use multiple formats from the same book source files.</p></li>
-</ol>
-<p>Or build the book from the R console:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="index.html#cb1-1" tabindex="-1"></a>bookdown<span class="sc">::</span><span class="fu">render_book</span>()</span></code></pre></div>
-<p>To render this example to PDF as a <code>bookdown::pdf_book</code>, you’ll need to install XeLaTeX. You are recommended to install TinyTeX (which includes XeLaTeX): <a href="https://yihui.org/tinytex/" class="uri">https://yihui.org/tinytex/</a>.</p>
-</div>
-<div id="preview-book" class="section level2 hasAnchor" number="1.3">
-<h2><span class="header-section-number">1.3</span> Preview book<a href="index.html#preview-book" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>As you work, you may start a local server to live preview this HTML book. This preview will update as you edit the book when you save individual .Rmd files. You can start the server in a work session by using the RStudio add-in “Preview book”, or from the R console:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="index.html#cb2-1" tabindex="-1"></a>bookdown<span class="sc">::</span><span class="fu">serve_book</span>()</span></code></pre></div>
 
-</div>
 </div>
             </section>
 
@@ -264,7 +230,7 @@ div.csl-indent {
         </div>
       </div>
 
-<a href="hello-bookdown.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="differential-expression.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -318,20 +284,6 @@ gitbook.start({
 });
 </script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    var src = "true";
-    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:")
-      if (/^https?:/.test(src))
-        src = src.replace(/^https?:/, '');
-    script.src = src;
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 </body>
 
 </html>

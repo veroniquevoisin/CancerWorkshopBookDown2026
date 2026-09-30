@@ -1,0 +1,201 @@
+# Differential Expression {-}
+
+**This work is licensed under a [Creative Commons Attribution-ShareAlike 4.0 Unported License](https://creativecommons.org/licenses/by-sa/4.0/deed.en). This means that you are able to copy, share and modify the work, as long as the result is distributed under the same license.**
+
+
+We perform differential expression analysis using a negative binomial generalized linear model using the edgeR package.
+
+## Install and load libraries
+```{r}
+## CRAN and Bioconductor setup
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+## List of CRAN packages
+cran_packages <- c(
+  "tidyverse",
+  "gprofiler2",
+  "ggrepel"
+)
+
+# List of Bioconductor packages
+bioc_packages <- c(
+  "edgeR",
+  "fgsea"
+)
+
+# Install CRAN packages if not already installed
+for (pkg in cran_packages) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    install.packages(pkg)
+  }
+}
+
+# Install Bioconductor packages if not already installed
+for (pkg in bioc_packages) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    BiocManager::install(pkg)
+  }
+}
+
+# Load the libraries
+
+# CRAN packages
+library(tidyverse)
+library(gprofiler2)
+library(ggrepel)
+# Bioconductor packages
+library(edgeR)
+library(fgsea)
+
+```
+
+## Data used for this comparison
+For this analysis, we are going to compare the Palbo-resistant cell lines (3 biological replicates) versus the parental cell lines (3 biological replicates)
+```{r dataset, echo=FALSE, fig.cap="GEO dataset", out.width="60%"}
+knitr::include_graphics("image/GEOscreenshot.png")
+```
+
+
+### generate a DGE object
+```{r}
+# 1. Find the count files
+files <- list.files(path = "data", pattern = "\\.txt\\.gz$", full.names = TRUE)
+
+# 2. Sample names from the file names (strip the extension)
+samples <- sub("_S.*", "", basename(files))
+
+# 3. Read the files into a DGEList
+#    HTSeq output has no header: column 1 = gene ID, column 2 = count.
+#    R reads gzipped files directly, so no need to decompress.
+dge <- readDGE(files, columns = c(1, 2), header = FALSE, labels = samples)
+
+# 4. Remove HTSeq summary rows (__no_feature, __ambiguous, etc.)
+dge <- dge[!grepl("^__", rownames(dge)), , keep.lib.sizes = FALSE]
+
+# 5. (Optional) add group information
+dge$samples$group <- factor(
+  c("parental", "parental", "parental",
+    "palbo_resistant", "palbo_resistant", "palbo_resistant"),
+  levels = c("parental", "palbo_resistant")   # parental = reference
+)
+```
+
+
+## Filter low-count genes and TMM-normalize
+```{r}
+keep <- filterByExpr(dge, group = dge$samples$group)
+dge  <- dge[keep, , keep.lib.sizes = FALSE]
+dge  <- calcNormFactors(dge, method = "TMM")
+cat("Genes retained after filtering:", nrow(dge), "\n")
+```
+
+```{r mds-calc, fig.show='hide'}
+mds <- plotMDS(dge, col = as.numeric(dge$samples$group), main = "MDS (logCPM)")
+```
+
+
+```{r}
+group = dge$samples$group
+var_pct <- round(100 * mds$var.explained[mds$dim.plot])
+mds_df <- data.frame(dim1 = mds$x, dim2 = mds$y,
+                      sample = colnames(dge), group = group)
+
+ggplot(mds_df, aes(x = dim1, y = dim2, color = group)) +
+  geom_point(size = 3) +
+  ggrepel::geom_text_repel(aes(label = sample), size = 3, color = "grey30",
+                            show.legend = FALSE, max.overlaps = Inf,
+                            box.padding = 0.4, segment.color = "grey60") +
+  labs(title = "MDS plot (all samples)",
+       x = sprintf("Leading logFC dim %d (%d%%)", mds$dim.plot[1], var_pct[1]),
+       y = sprintf("Leading logFC dim %d (%d%%)", mds$dim.plot[2], var_pct[2]),
+       color = "Group") +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "right")
+```
+
+
+##  Design (~0 + group) and named contrast
+```{r}
+design <- model.matrix(~ 0 + group, data = dge$samples)
+colnames(design) <- levels(dge$samples$group)   # "parental", "palbo_resistant"
+ 
+contr <- makeContrasts(
+  resistant_vs_parental = palbo_resistant - parental,   # + logFC = up in resistant
+  levels = design
+)
+
+head(design)
+```
+
+
+##  Dispersion estimation and quasi-likelihood GLM
+```{r}
+dge <- estimateDisp(dge, design, robust = TRUE)
+fit <- glmQLFit(dge, design, robust = TRUE)
+ 
+par(mfrow = c(1, 2)); plotBCV(dge); plotQLDisp(fit)
+
+qlf <- glmQLFTest(fit, contrast = contr[, "resistant_vs_parental"])
+ 
+res <- topTags(qlf, n = Inf, sort.by = "PValue")$table
+res$gene <- rownames(res)
+```
+## Calculating ranking score and export full results
+```{r}
+res$score = sign(res$logFC) * -log10(res$PValue)
+head(res)
+```
+
+##visualization
+```{r}
+### histogram of the ranking score
+hist(res$score, breaks=100, col="orchid", xlab = "score", main = "Histogram of score")
+
+### volcano plot
+
+```
+
+
+
+```{r volcano, fig.width=7, fig.height=6}
+# Step 1: add -log10(FDR), and label each gene Up / Down / Not sig
+res <- res %>%
+  mutate(
+    negLogFDR = -log10(FDR),
+    status = case_when(
+      FDR < 0.05 & logFC > 0 ~ "Up",
+      FDR < 0.05 & logFC < 0 ~ "Down",
+      TRUE ~ "Not sig"
+    )
+  )
+
+# Step 2: pick the top 15 most significant genes on each side, to label
+top_up   <- res %>% filter(status == "Up")   %>% arrange(FDR) %>% slice_head(n = 15)
+top_down <- res %>% filter(status == "Down") %>% arrange(FDR) %>% slice_head(n = 15)
+top_genes <- bind_rows(top_up, top_down)
+
+# Step 3: plot
+ggplot(res, aes(x = logFC, y = negLogFDR, color = status)) +
+  geom_point() +
+  scale_color_manual(values = c("Up" = "#D55E00", "Down" = "#0072B2", "Not sig" = "grey")) +
+ ggrepel::geom_text_repel(data = top_genes, aes(label = gene), max.overlaps = Inf) +
+  labs(x = "log2 Fold Change", y = "-log10(FDR)", color = "Status")+
+  coord_cartesian(ylim = c(0, 4.5)) +
+  theme_classic()
+```
+
+
+
+## Result output
+```{r}
+print(summary(decideTests(qlf, adjust.method = "BH", p.value = 0.05)))
+write.csv(res, "results/edgeR_resistant_vs_parental_all_genes.csv", row.names = FALSE)
+
+```
+
+## Version of packages and R
+```{r}
+sessionInfo()
+```
+
