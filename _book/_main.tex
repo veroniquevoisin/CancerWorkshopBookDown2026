@@ -586,7 +586,9 @@ This exercise requires the file ``edgeR\_resistant\_vs\_parental\_all\_genes.csv
   \StringTok{"stringr"}\NormalTok{,}
   \StringTok{"data.table"}\NormalTok{,}
   \StringTok{"patchwork"}\NormalTok{,}
-  \StringTok{"ggdendro"}
+  \StringTok{"ggdendro"}\NormalTok{,}
+  \StringTok{"pheatmap"}\NormalTok{,}
+  \StringTok{"RColorBrewer"}
 \NormalTok{)}
 \CommentTok{\# List of Bioconductor packages}
 \NormalTok{bioc\_packages }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
@@ -621,6 +623,8 @@ This exercise requires the file ``edgeR\_resistant\_vs\_parental\_all\_genes.csv
 \FunctionTok{library}\NormalTok{(data.table)}
 \FunctionTok{library}\NormalTok{(patchwork)}
 \FunctionTok{library}\NormalTok{(ggdendro)}
+\FunctionTok{library}\NormalTok{(pheatmap)}
+\FunctionTok{library}\NormalTok{(RColorBrewer)}
 
 \CommentTok{\# Bioconductor packages}
 \FunctionTok{library}\NormalTok{(gprofiler2)}
@@ -1105,12 +1109,12 @@ Note: it took about 2 minutes to run this chunck of code.
 \end{Shaded}
 
 \begin{verbatim}
-## Your custom annotations ID is gp__ZWMW_rs4V_Duc.
+## Your custom annotations ID is gp__8yGN_OQCp_yvY.
 ## You can use this ID as an 'organism' name in all the related enrichment tests against this custom source.
 \end{verbatim}
 
 \begin{verbatim}
-## Just use: gost(my_genes, organism = 'gp__ZWMW_rs4V_Duc')
+## Just use: gost(my_genes, organism = 'gp__8yGN_OQCp_yvY')
 \end{verbatim}
 
 \begin{Shaded}
@@ -1142,7 +1146,66 @@ Note: it took about 2 minutes to run this chunck of code.
   \ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{paste}\NormalTok{(x, }\AttributeTok{collapse =} \StringTok{", "}\NormalTok{)}
 \NormalTok{)}
  
- 
+\DocumentationTok{\#\#Now display the top 20 pathways}
+\FunctionTok{kable}\NormalTok{(}\FunctionTok{head}\NormalTok{(enrichment\_results\_UPgenes, }\AttributeTok{n=}\DecValTok{20}\NormalTok{), }\AttributeTok{caption =} \StringTok{"Enrichment Result"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{bootstrap\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{, }\StringTok{"condensed"}\NormalTok{), }\AttributeTok{font\_size =} \DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+\centering
+\caption{\label{tab:unnamed-chunk-22}Enrichment Result}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{l|l|r|r|r|r|r|r|l|l|l|r|r|l}
+\hline
+query & significant & p\_value & term\_size & query\_size & intersection\_size & precision & recall & term\_id & source & term\_name & effective\_domain\_size & source\_order & parents\\
+\hline
+query\_1 & TRUE & 0.0000025 & 308 & 81 & 13 & 0.1604938 & 0.0422078 & EXTRACELLULAR MATRIX ORGANIZATION\%REACTOME\%R-HSA-1474244.5 & Human\_GOBP\_AllPathways\_filtered\_500orLessV2 & Extracellular matrix organization & 17710 & 3114 & \\
+\hline
+query\_1 & TRUE & 0.0005125 & 66 & 81 & 6 & 0.0740741 & 0.0909091 & BETA1 INTEGRIN CELL SURFACE INTERACTIONS\%PATHWAY INTERACTION DATABASE NCI-NATURE CURATED DATA\%BETA1 INTEGRIN CELL SURFACE INTERACTIONS & Human\_GOBP\_AllPathways\_filtered\_500orLessV2 & Beta1 integrin cell surface interactions & 17710 & 1083 & \\
+\hline
+query\_1 & TRUE & 0.0020101 & 89 & 81 & 6 & 0.0740741 & 0.0674157 & COLLAGEN FORMATION\%REACTOME DATABASE ID RELEASE 97\%1474290 & Human\_GOBP\_AllPathways\_filtered\_500orLessV2 & Collagen formation & 17710 & 2582 & \\
+\hline
+query\_1 & TRUE & 0.0043121 & 62 & 81 & 5 & 0.0617284 & 0.0806452 & REGULATION OF COAGULATION\%GOBP\%GO:0050818 & Human\_GOBP\_AllPathways\_filtered\_500orLessV2 & regulation of coagulation & 17710 & 14756 & \\
+\hline
+query\_1 & TRUE & 0.0050573 & 67 & 81 & 5 & 0.0617284 & 0.0746269 & COLLAGEN BIOSYNTHESIS AND MODIFYING ENZYMES\%REACTOME DATABASE ID RELEASE 97\%1650814 & Human\_GOBP\_AllPathways\_filtered\_500orLessV2 & Collagen biosynthesis and modifying enzymes & 17710 & 3202 & \\
+\hline
+query\_1 & TRUE & 0.0067961 & 422 & 81 & 10 & 0.1234568 & 0.0236967 & TUBE DEVELOPMENT\%GOBP\%GO:0035295 & Human\_GOBP\_AllPathways\_filtered\_500orLessV2 & tube development & 17710 & 9957 & \\
+\hline
+query\_1 & TRUE & 0.0086573 & 40 & 81 & 4 & 0.0493827 & 0.1000000 & ELASTIC FIBRE FORMATION\%REACTOME DATABASE ID RELEASE 97\%1566948 & Human\_GOBP\_AllPathways\_filtered\_500orLessV2 & Elastic fibre formation & 17710 & 4843 & \\
+\hline
+query\_1 & TRUE & 0.0104444 & 283 & 81 & 8 & 0.0987654 & 0.0282686 & VASCULATURE DEVELOPMENT\%GOBP\%GO:0001944 & Human\_GOBP\_AllPathways\_filtered\_500orLessV2 & vasculature development & 17710 & 8945 & \\
+\hline
+query\_1 & TRUE & 0.0137184 & 57 & 81 & 4 & 0.0493827 & 0.0701754 & COAGULATION PATHWAY\%REACTOME DATABASE ID RELEASE 97\%9769740 & Human\_GOBP\_AllPathways\_filtered\_500orLessV2 & Coagulation pathway & 17710 & 2450 & \\
+\hline
+query\_1 & TRUE & 0.0137184 & 98 & 81 & 5 & 0.0617284 & 0.0510204 & POSITIVE REGULATION OF MONOATOMIC ION TRANSMEMBRANE TRANSPORT\%GOBP\%GO:0034767 & Human\_GOBP\_AllPathways\_filtered\_500orLessV2 & positive regulation of monoatomic ion transmembrane transport & 17710 & 7284 & \\
+\hline
+query\_1 & TRUE & 0.0137184 & 50 & 81 & 4 & 0.0493827 & 0.0800000 & REGULATION OF CLOTTING CASCADE\%REACTOME DATABASE ID RELEASE 97\%9769739 & Human\_GOBP\_AllPathways\_filtered\_500orLessV2 & Regulation of clotting cascade & 17710 & 4167 & \\
+\hline
+query\_1 & TRUE & 0.0137184 & 57 & 81 & 4 & 0.0493827 & 0.0701754 & REGULATION OF BLOOD COAGULATION\%GOBP\%GO:0030193 & Human\_GOBP\_AllPathways\_filtered\_500orLessV2 & regulation of blood coagulation & 17710 & 17655 & \\
+\hline
+query\_1 & TRUE & 0.0137184 & 21 & 81 & 3 & 0.0370370 & 0.1428571 & POSITIVE REGULATION OF HEMOSTASIS\%GOBP\%GO:1900048 & Human\_GOBP\_AllPathways\_filtered\_500orLessV2 & positive regulation of hemostasis & 17710 & 15624 & \\
+\hline
+query\_1 & TRUE & 0.0137184 & 240 & 81 & 7 & 0.0864198 & 0.0291667 & BLOOD VESSEL MORPHOGENESIS\%GOBP\%GO:0048514 & Human\_GOBP\_AllPathways\_filtered\_500orLessV2 & blood vessel morphogenesis & 17710 & 12918 & \\
+\hline
+query\_1 & TRUE & 0.0137184 & 94 & 81 & 5 & 0.0617284 & 0.0531915 & POSITIVE REGULATION OF CATION TRANSMEMBRANE TRANSPORT\%GOBP\%GO:1904064 & Human\_GOBP\_AllPathways\_filtered\_500orLessV2 & positive regulation of cation transmembrane transport & 17710 & 11849 & \\
+\hline
+query\_1 & TRUE & 0.0137184 & 56 & 81 & 4 & 0.0493827 & 0.0714286 & ASSEMBLY OF COLLAGEN FIBRILS AND OTHER MULTIMERIC STRUCTURES\%REACTOME DATABASE ID RELEASE 97\%2022090 & Human\_GOBP\_AllPathways\_filtered\_500orLessV2 & Assembly of collagen fibrils and other multimeric structures & 17710 & 4570 & \\
+\hline
+query\_1 & TRUE & 0.0137184 & 21 & 81 & 3 & 0.0370370 & 0.1428571 & POSITIVE REGULATION OF BLOOD COAGULATION\%GOBP\%GO:0030194 & Human\_GOBP\_AllPathways\_filtered\_500orLessV2 & positive regulation of blood coagulation & 17710 & 18367 & \\
+\hline
+query\_1 & TRUE & 0.0137184 & 52 & 81 & 4 & 0.0493827 & 0.0769231 & COLLAGEN METABOLIC PROCESS\%GOBP\%GO:0032963 & Human\_GOBP\_AllPathways\_filtered\_500orLessV2 & collagen metabolic process & 17710 & 16593 & \\
+\hline
+query\_1 & TRUE & 0.0139108 & 58 & 81 & 4 & 0.0493827 & 0.0689655 & REGULATION OF HEMOSTASIS\%GOBP\%GO:1900046 & Human\_GOBP\_AllPathways\_filtered\_500orLessV2 & regulation of hemostasis & 17710 & 7751 & \\
+\hline
+query\_1 & TRUE & 0.0141423 & 23 & 81 & 3 & 0.0370370 & 0.1304348 & POSITIVE REGULATION OF COAGULATION\%GOBP\%GO:0050820 & Human\_GOBP\_AllPathways\_filtered\_500orLessV2 & positive regulation of coagulation & 17710 & 12228 & \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \FunctionTok{write.csv}\NormalTok{( enrichment\_results\_UPgenes, }\StringTok{"results/enrichment\_results\_gprofiler\_UPgenes.csv"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -1168,6 +1231,9 @@ Note: it took about 2 minutes to run this chunck of code.
   \ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{paste}\NormalTok{(x, }\AttributeTok{collapse =} \StringTok{", "}\NormalTok{)}
 \NormalTok{)}
 
+\FunctionTok{kable}\NormalTok{(}\FunctionTok{head}\NormalTok{(enrichment\_results\_DNgenes, }\AttributeTok{n=}\DecValTok{20}\NormalTok{), }\AttributeTok{caption =} \StringTok{"Enrichment Result"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{bootstrap\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{, }\StringTok{"condensed"}\NormalTok{), }\AttributeTok{font\_size =} \DecValTok{10}\NormalTok{)}
+
 \FunctionTok{write.csv}\NormalTok{( enrichment\_results\_DNgenes, }\StringTok{"results/enrichment\_results\_gprofiler\_DNgenes.csv"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -1180,6 +1246,9 @@ We will use clusterProfiler style visualization.
 \begin{Shaded}
 \begin{Highlighting}[]
 \DocumentationTok{\#\#Calculate a score (small very significant adjusted p value will turn into a large score)}
+
+\NormalTok{enrichment\_results\_UPgenes }\OtherTok{\textless{}{-}}\NormalTok{ gprofiler\_results\_custom\_max500\_UPgenes}\SpecialCharTok{$}\NormalTok{result}
+
 \NormalTok{enrichment\_results\_UPgenes}\SpecialCharTok{$}\NormalTok{score }\OtherTok{=} \SpecialCharTok{{-}}\FunctionTok{log10}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(enrichment\_results\_UPgenes}\SpecialCharTok{$}\NormalTok{p\_value))}
 
 \NormalTok{enrichment }\OtherTok{\textless{}{-}}\NormalTok{ enrichment\_results\_UPgenes }\SpecialCharTok{\%\textgreater{}\%}
@@ -1233,6 +1302,406 @@ We will use clusterProfiler style visualization.
 \end{Shaded}
 
 \includegraphics{_main_files/figure-latex/unnamed-chunk-25-1.pdf}
+
+\subsection{Step 4 - Hierarchical Cluster}\label{step-4---hierarchical-cluster}
+
+The problem with the earlier visualization, which represents the top 20 pathways, is that it does not account for the overlap between gene sets. As you can observe, many pathways have similar names because they share a substantial number of genes. To provide a more accurate and efficient representation of the results, and to obtain a quicker and clearer overview, it would be more appropriate to aggregate and summarize pathways with substantial gene overlap, thereby reducing redundancy.
+
+Our first approach is to use hierarchical clustering based on a distance matrix that measures the similarity between pathways according to the number of genes they have in common, allowing us to visualize their relationships.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{enrichment\_results\_UPgenes }\OtherTok{\textless{}{-}}\NormalTok{ gprofiler\_results\_custom\_max500\_UPgenes}\SpecialCharTok{$}\NormalTok{result}
+
+\NormalTok{enrichment\_results\_UPgenes}\SpecialCharTok{$}\NormalTok{score }\OtherTok{=} \SpecialCharTok{{-}}\FunctionTok{log10}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(enrichment\_results\_UPgenes}\SpecialCharTok{$}\NormalTok{p\_value))}
+
+\CommentTok{\# Top 20 enriched terms}
+\NormalTok{enrichmentTop20 }\OtherTok{\textless{}{-}}\NormalTok{ enrichment\_results\_UPgenes }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(score)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{slice\_head}\NormalTok{(}\AttributeTok{n =} \DecValTok{20}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{Get gene list in each pathway}\label{get-gene-list-in-each-pathway}
+
+The genes contained in each pathway that overlap with our gene list are unfortunately not included in the enrichment results output. We therefore need to retrieve these genes from the pathway file by extracting the pathways of interest and merging them with our gene list.
+
+addgenes: helper function to add gene list to enrichment result table
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{addgenes }\OtherTok{=} \ControlFlowTok{function}\NormalTok{(gmtfile, enrichmentresult )\{}
+
+
+\NormalTok{capt\_output }\OtherTok{\textless{}{-}} \FunctionTok{capture.output}\NormalTok{(genesets\_baderlab\_genesets }\OtherTok{\textless{}{-}} 
+                                \FunctionTok{GSA.read.gmt}\NormalTok{(}\AttributeTok{filename =}\NormalTok{ dest\_gmt\_file\_500))}
+
+\FunctionTok{names}\NormalTok{(genesets\_baderlab\_genesets}\SpecialCharTok{$}\NormalTok{genesets) }\OtherTok{\textless{}{-}} 
+\NormalTok{                                genesets\_baderlab\_genesets}\SpecialCharTok{$}\NormalTok{geneset.names}
+
+
+\NormalTok{subset\_genesets }\OtherTok{\textless{}{-}}\NormalTok{ genesets\_baderlab\_genesets}\SpecialCharTok{$}\NormalTok{genesets[}\FunctionTok{which}\NormalTok{(genesets\_baderlab\_genesets}\SpecialCharTok{$}\NormalTok{geneset.names }\SpecialCharTok{\%in\%}\NormalTok{ enrichmentresult}\SpecialCharTok{$}\NormalTok{term\_id)]}
+
+\NormalTok{genes }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(subset\_genesets,}\AttributeTok{FUN=}\ControlFlowTok{function}\NormalTok{(x)\{}\FunctionTok{intersect}\NormalTok{(x,query\_set)\})}
+
+\CommentTok{\# For each of the genes collapse to the comma separate text}
+\NormalTok{genes\_collapsed }\OtherTok{\textless{}{-}} \FunctionTok{unlist}\NormalTok{(}\FunctionTok{lapply}\NormalTok{(genes,}\AttributeTok{FUN=}\ControlFlowTok{function}\NormalTok{(x)\{}\FunctionTok{paste}\NormalTok{(x,}\AttributeTok{collapse =} \StringTok{","}\NormalTok{)\}))}
+  
+\NormalTok{genes\_collapsed\_df }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+                            \AttributeTok{term\_id =} \FunctionTok{names}\NormalTok{(genes), }
+                            \AttributeTok{genes =}\NormalTok{ genes\_collapsed,}\AttributeTok{stringsAsFactors =} \ConstantTok{FALSE}\NormalTok{)}
+  
+
+
+\NormalTok{formatted\_results }\OtherTok{\textless{}{-}} \FunctionTok{merge}\NormalTok{(enrichmentresult,genes\_collapsed\_df,}\AttributeTok{by.x=}\StringTok{"term\_id"}\NormalTok{ , }\AttributeTok{by.y=}\StringTok{"term\_id"}\NormalTok{ )}
+
+\NormalTok{formatted\_results }\OtherTok{\textless{}{-}}\NormalTok{ formatted\_results[}\FunctionTok{order}\NormalTok{(formatted\_results}\SpecialCharTok{$}\NormalTok{p\_value),]}
+
+\FunctionTok{return}\NormalTok{(formatted\_results)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{Running the function to add genes}\label{running-the-function-to-add-genes}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{formatted\_results }\OtherTok{\textless{}{-}} \FunctionTok{addgenes}\NormalTok{(}\AttributeTok{gmtfile =}\NormalTok{ dest\_gmt\_file\_500 , }\AttributeTok{enrichmentresult=}\NormalTok{ enrichment\_results\_UPgenes)}
+
+\FunctionTok{head}\NormalTok{(formatted\_results)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                                                                                                                                   term_id
+## 18                                                                             EXTRACELLULAR MATRIX ORGANIZATION%REACTOME%R-HSA-1474244.5
+## 2  BETA1 INTEGRIN CELL SURFACE INTERACTIONS%PATHWAY INTERACTION DATABASE NCI-NATURE CURATED DATA%BETA1 INTEGRIN CELL SURFACE INTERACTIONS
+## 12                                                                             COLLAGEN FORMATION%REACTOME DATABASE ID RELEASE 97%1474290
+## 42                                                                                              REGULATION OF COAGULATION%GOBP%GO:0050818
+## 9                                                     COLLAGEN BIOSYNTHESIS AND MODIFYING ENZYMES%REACTOME DATABASE ID RELEASE 97%1650814
+## 55                                                                                                       TUBE DEVELOPMENT%GOBP%GO:0035295
+##      query significant      p_value term_size query_size intersection_size
+## 18 query_1        TRUE 2.491195e-06       308         81                13
+## 2  query_1        TRUE 5.124925e-04        66         81                 6
+## 12 query_1        TRUE 2.010127e-03        89         81                 6
+## 42 query_1        TRUE 4.312081e-03        62         81                 5
+## 9  query_1        TRUE 5.057330e-03        67         81                 5
+## 55 query_1        TRUE 6.796124e-03       422         81                10
+##     precision     recall                                      source
+## 18 0.16049383 0.04220779 Human_GOBP_AllPathways_filtered_500orLessV2
+## 2  0.07407407 0.09090909 Human_GOBP_AllPathways_filtered_500orLessV2
+## 12 0.07407407 0.06741573 Human_GOBP_AllPathways_filtered_500orLessV2
+## 42 0.06172840 0.08064516 Human_GOBP_AllPathways_filtered_500orLessV2
+## 9  0.06172840 0.07462687 Human_GOBP_AllPathways_filtered_500orLessV2
+## 55 0.12345679 0.02369668 Human_GOBP_AllPathways_filtered_500orLessV2
+##                                      term_name effective_domain_size
+## 18           Extracellular matrix organization                 17710
+## 2     Beta1 integrin cell surface interactions                 17710
+## 12                          Collagen formation                 17710
+## 42                   regulation of coagulation                 17710
+## 9  Collagen biosynthesis and modifying enzymes                 17710
+## 55                            tube development                 17710
+##    source_order parents    score
+## 18         3114         5.603592
+## 2          1083         3.290313
+## 12         2582         2.696776
+## 42        14756         2.365313
+## 9          3202         2.296079
+## 55         9957         2.167739
+##                                                                           genes
+## 18 FBLN1,FBN1,SNTB1,ITGA5,TIMP2,P3H2,P3H3,LOX,COL6A2,COL6A1,COL5A1,SERPINE1,BGN
+## 2                                         COL6A1,FBN1,ITGA5,TGFBI,COL5A1,COL6A2
+## 12                                           P3H2,P3H3,LOX,COL6A2,COL6A1,COL5A1
+## 42                                                   F2R,CAV1,PROCR,SERPINE1,F3
+## 9                                                P3H2,P3H3,COL6A2,COL6A1,COL5A1
+## 55                   ERRFI1,TGFBI,LOX,CLMP,SERPINE1,WNK4,ITGA5,RAMP1,CCBE1,CAV1
+\end{verbatim}
+
+\subsubsection{Calculating the distance matrix using the jaccard coefficient}\label{calculating-the-distance-matrix-using-the-jaccard-coefficient}
+
+\begin{itemize}
+\tightlist
+\item
+  Many pathways share genes, so similar biological processes can appear under different pathway names. To group similar pathways, we look at how many genes they have in common.
+\item
+  The Jaccard coefficient measures the shared genes relative to all unique genes in the two pathways, from 0 (no overlap) to 1 (identical).
+\item
+  The overlap coefficient measures the shared genes relative to the smaller pathway and shows when one pathway is mostly contained within another, from 0 (no overlap) to 1 (smaller pathway contained into larger one).
+\end{itemize}
+
+\begin{figure}
+\includegraphics[width=1.1\linewidth]{image/jaccard_Overlap_coefficient} \caption{Jaccard and overlap coefficients for two gene sets.}\label{fig:jaccard-overlap}
+\end{figure}
+
+We convert these scores into distances (1 − score) and use them to group similar pathways into broader biological themes.
+
+\#\#Illustration with Jaccard Coefficient
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Convert genes to lists}
+\NormalTok{gene\_lists }\OtherTok{\textless{}{-}} \FunctionTok{strsplit}\NormalTok{(formatted\_results}\SpecialCharTok{$}\NormalTok{genes, }\StringTok{","}\NormalTok{)}
+
+\CommentTok{\# Calculate Jaccard similarity matrix}
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(gene\_lists)}
+\NormalTok{jaccard\_mat }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\DecValTok{0}\NormalTok{, n, n)}
+\FunctionTok{rownames}\NormalTok{(jaccard\_mat) }\OtherTok{\textless{}{-}}\NormalTok{ formatted\_results}\SpecialCharTok{$}\NormalTok{term\_name}
+\FunctionTok{colnames}\NormalTok{(jaccard\_mat) }\OtherTok{\textless{}{-}}\NormalTok{ formatted\_results}\SpecialCharTok{$}\NormalTok{term\_name}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_len}\NormalTok{(n)) \{}
+  \ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \FunctionTok{seq\_len}\NormalTok{(n)) \{}
+\NormalTok{    intersection }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(}\FunctionTok{intersect}\NormalTok{(gene\_lists[[i]], gene\_lists[[j]]))}
+\NormalTok{    union        }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(}\FunctionTok{union}\NormalTok{(gene\_lists[[i]],     gene\_lists[[j]]))}
+\NormalTok{    jaccard\_mat[i, j] }\OtherTok{\textless{}{-}}\NormalTok{ intersection }\SpecialCharTok{/}\NormalTok{ union}
+\NormalTok{  \}}
+\NormalTok{\}}
+
+\FunctionTok{library}\NormalTok{(corrplot)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## corrplot 0.95 loaded
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(RColorBrewer)}
+
+\NormalTok{labs }\OtherTok{\textless{}{-}}\NormalTok{ formatted\_results}\SpecialCharTok{$}\NormalTok{term\_name}
+\NormalTok{labs }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{nchar}\NormalTok{(labs) }\SpecialCharTok{\textgreater{}} \DecValTok{30}\NormalTok{, }\FunctionTok{paste0}\NormalTok{(}\FunctionTok{substr}\NormalTok{(labs, }\DecValTok{1}\NormalTok{, }\DecValTok{27}\NormalTok{), }\StringTok{"..."}\NormalTok{), labs)}
+\FunctionTok{rownames}\NormalTok{(jaccard\_mat) }\OtherTok{\textless{}{-}} \FunctionTok{colnames}\NormalTok{(jaccard\_mat) }\OtherTok{\textless{}{-}} \FunctionTok{make.unique}\NormalTok{(labs)}
+
+\NormalTok{keep }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{seq\_len}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(jaccard\_mat)), }\FunctionTok{min}\NormalTok{(}\DecValTok{20}\NormalTok{, }\FunctionTok{nrow}\NormalTok{(jaccard\_mat)))}
+\NormalTok{jaccard\_sub }\OtherTok{\textless{}{-}}\NormalTok{ jaccard\_mat[keep, keep]}
+
+
+\CommentTok{\# Heatmap}
+\NormalTok{p }\OtherTok{\textless{}{-}} \FunctionTok{pheatmap}\NormalTok{(}
+\NormalTok{  jaccard\_sub,}
+  \AttributeTok{color           =} \FunctionTok{colorRampPalette}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"white"}\NormalTok{, }\StringTok{"\#C6DBEF"}\NormalTok{, }\StringTok{"\#6BAED6"}\NormalTok{, }\StringTok{"\#2171B5"}\NormalTok{, }\StringTok{"\#08306B"}\NormalTok{))(}\DecValTok{100}\NormalTok{),}
+  \AttributeTok{breaks          =} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{101}\NormalTok{),}
+  \AttributeTok{display\_numbers =}\NormalTok{ F,}
+  \CommentTok{\#number\_format   = "\%.2f",}
+  \CommentTok{\#number\_color    = "black",}
+  \CommentTok{\#fontsize\_number = 8,}
+  \AttributeTok{clustering\_distance\_rows =} \FunctionTok{as.dist}\NormalTok{(}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ jaccard\_sub),}
+  \AttributeTok{clustering\_distance\_cols =} \FunctionTok{as.dist}\NormalTok{(}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ jaccard\_sub),}
+  \AttributeTok{border\_color    =} \StringTok{"grey90"}\NormalTok{,}
+  \AttributeTok{fontsize\_row    =} \DecValTok{7}\NormalTok{,}
+  \AttributeTok{fontsize\_col    =} \DecValTok{7}\NormalTok{,}
+  \AttributeTok{angle\_col       =} \DecValTok{45}\NormalTok{,}
+  \AttributeTok{main            =} \StringTok{"Jaccard coefficient (20 random gene sets)"}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{_main_files/figure-latex/unnamed-chunk-29-1.pdf}
+
+\#\#Illustration with Overlap Coefficient
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Calculate Overlap coefficient matrix (reuses gene\_lists and n from above)}
+\NormalTok{overlap\_mat }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\DecValTok{0}\NormalTok{, n, n)}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_len}\NormalTok{(n)) \{}
+  \ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \FunctionTok{seq\_len}\NormalTok{(n)) \{}
+\NormalTok{    intersection }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(}\FunctionTok{intersect}\NormalTok{(gene\_lists[[i]], gene\_lists[[j]]))}
+\NormalTok{    smaller      }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(}\FunctionTok{length}\NormalTok{(gene\_lists[[i]]), }\FunctionTok{length}\NormalTok{(gene\_lists[[j]]))}
+\NormalTok{    overlap\_mat[i, j] }\OtherTok{\textless{}{-}}\NormalTok{ intersection }\SpecialCharTok{/}\NormalTok{ smaller}
+\NormalTok{  \}}
+\NormalTok{\}}
+
+\FunctionTok{rownames}\NormalTok{(overlap\_mat) }\OtherTok{\textless{}{-}} \FunctionTok{colnames}\NormalTok{(overlap\_mat) }\OtherTok{\textless{}{-}} \FunctionTok{make.unique}\NormalTok{(labs)}
+
+\CommentTok{\# Use the same 20 gene sets as the Jaccard heatmap so the two can be compared}
+\NormalTok{overlap\_sub }\OtherTok{\textless{}{-}}\NormalTok{ overlap\_mat[keep, keep]}
+
+
+\CommentTok{\# Heatmap}
+\NormalTok{p }\OtherTok{\textless{}{-}} \FunctionTok{pheatmap}\NormalTok{(}
+\NormalTok{  overlap\_sub,}
+  \AttributeTok{color           =} \FunctionTok{colorRampPalette}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"white"}\NormalTok{, }\StringTok{"\#C6DBEF"}\NormalTok{, }\StringTok{"\#6BAED6"}\NormalTok{, }\StringTok{"\#2171B5"}\NormalTok{, }\StringTok{"\#08306B"}\NormalTok{))(}\DecValTok{100}\NormalTok{),}
+  \AttributeTok{breaks          =} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{101}\NormalTok{),}
+  \AttributeTok{display\_numbers =}\NormalTok{ F,}
+  \AttributeTok{clustering\_distance\_rows =} \FunctionTok{as.dist}\NormalTok{(}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ overlap\_sub),}
+  \AttributeTok{clustering\_distance\_cols =} \FunctionTok{as.dist}\NormalTok{(}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ overlap\_sub),}
+  \AttributeTok{border\_color    =} \StringTok{"grey90"}\NormalTok{,}
+  \AttributeTok{fontsize\_row    =} \DecValTok{7}\NormalTok{,}
+  \AttributeTok{fontsize\_col    =} \DecValTok{7}\NormalTok{,}
+  \AttributeTok{angle\_col       =} \DecValTok{45}\NormalTok{,}
+  \AttributeTok{main            =} \StringTok{"Overlap coefficient (20 random gene sets)"}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{_main_files/figure-latex/unnamed-chunk-30-1.pdf}
+
+\#\#Hierarchical Clustering
+
+plot\_hclust\_enrichment: helper function to cluster the top enriched pathways by gene overlap (Jaccard distance) and plot them next to the dendrogram
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot\_hclust\_enrichment }\OtherTok{=} \ControlFlowTok{function}\NormalTok{(enrichment\_results, }\AttributeTok{n\_top =} \DecValTok{20}\NormalTok{, }\AttributeTok{n\_clusters =} \DecValTok{8}\NormalTok{) \{}
+
+\NormalTok{  enrichment\_results}\SpecialCharTok{$}\NormalTok{score }\OtherTok{\textless{}{-}} \SpecialCharTok{{-}}\FunctionTok{log10}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(enrichment\_results}\SpecialCharTok{$}\NormalTok{p\_value))}
+
+  \CommentTok{\# Top n\_top enriched terms}
+\NormalTok{  enrichmentTop }\OtherTok{\textless{}{-}}\NormalTok{ enrichment\_results }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(score)) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{slice\_head}\NormalTok{(}\AttributeTok{n =}\NormalTok{ n\_top)}
+
+  \CommentTok{\# Add the genes of our list found in each pathway}
+\NormalTok{  top\_terms }\OtherTok{\textless{}{-}} \FunctionTok{addgenes}\NormalTok{(}\AttributeTok{gmtfile =}\NormalTok{ dest\_gmt\_file\_500 , }\AttributeTok{enrichmentresult =}\NormalTok{ enrichmentTop)}
+\NormalTok{  top\_terms }\OtherTok{\textless{}{-}}\NormalTok{ top\_terms }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{arrange}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(p\_value)) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{slice\_head}\NormalTok{(}\AttributeTok{n =}\NormalTok{ n\_top)}
+
+  \CommentTok{\# Jaccard similarity matrix }
+\NormalTok{  gene\_lists }\OtherTok{\textless{}{-}} \FunctionTok{strsplit}\NormalTok{(top\_terms}\SpecialCharTok{$}\NormalTok{genes, }\StringTok{","}\NormalTok{)}
+\NormalTok{  n          }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(gene\_lists)}
+
+\NormalTok{  jaccard\_mat }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\DecValTok{0}\NormalTok{, n, n,}
+                        \AttributeTok{dimnames =} \FunctionTok{list}\NormalTok{(top\_terms}\SpecialCharTok{$}\NormalTok{term\_name, top\_terms}\SpecialCharTok{$}\NormalTok{term\_name))}
+
+  \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_len}\NormalTok{(n)) \{}
+    \ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \FunctionTok{seq\_len}\NormalTok{(n)) \{}
+\NormalTok{      inter }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(}\FunctionTok{intersect}\NormalTok{(gene\_lists[[i]], gene\_lists[[j]]))}
+\NormalTok{      uni   }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(}\FunctionTok{union}\NormalTok{(gene\_lists[[i]],     gene\_lists[[j]]))}
+\NormalTok{      jaccard\_mat[i, j] }\OtherTok{\textless{}{-}}\NormalTok{ inter }\SpecialCharTok{/}\NormalTok{ uni}
+\NormalTok{    \}}
+\NormalTok{  \}}
+
+  \CommentTok{\# Hierarchical clustering }
+\NormalTok{  dist\_mat   }\OtherTok{\textless{}{-}} \FunctionTok{as.dist}\NormalTok{(}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ jaccard\_mat)}
+\NormalTok{  hc         }\OtherTok{\textless{}{-}} \FunctionTok{hclust}\NormalTok{(dist\_mat, }\AttributeTok{method =} \StringTok{"average"}\NormalTok{)}
+\NormalTok{  term\_order }\OtherTok{\textless{}{-}}\NormalTok{ hc}\SpecialCharTok{$}\NormalTok{labels[hc}\SpecialCharTok{$}\NormalTok{order]}
+
+  \CommentTok{\# The first level is drawn at the bottom of the bar plot, matching the}
+  \CommentTok{\# first dendrogram leaf (y = 1)}
+\NormalTok{  top\_terms}\SpecialCharTok{$}\NormalTok{term\_name }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(top\_terms}\SpecialCharTok{$}\NormalTok{term\_name, }\AttributeTok{levels =}\NormalTok{ term\_order)}
+\NormalTok{  top\_terms}\SpecialCharTok{$}\NormalTok{neglog10p }\OtherTok{\textless{}{-}} \SpecialCharTok{{-}}\FunctionTok{log10}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(top\_terms}\SpecialCharTok{$}\NormalTok{p\_value))}
+
+  \CommentTok{\#  Cut tree into k branches (cannot have more branches than terms)}
+\NormalTok{  k        }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(n\_clusters, n)}
+\NormalTok{  clusters }\OtherTok{\textless{}{-}} \FunctionTok{cutree}\NormalTok{(hc, }\AttributeTok{k =}\NormalTok{ k)}
+
+\NormalTok{  top\_terms}\SpecialCharTok{$}\NormalTok{cluster }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(clusters[}\FunctionTok{as.character}\NormalTok{(top\_terms}\SpecialCharTok{$}\NormalTok{term\_name)])}
+
+  \CommentTok{\# Bar plot (full, coloured by cluster)}
+\NormalTok{  base\_colours }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"\#1D9E75"}\NormalTok{, }\StringTok{"\#3A7DC9"}\NormalTok{, }\StringTok{"\#E07B39"}\NormalTok{, }\StringTok{"\#9B59B6"}\NormalTok{,}
+                    \StringTok{"\#E74C3C"}\NormalTok{, }\StringTok{"\#F1C40F"}\NormalTok{, }\StringTok{"\#1ABC9C"}\NormalTok{, }\StringTok{"\#E91E63"}\NormalTok{)}
+  \CommentTok{\# Interpolate extra colours when more than 8 clusters are requested}
+  \ControlFlowTok{if}\NormalTok{ (k }\SpecialCharTok{\textless{}=} \FunctionTok{length}\NormalTok{(base\_colours)) \{}
+\NormalTok{    cluster\_colours }\OtherTok{\textless{}{-}}\NormalTok{ base\_colours}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{    cluster\_colours }\OtherTok{\textless{}{-}} \FunctionTok{colorRampPalette}\NormalTok{(base\_colours)(k)}
+\NormalTok{  \}}
+
+\NormalTok{  p\_bar }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(top\_terms, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ neglog10p, }\AttributeTok{y =}\NormalTok{ term\_name, }\AttributeTok{fill =}\NormalTok{ cluster)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_col}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.85}\NormalTok{, }\AttributeTok{width =} \FloatTok{0.7}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{scale\_y\_discrete}\NormalTok{(}\AttributeTok{expand =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{0.5}\NormalTok{)) }\SpecialCharTok{+}
+    \FunctionTok{scale\_fill\_manual}\NormalTok{(}\AttributeTok{values =}\NormalTok{ cluster\_colours[}\FunctionTok{seq\_len}\NormalTok{(k)],}
+                      \AttributeTok{name   =} \StringTok{"Branch"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \FunctionTok{expression}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{log[}\DecValTok{10}\NormalTok{](p}\SpecialCharTok{{-}}\NormalTok{value)), }\AttributeTok{y =} \ConstantTok{NULL}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{theme\_bw}\NormalTok{(}\AttributeTok{base\_size =} \DecValTok{10}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{theme}\NormalTok{(}
+      \AttributeTok{panel.grid.major.y =} \FunctionTok{element\_blank}\NormalTok{(),}
+      \AttributeTok{axis.text.y        =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{8}\NormalTok{),}
+      \AttributeTok{legend.position    =} \StringTok{"bottom"}
+\NormalTok{    )}
+
+  \CommentTok{\#  Dendrogram }
+\NormalTok{  dend\_data }\OtherTok{\textless{}{-}} \FunctionTok{dendro\_data}\NormalTok{(hc, }\AttributeTok{type =} \StringTok{"rectangle"}\NormalTok{)}
+\NormalTok{  seg       }\OtherTok{\textless{}{-}}\NormalTok{ dend\_data}\SpecialCharTok{$}\NormalTok{segments}
+
+\NormalTok{  p\_dend }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(seg) }\SpecialCharTok{+}
+    \FunctionTok{geom\_segment}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ y, }\AttributeTok{y =}\NormalTok{ x, }\AttributeTok{xend =}\NormalTok{ yend, }\AttributeTok{yend =}\NormalTok{ xend),}
+                 \AttributeTok{colour =} \StringTok{"grey40"}\NormalTok{, }\AttributeTok{linewidth =} \FloatTok{0.45}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{scale\_x\_reverse}\NormalTok{(}\AttributeTok{expand =} \FunctionTok{expansion}\NormalTok{(}\AttributeTok{mult =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.02}\NormalTok{, }\DecValTok{0}\NormalTok{))) }\SpecialCharTok{+}
+    \FunctionTok{scale\_y\_continuous}\NormalTok{(}\AttributeTok{limits =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{, n }\SpecialCharTok{+} \FloatTok{0.5}\NormalTok{), }\AttributeTok{expand =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{)) }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"Jaccard distance"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{theme\_void}\NormalTok{() }\SpecialCharTok{+}
+    \FunctionTok{theme}\NormalTok{(}
+      \AttributeTok{axis.title.x =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{8}\NormalTok{, }\AttributeTok{colour =} \StringTok{"grey50"}\NormalTok{, }\AttributeTok{margin =} \FunctionTok{margin}\NormalTok{(}\AttributeTok{t =} \DecValTok{4}\NormalTok{)),}
+      \AttributeTok{axis.text.x  =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{7}\NormalTok{, }\AttributeTok{colour =} \StringTok{"grey60"}\NormalTok{),}
+      \AttributeTok{plot.margin  =} \FunctionTok{margin}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{)}
+\NormalTok{    )}
+
+  \CommentTok{\#  Combined plot }
+\NormalTok{  p\_combined }\OtherTok{\textless{}{-}}\NormalTok{ p\_dend }\SpecialCharTok{+}\NormalTok{ p\_bar }\SpecialCharTok{+}
+    \FunctionTok{plot\_layout}\NormalTok{(}\AttributeTok{widths =} \FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+
+  \CommentTok{\#  Keep only the top hit per branch }
+\NormalTok{  top\_per\_cluster }\OtherTok{\textless{}{-}}\NormalTok{ top\_terms }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{group\_by}\NormalTok{(cluster) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{slice\_min}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(p\_value), }\AttributeTok{n =} \DecValTok{1}\NormalTok{, }\AttributeTok{with\_ties =} \ConstantTok{FALSE}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{arrange}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(p\_value)) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{term\_name =} \FunctionTok{factor}\NormalTok{(}\FunctionTok{as.character}\NormalTok{(term\_name),}
+                              \AttributeTok{levels =} \FunctionTok{rev}\NormalTok{(}\FunctionTok{as.character}\NormalTok{(term\_name))))}
+
+  \CommentTok{\#  Simple barplot — one representative term per branch }
+\NormalTok{  p\_simple }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(top\_per\_cluster,}
+                     \FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ neglog10p, }\AttributeTok{y =}\NormalTok{ term\_name, }\AttributeTok{fill =}\NormalTok{ cluster)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_col}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.88}\NormalTok{, }\AttributeTok{width =} \FloatTok{0.6}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{geom\_text}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{label =} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"p = \%.2e"}\NormalTok{, }\FunctionTok{as.numeric}\NormalTok{(p\_value))),}
+              \AttributeTok{hjust =} \SpecialCharTok{{-}}\FloatTok{0.1}\NormalTok{, }\AttributeTok{size =} \DecValTok{3}\NormalTok{, }\AttributeTok{colour =} \StringTok{"grey30"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{scale\_fill\_manual}\NormalTok{(}\AttributeTok{values =}\NormalTok{ cluster\_colours[}\FunctionTok{seq\_len}\NormalTok{(k)],}
+                      \AttributeTok{name   =} \StringTok{"Branch"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{scale\_x\_continuous}\NormalTok{(}\AttributeTok{expand =} \FunctionTok{expansion}\NormalTok{(}\AttributeTok{mult =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{0.25}\NormalTok{))) }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}
+      \AttributeTok{x     =} \FunctionTok{expression}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{log[}\DecValTok{10}\NormalTok{](p}\SpecialCharTok{{-}}\NormalTok{value)),}
+      \AttributeTok{y     =} \ConstantTok{NULL}\NormalTok{,}
+      \AttributeTok{title =} \StringTok{"Top term per branch"}
+\NormalTok{    ) }\SpecialCharTok{+}
+    \FunctionTok{theme\_bw}\NormalTok{(}\AttributeTok{base\_size =} \DecValTok{11}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{theme}\NormalTok{(}
+      \AttributeTok{panel.grid.major.y =} \FunctionTok{element\_blank}\NormalTok{(),}
+      \AttributeTok{axis.text.y        =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{9}\NormalTok{),}
+      \AttributeTok{legend.position    =} \StringTok{"bottom"}\NormalTok{,}
+      \AttributeTok{plot.title         =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{11}\NormalTok{, }\AttributeTok{face =} \StringTok{"bold"}\NormalTok{)}
+\NormalTok{    )}
+
+  \CommentTok{\# n\_terms and n\_clusters are returned so the figure height can be set}
+  \CommentTok{\# from them in the chunk options}
+  \FunctionTok{return}\NormalTok{(}\FunctionTok{list}\NormalTok{(}\AttributeTok{combined =}\NormalTok{ p\_combined, }\AttributeTok{top\_per\_branch =}\NormalTok{ p\_simple,}
+              \AttributeTok{n\_terms =}\NormalTok{ n, }\AttributeTok{n\_clusters =}\NormalTok{ k))}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{Running the function on the top 20 pathways}\label{running-the-function-on-the-top-20-pathways}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{enrichment\_results\_UPgenes }\OtherTok{\textless{}{-}}\NormalTok{ gprofiler\_results\_custom\_max500\_UPgenes}\SpecialCharTok{$}\NormalTok{result}
+
+\NormalTok{hc\_plots }\OtherTok{\textless{}{-}} \FunctionTok{plot\_hclust\_enrichment}\NormalTok{(}\AttributeTok{enrichment\_results =}\NormalTok{ enrichment\_results\_UPgenes, }\AttributeTok{n\_top =} \DecValTok{500}\NormalTok{, }\AttributeTok{n\_clusters =} \DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+The figure height grows with the number of pathways (combined plot) and the number of clusters (top term per branch), so the bars do not overlap.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hc\_plots}\SpecialCharTok{$}\NormalTok{combined}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{_main_files/figure-latex/unnamed-chunk-33-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hc\_plots}\SpecialCharTok{$}\NormalTok{top\_per\_branch}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{_main_files/figure-latex/unnamed-chunk-34-1.pdf}
+
+\subsubsection{YOUR TURN Running the function with your defined number of pathways and clusters}\label{your-turn-running-the-function-with-your-defined-number-of-pathways-and-clusters}
 
 \chapter*{Ranked gene list}\label{ranked-gene-list}
 \addcontentsline{toc}{chapter}{Ranked gene list}

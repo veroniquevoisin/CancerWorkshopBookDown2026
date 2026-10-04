@@ -53,7 +53,9 @@ cran_packages <- c(
   "stringr",
   "data.table",
   "patchwork",
-  "ggdendro"
+  "ggdendro",
+  "pheatmap",
+  "RColorBrewer"
 )
 # List of Bioconductor packages
 bioc_packages <- c(
@@ -88,6 +90,8 @@ library(stringr)
 library(data.table)
 library(patchwork)
 library(ggdendro)
+library(pheatmap)
+library(RColorBrewer)
 
 # Bioconductor packages
 library(gprofiler2)
@@ -420,7 +424,7 @@ write.csv( enrichment_results_DNgenes, "results/enrichment_results_gprofiler_DNg
 ## Exercise 2 - visualization
 We will use clusterProfiler style visualization.
 ### Step 1 - Bar plot
-```{r}
+```{r echo=TRUE}
 ##Calculate a score (small very significant adjusted p value will turn into a large score)
 
 enrichment_results_UPgenes <- gprofiler_results_custom_max500_UPgenes$result
@@ -479,7 +483,7 @@ The problem with the earlier visualization, which represents the top 20 pathways
 
 Our first approach is to use hierarchical clustering based on a distance matrix that measures the similarity between pathways according to the number of genes they have in common, allowing us to visualize their relationships.
 
-```{r}
+```{r echo=TRUE}
 
 enrichment_results_UPgenes <- gprofiler_results_custom_max500_UPgenes$result
 
@@ -492,11 +496,11 @@ enrichmentTop20 <- enrichment_results_UPgenes %>%
 
 ```
 
-##get gene list in each pathway
+#### Get gene list in each pathway
 The genes contained in each pathway that overlap with our gene list are unfortunately not included in the enrichment results output. We therefore need to retrieve these genes from the pathway file by extracting the pathways of interest and merging them with our gene list.
 
 addgenes: helper function to add gene list to enrichment result table
-```{r}
+```{r echo=TRUE}
 
 addgenes = function(gmtfile, enrichmentresult ){
 
@@ -530,8 +534,8 @@ return(formatted_results)
 
 ```
 
-##running the function to add genes
-```{r}
+#### Running the function to add genes
+```{r echo=TRUE}
 
 formatted_results <- addgenes(gmtfile = dest_gmt_file_500 , enrichmentresult= enrichment_results_UPgenes)
 
@@ -542,8 +546,20 @@ head(formatted_results)
 
 
 
-### calculating the distance matrix using the jaccard coefficient
-```{r}
+#### Calculating the distance matrix using the jaccard coefficient
+- Many pathways share genes, so similar biological processes can appear under different pathway names. To group similar pathways, we look at how many genes they have in common. 
+- The Jaccard coefficient measures the shared genes relative to all unique genes in the two pathways, from 0 (no overlap) to 1 (identical).
+- The overlap coefficient measures the shared genes relative to the smaller pathway and shows when one pathway is mostly contained within another, from 0 (no overlap) to 1 (smaller pathway contained into larger one). 
+
+```{r jaccard-overlap, echo=FALSE, fig.cap="Jaccard and overlap coefficients for two gene sets.", out.width="110%"}
+knitr::include_graphics("image/jaccard_Overlap_coefficient.png")
+```
+
+
+We convert these scores into distances (1 − score) and use them to group similar pathways into broader biological themes.
+
+##Illustration with Jaccard Coefficient
+```{r echo=TRUE}
 
 # Convert genes to lists
 gene_lists <- strsplit(formatted_results$genes, ",")
@@ -556,165 +572,250 @@ colnames(jaccard_mat) <- formatted_results$term_name
 
 for (i in seq_len(n)) {
   for (j in seq_len(n)) {
-    inter <- length(intersect(gene_lists[[i]], gene_lists[[j]]))
-    uni   <- length(union(gene_lists[[i]],     gene_lists[[j]]))
-    jaccard_mat[i, j] <- inter / uni
+    intersection <- length(intersect(gene_lists[[i]], gene_lists[[j]]))
+    union        <- length(union(gene_lists[[i]],     gene_lists[[j]]))
+    jaccard_mat[i, j] <- intersection / union
   }
 }
 
+library(corrplot)
+library(RColorBrewer)
+
+labs <- formatted_results$term_name
+labs <- ifelse(nchar(labs) > 30, paste0(substr(labs, 1, 27), "..."), labs)
+rownames(jaccard_mat) <- colnames(jaccard_mat) <- make.unique(labs)
+
+keep <- sample(seq_len(nrow(jaccard_mat)), min(20, nrow(jaccard_mat)))
+jaccard_sub <- jaccard_mat[keep, keep]
+
+
+# Heatmap
+p <- pheatmap(
+  jaccard_sub,
+  color           = colorRampPalette(c("white", "#C6DBEF", "#6BAED6", "#2171B5", "#08306B"))(100),
+  breaks          = seq(0, 1, length.out = 101),
+  display_numbers = F,
+  #number_format   = "%.2f",
+  #number_color    = "black",
+  #fontsize_number = 8,
+  clustering_distance_rows = as.dist(1 - jaccard_sub),
+  clustering_distance_cols = as.dist(1 - jaccard_sub),
+  border_color    = "grey90",
+  fontsize_row    = 7,
+  fontsize_col    = 7,
+  angle_col       = 45,
+  main            = "Jaccard coefficient (20 random gene sets)"
+)
+
+
+
+
 ```
 
-```{r}
-# Hierarchical clustering
-dist_mat <- as.dist(1 - jaccard_mat)
-hc       <- hclust(dist_mat, method = "average")
 
-# Get term order from clustering
-term_order <- hc$labels[hc$order]
+##Illustration with Overlap Coefficient
+```{r echo=TRUE}
 
-# Reorder enrichment results
-top20$term_name  <- factor(top20$term_name, levels = rev(term_order))
-top20$neglog10p  <- -log10(top20$p_value)
-
-#  Bar plot
-p_bar <- ggplot(top20, aes(x = neglog10p, y = term_name)) +
-  geom_col(fill = "#1D9E75", alpha = 0.85, width = 0.7) +
-  labs(x = expression(-log[10](p-value)), y = NULL) +
-  theme_bw(base_size = 10) +
-  theme(
-    panel.grid.major.y = element_blank(),
-    axis.text.y        = element_text(size = 8)
-  )
-
-# Dendrogram 
-dend_data <- dendro_data(hc, type = "rectangle")
-seg       <- dend_data$segments   # has x, y, xend, yend
-
-# ggdendro builds a top-down dendrogram where leaves are on the x-axis.
-# We swap x y so leaves align with bar plot rows, then reverse x so the
-# root is on the right and leaves meet the bar plot on the left.
-p_dend <- ggplot(seg) +
-  geom_segment(aes(x = y, y = x, xend = yend, yend = xend),
-               colour = "grey40", linewidth = 0.45) +
-  scale_x_reverse(expand = expansion(mult = c(0.02, 0))) +
-  scale_y_continuous(limits = c(0.5, n + 0.5), expand = c(0, 0)) +
-  labs(x = "Jaccard distance") +
-  theme_void() +
-  theme(
-    axis.title.x = element_text(size = 8, colour = "grey50", margin = margin(t = 4)),
-    axis.text.x  = element_text(size = 7, colour = "grey60"),
-    plot.margin  = margin(0, 4, 0, 0)
-  )
-
-# Combine 
-p_dend + p_bar 
-  plot_layout(widths = c(3, 1))
-```
-
-### Step 5 - Hierarchical clustering 2
-```{r}
-#  Top 20 enriched terms 
-top20 <- formatted_results %>%
-  arrange(p_value) %>%
-  slice(1:20)
-
-# Jaccard similarity matrix 
-gene_lists <- strsplit(top20$genes, ",")
-n          <- length(gene_lists)
-
-jaccard_mat <- matrix(0, n, n,
-                      dimnames = list(top20$term_name, top20$term_name))
+# Calculate Overlap coefficient matrix (reuses gene_lists and n from above)
+overlap_mat <- matrix(0, n, n)
 
 for (i in seq_len(n)) {
   for (j in seq_len(n)) {
-    inter <- length(intersect(gene_lists[[i]], gene_lists[[j]]))
-    uni   <- length(union(gene_lists[[i]],     gene_lists[[j]]))
-    jaccard_mat[i, j] <- inter / uni
+    intersection <- length(intersect(gene_lists[[i]], gene_lists[[j]]))
+    smaller      <- min(length(gene_lists[[i]]), length(gene_lists[[j]]))
+    overlap_mat[i, j] <- intersection / smaller
   }
 }
 
-# Hierarchical clustering 
-dist_mat   <- as.dist(1 - jaccard_mat)
-hc         <- hclust(dist_mat, method = "average")
-term_order <- hc$labels[hc$order]
+rownames(overlap_mat) <- colnames(overlap_mat) <- make.unique(labs)
 
-top20$term_name <- factor(top20$term_name, levels = rev(term_order))
-top20$neglog10p <- -log10(top20$p_value)
+# Use the same 20 gene sets as the Jaccard heatmap so the two can be compared
+overlap_sub <- overlap_mat[keep, keep]
 
-#  Cut tree into k branches 
-k       <- 8   # adjust number of clusters as needed
-clusters <- cutree(hc, k = k)
 
-top20$cluster <- factor(clusters[as.character(top20$term_name)])
+# Heatmap
+p <- pheatmap(
+  overlap_sub,
+  color           = colorRampPalette(c("white", "#C6DBEF", "#6BAED6", "#2171B5", "#08306B"))(100),
+  breaks          = seq(0, 1, length.out = 101),
+  display_numbers = F,
+  clustering_distance_rows = as.dist(1 - overlap_sub),
+  clustering_distance_cols = as.dist(1 - overlap_sub),
+  border_color    = "grey90",
+  fontsize_row    = 7,
+  fontsize_col    = 7,
+  angle_col       = 45,
+  main            = "Overlap coefficient (20 random gene sets)"
+)
 
-# Bar plot (full, coloured by cluster) 
-cluster_colours <- c("#1D9E75", "#3A7DC9", "#E07B39", "#9B59B6",
-                     "#E74C3C", "#F1C40F", "#1ABC9C", "#E91E63")
+```
 
-p_bar <- ggplot(top20, aes(x = neglog10p, y = term_name, fill = cluster)) +
-  geom_col(alpha = 0.85, width = 0.7) +
-  scale_fill_manual(values = cluster_colours[seq_len(k)],
-                    name   = "Branch") +
-  labs(x = expression(-log[10](p-value)), y = NULL) +
-  theme_bw(base_size = 10) +
-  theme(
-    panel.grid.major.y = element_blank(),
-    axis.text.y        = element_text(size = 8),
-    legend.position    = "bottom"
-  )
 
-#  Dendrogram 
-dend_data <- dendro_data(hc, type = "rectangle")
-seg       <- dend_data$segments
+##Hierarchical Clustering
 
-p_dend <- ggplot(seg) +
-  geom_segment(aes(x = y, y = x, xend = yend, yend = xend),
-               colour = "grey40", linewidth = 0.45) +
-  scale_x_reverse(expand = expansion(mult = c(0.02, 0))) +
-  scale_y_continuous(limits = c(0.5, n + 0.5), expand = c(0, 0)) +
-  labs(x = "Jaccard distance") +
-  theme_void() +
-  theme(
-    axis.title.x = element_text(size = 8, colour = "grey50", margin = margin(t = 4)),
-    axis.text.x  = element_text(size = 7, colour = "grey60"),
-    plot.margin  = margin(0, 4, 0, 0)
-  )
+plot_hclust_enrichment: helper function to cluster the top enriched pathways by gene overlap (Jaccard distance) and plot them next to the dendrogram
+```{r echo=TRUE}
 
-#  Combined plot 
-  p_dend + p_bar  +
-  plot_layout(widths = c(3, 1))
+plot_hclust_enrichment = function(enrichment_results, n_top = 20, n_clusters = 8) {
 
-#  Keep only the top hit per branch 
-top_per_cluster <- top20 %>%
-  group_by(cluster) %>%
-  slice_min(p_value, n = 1) %>%
-  ungroup() %>%
-  arrange(p_value) %>%
-  mutate(term_name = factor(term_name, levels = rev(term_name)))
+  enrichment_results$score <- -log10(as.numeric(enrichment_results$p_value))
 
-#  Simple barplot — one representative term per branch 
-p_simple <- ggplot(top_per_cluster,
-                   aes(x = neglog10p, y = term_name, fill = cluster)) +
-  geom_col(alpha = 0.88, width = 0.6) +
-  geom_text(aes(label = sprintf("p = %.2e", p_value)),
-            hjust = -0.1, size = 3, colour = "grey30") +
-  scale_fill_manual(values = cluster_colours[seq_len(k)],
-                    name   = "Branch") +
-  scale_x_continuous(expand = expansion(mult = c(0, 0.25))) +
-  labs(
-    x     = expression(-log[10](p-value)),
-    y     = NULL,
-    title = "Top term per branch"
-  ) +
-  theme_bw(base_size = 11) +
-  theme(
-    panel.grid.major.y = element_blank(),
-    axis.text.y        = element_text(size = 9),
-    legend.position    = "bottom",
-    plot.title         = element_text(size = 11, face = "bold")
-  )
+  # Top n_top enriched terms
+  enrichmentTop <- enrichment_results %>%
+    arrange(desc(score)) %>%
+    slice_head(n = n_top)
 
-print(p_simple)
+  # Add the genes of our list found in each pathway
+  top_terms <- addgenes(gmtfile = dest_gmt_file_500 , enrichmentresult = enrichmentTop)
+  top_terms <- top_terms %>%
+    arrange(as.numeric(p_value)) %>%
+    slice_head(n = n_top)
+
+  # Jaccard similarity matrix 
+  gene_lists <- strsplit(top_terms$genes, ",")
+  n          <- length(gene_lists)
+
+  jaccard_mat <- matrix(0, n, n,
+                        dimnames = list(top_terms$term_name, top_terms$term_name))
+
+  for (i in seq_len(n)) {
+    for (j in seq_len(n)) {
+      inter <- length(intersect(gene_lists[[i]], gene_lists[[j]]))
+      uni   <- length(union(gene_lists[[i]],     gene_lists[[j]]))
+      jaccard_mat[i, j] <- inter / uni
+    }
+  }
+
+  # Hierarchical clustering 
+  dist_mat   <- as.dist(1 - jaccard_mat)
+  hc         <- hclust(dist_mat, method = "average")
+  term_order <- hc$labels[hc$order]
+
+  # The first level is drawn at the bottom of the bar plot, matching the
+  # first dendrogram leaf (y = 1)
+  top_terms$term_name <- factor(top_terms$term_name, levels = term_order)
+  top_terms$neglog10p <- -log10(as.numeric(top_terms$p_value))
+
+  #  Cut tree into k branches (cannot have more branches than terms)
+  k        <- min(n_clusters, n)
+  clusters <- cutree(hc, k = k)
+
+  top_terms$cluster <- factor(clusters[as.character(top_terms$term_name)])
+
+  # Bar plot (full, coloured by cluster)
+  base_colours <- c("#1D9E75", "#3A7DC9", "#E07B39", "#9B59B6",
+                    "#E74C3C", "#F1C40F", "#1ABC9C", "#E91E63")
+  # Interpolate extra colours when more than 8 clusters are requested
+  if (k <= length(base_colours)) {
+    cluster_colours <- base_colours
+  } else {
+    cluster_colours <- colorRampPalette(base_colours)(k)
+  }
+
+  p_bar <- ggplot(top_terms, aes(x = neglog10p, y = term_name, fill = cluster)) +
+    geom_col(alpha = 0.85, width = 0.7) +
+    scale_y_discrete(expand = c(0, 0.5)) +
+    scale_fill_manual(values = cluster_colours[seq_len(k)],
+                      name   = "Branch") +
+    labs(x = expression(-log[10](p-value)), y = NULL) +
+    theme_bw(base_size = 10) +
+    theme(
+      panel.grid.major.y = element_blank(),
+      axis.text.y        = element_text(size = 8),
+      legend.position    = "bottom"
+    )
+
+  #  Dendrogram 
+  dend_data <- dendro_data(hc, type = "rectangle")
+  seg       <- dend_data$segments
+
+  p_dend <- ggplot(seg) +
+    geom_segment(aes(x = y, y = x, xend = yend, yend = xend),
+                 colour = "grey40", linewidth = 0.45) +
+    scale_x_reverse(expand = expansion(mult = c(0.02, 0))) +
+    scale_y_continuous(limits = c(0.5, n + 0.5), expand = c(0, 0)) +
+    labs(x = "Jaccard distance") +
+    theme_void() +
+    theme(
+      axis.title.x = element_text(size = 8, colour = "grey50", margin = margin(t = 4)),
+      axis.text.x  = element_text(size = 7, colour = "grey60"),
+      plot.margin  = margin(0, 4, 0, 0)
+    )
+
+  #  Combined plot 
+  p_combined <- p_dend + p_bar +
+    plot_layout(widths = c(3, 1))
+
+  #  Keep only the top hit per branch 
+  top_per_cluster <- top_terms %>%
+    group_by(cluster) %>%
+    slice_min(as.numeric(p_value), n = 1, with_ties = FALSE) %>%
+    ungroup() %>%
+    arrange(as.numeric(p_value)) %>%
+    mutate(term_name = factor(as.character(term_name),
+                              levels = rev(as.character(term_name))))
+
+  #  Simple barplot — one representative term per branch 
+  p_simple <- ggplot(top_per_cluster,
+                     aes(x = neglog10p, y = term_name, fill = cluster)) +
+    geom_col(alpha = 0.88, width = 0.6) +
+    geom_text(aes(label = sprintf("p = %.2e", as.numeric(p_value))),
+              hjust = -0.1, size = 3, colour = "grey30") +
+    scale_fill_manual(values = cluster_colours[seq_len(k)],
+                      name   = "Branch") +
+    scale_x_continuous(expand = expansion(mult = c(0, 0.25))) +
+    labs(
+      x     = expression(-log[10](p-value)),
+      y     = NULL,
+      title = "Top term per branch"
+    ) +
+    theme_bw(base_size = 11) +
+    theme(
+      panel.grid.major.y = element_blank(),
+      axis.text.y        = element_text(size = 9),
+      legend.position    = "bottom",
+      plot.title         = element_text(size = 11, face = "bold")
+    )
+
+  # n_terms and n_clusters are returned so the figure height can be set
+  # from them in the chunk options
+  return(list(combined = p_combined, top_per_branch = p_simple,
+              n_terms = n, n_clusters = k))
+}
+
+```
+
+#### Running the function on the top 20 pathways
+```{r echo=TRUE}
+
+enrichment_results_UPgenes <- gprofiler_results_custom_max500_UPgenes$result
+
+hc_plots <- plot_hclust_enrichment(enrichment_results = enrichment_results_UPgenes, n_top = 500, n_clusters = 10)
+```
+
+The figure height grows with the number of pathways (combined plot) and the number of clusters (top term per branch), so the bars do not overlap.
+```{r echo=TRUE, fig.width=10, fig.height=max(5, 0.15 * hc_plots$n_terms + 1.5)}
+hc_plots$combined
+```
+
+```{r echo=TRUE, fig.width=8, fig.height=max(3, 0.35 * hc_plots$n_clusters + 1.5)}
+hc_plots$top_per_branch
+```
+
+#### YOUR TURN Running the function with your defined number of pathways and clusters
+```{r eval=FALSE, include=FALSE}
+
+enrichment_results_UPgenes <- gprofiler_results_custom_max500_UPgenes$result
+
+hc_plots <- plot_hclust_enrichment(enrichment_results = enrichment_results_UPgenes, n_top = XXXX, n_clusters = XXXX)
+```
+
+```{r eval=FALSE, include=FALSE, fig.width=10, fig.height=max(5, 0.15 * hc_plots$n_terms + 1.5)}
+hc_plots$combined
+```
+
+```{r eval=FALSE, include=FALSE, fig.width=8, fig.height=max(3, 0.35 * hc_plots$n_clusters + 1.5)}
+hc_plots$top_per_branch
 ```
 
 
