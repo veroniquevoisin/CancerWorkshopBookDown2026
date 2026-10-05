@@ -1,0 +1,28 @@
+p.caption {
+  color: #777;
+  margin-top: 10px;
+}
+p code {
+  white-space: inherit;
+}
+pre {
+  word-break: normal;
+  word-wrap: normal;
+}
+pre code {
+  white-space: inherit;
+}
+.rmd-caution, .rmd-tip {
+  padding: 1em;
+  margin: 1em 0;
+  border-left: 5px solid;
+  border-radius: 4px;
+}
+.rmd-caution {
+  background: #fff5e6;
+  border-color: #e69500;
+}
+.rmd-tip {
+  background: #eefaf0;
+  border-color: #3a9a4a;
+}
