@@ -150,6 +150,17 @@ nperm = 2000
 fgseaRes <- fgseaRes[order(fgseaRes$padj), ]
 ```
 
+Save the full fgsea results table to the results folder.
+
+```{r}
+#the leadingEdge column is a list of genes for each pathway,
+#convert it to text (genes separated by a comma) so that it can be written to a csv file.
+fgseaRes_to_save <- copy(fgseaRes)
+fgseaRes_to_save$leadingEdge <- sapply(fgseaRes_to_save$leadingEdge, paste, collapse = ",")
+
+write.csv(fgseaRes_to_save, "results/fgsea_results_resistant_vs_parental.csv", row.names = FALSE)
+```
+
 ```{block, type="rmd-tip"}
 Set **gseaParam** to 2 if you want to add more weight on the most top up-regulated and top down-regulated. <br> **2** is a more stringent parameter and it will result in less gene-sets significant under FDR <0.05.
 ```
