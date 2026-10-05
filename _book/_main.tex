@@ -104,6 +104,9 @@
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{5}
 \usepackage{booktabs}
+\usepackage{tcolorbox}
+\newenvironment{rmd-caution}{\begin{tcolorbox}[colback=orange!5,colframe=orange!75!black,title=Caution]}{\end{tcolorbox}}
+\newenvironment{rmd-tip}{\begin{tcolorbox}[colback=green!5,colframe=green!50!black,title=Tip]}{\end{tcolorbox}}
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{array}
@@ -531,8 +534,8 @@ For this analysis, we are going to compare the Palbo-resistant cell lines (3 bio
 ## [55] jsonlite_2.0.0      R6_2.6.1
 \end{verbatim}
 
-\chapter*{Pathway Enrichment Analysis using a defined genelist}\label{pathway-enrichment-analysis-using-a-defined-genelist}
-\addcontentsline{toc}{chapter}{Pathway Enrichment Analysis using a defined genelist}
+\chapter*{Defined genelist}\label{defined-genelist}
+\addcontentsline{toc}{chapter}{Defined genelist}
 
 \textbf{This work is licensed under a \href{https://creativecommons.org/licenses/by-sa/4.0/deed.en}{Creative Commons Attribution-ShareAlike 4.0 Unported License}. This means that you are able to copy, share and modify the work, as long as the result is distributed under the same license.}
 
@@ -562,7 +565,7 @@ The \href{https://biit.cs.ut.ee/gprofiler/page/r}{gprofielr2} -\href{https://bii
 
 g:Profiler requires a list of genes. For this analysis, we used genes we found to be differentially expressed in palbociclib-resistant samples compared with parental samples from the breast cancer cell line MCF7 (see chapter 1.
 
-\section{Exercise 1 - prepare the gene lists}\label{exercise-1}
+\section{Exercise 1 - prepare the gene lists}\label{exercise-1-defined}
 
 This exercise requires the file ``edgeR\_resistant\_vs\_parental\_all\_genes.csv'' located in the results folder.
 
@@ -1109,12 +1112,12 @@ Note: it took about 2 minutes to run this chunck of code.
 \end{Shaded}
 
 \begin{verbatim}
-## Your custom annotations ID is gp__8yGN_OQCp_yvY.
+## Your custom annotations ID is gp__eyFN_EBp7_KEY.
 ## You can use this ID as an 'organism' name in all the related enrichment tests against this custom source.
 \end{verbatim}
 
 \begin{verbatim}
-## Just use: gost(my_genes, organism = 'gp__8yGN_OQCp_yvY')
+## Just use: gost(my_genes, organism = 'gp__eyFN_EBp7_KEY')
 \end{verbatim}
 
 \begin{Shaded}
@@ -1706,13 +1709,658 @@ The figure height grows with the number of pathways (combined plot) and the numb
 \chapter*{Ranked gene list}\label{ranked-gene-list}
 \addcontentsline{toc}{chapter}{Ranked gene list}
 
-You can add parts to organize one or more book chapters together. Parts can be inserted at the top of an .Rmd file, before the first-level chapter heading in that same file.
+\textbf{This work is licensed under a \href{https://creativecommons.org/licenses/by-sa/4.0/deed.en}{Creative Commons Attribution-ShareAlike 4.0 Unported License}. This means that you are able to copy, share and modify the work, as long as the result is distributed under the same license.}
 
-Add a numbered part: \texttt{\#\ (PART)\ Act\ one\ \{-\}} (followed by \texttt{\#\ A\ chapter})
+Authors: Veronique Voisin, Ruth Isserlin
 
-Add an unnumbered part: \texttt{\#\ (PART\textbackslash{}*)\ Act\ one\ \{-\}} (followed by \texttt{\#\ A\ chapter})
+Presenter: Veronique Voisin
 
-Add an appendix as a special kind of un-numbered part: \texttt{\#\ (APPENDIX)\ Other\ stuff\ \{-\}} (followed by \texttt{\#\ A\ chapter}). Chapters in an appendix are prepended with letters instead of numbers.
+\section{Introduction}\label{introduction-1}
+
+This practical lab contains one exercise. It uses \href{https://github.com/alserglab/fgsea}{fGSEA} to perform a gene-set enrichment analysis.
+
+\section{Goal of the exercise}\label{goal-of-the-exercise}
+
+Learn how to run fGSEA and explore the results.
+
+\section{Data}\label{data-1}
+
+We will perform gene-set enrichment analysis using the output of the differential expression analysis comparing the palbo-resistant and the MCF7 parental cell line. We won't use only the signficant differentially expressed genes but we will rank all genes from top up-regulated to down-regulated. The non significant genes stays in the rank file.
+
+\section{Background}\label{background}
+
+The goal of this lab is to:
+
+\begin{itemize}
+\tightlist
+\item
+  Upload the 2 required files into GSEA,
+\item
+  Adjust relevant parameters,
+\item
+  Run fGSEA,
+\item
+  Open and explore the gene-set enrichment results.
+\end{itemize}
+
+The 2 required files are:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  a rank file (.rnk)
+\item
+  a pathway definition file (.gmt).
+\end{enumerate}
+
+\subsubsection{Rank File}\label{rank-file}
+
+To generate a rank file (.rnk), a score (-log10(pvalue) * sign(logFC)) was calculated from the edgeR differential expression results. A gene that is significantly differentially expressed (i.e associated with a very small pvalue, close to 0) will be assigned a high score.The sign of the logFC indicates if the gene has an expression which is higher in Palbo-resistant (logFC \textgreater{} 0, the score will have a + sign) or higher in Parental (logFC \textless{} 0, the score will have a - sign). It is used to rank the genes from top up-regulated to top down-regulated (\textbf{all genes have to be included}).
+
+\section{Exercise 1 - prepare the gene lists}\label{exercise-1-ranked}
+
+This exercise requires the file ``edgeR\_resistant\_vs\_parental\_all\_genes.csv'' located in the results folder.
+
+\subsection{Step 1 - Install and Load libraries}\label{step-1---install-and-load-libraries-1}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# CRAN and Bioconductor setup}
+\ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{requireNamespace}\NormalTok{(}\StringTok{"BiocManager"}\NormalTok{, }\AttributeTok{quietly =} \ConstantTok{TRUE}\NormalTok{))}
+  \FunctionTok{install.packages}\NormalTok{(}\StringTok{"BiocManager"}\NormalTok{)}
+\CommentTok{\# List of CRAN packages}
+\NormalTok{cran\_packages }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
+  \StringTok{"tidyverse"}\NormalTok{,}
+  \StringTok{"knitr"}\NormalTok{,}
+  \StringTok{"kableExtra"}\NormalTok{,}
+  \StringTok{"glue"}\NormalTok{,}
+  \StringTok{"RCurl"}\NormalTok{,}
+  \StringTok{"webshot2"}\NormalTok{,}
+  \StringTok{"ggridges"}\NormalTok{,}
+  \StringTok{"igraph"}\NormalTok{,}
+  \StringTok{"stringr"}\NormalTok{,}
+  \StringTok{"data.table"}\NormalTok{,}
+  \StringTok{"patchwork"}\NormalTok{,}
+  \StringTok{"ggdendro"}\NormalTok{,}
+  \StringTok{"pheatmap"}\NormalTok{,}
+  \StringTok{"RColorBrewer"}
+\NormalTok{)}
+\CommentTok{\# List of Bioconductor packages}
+\NormalTok{bioc\_packages }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
+  \StringTok{"gprofiler2"}\NormalTok{,}
+  \StringTok{"GSA"}\NormalTok{,}
+  \StringTok{"fgsea"}\NormalTok{,}
+  \StringTok{"clusterProfiler"}\NormalTok{,}
+  \StringTok{"enrichplot"}
+\NormalTok{) }
+\CommentTok{\# Install CRAN packages if not already installed}
+\ControlFlowTok{for}\NormalTok{ (pkg }\ControlFlowTok{in}\NormalTok{ cran\_packages) \{}
+  \ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{requireNamespace}\NormalTok{(pkg, }\AttributeTok{quietly =} \ConstantTok{TRUE}\NormalTok{)) \{}
+    \FunctionTok{install.packages}\NormalTok{(pkg)}
+\NormalTok{  \}}
+\NormalTok{\}}
+\CommentTok{\# Install Bioconductor packages if not already installed}
+\ControlFlowTok{for}\NormalTok{ (pkg }\ControlFlowTok{in}\NormalTok{ bioc\_packages) \{}
+  \ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{requireNamespace}\NormalTok{(pkg, }\AttributeTok{quietly =} \ConstantTok{TRUE}\NormalTok{)) \{}
+\NormalTok{    BiocManager}\SpecialCharTok{::}\FunctionTok{install}\NormalTok{(pkg)}
+\NormalTok{  \}}
+\NormalTok{\}}
+\CommentTok{\# Load the libraries}
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\FunctionTok{library}\NormalTok{(knitr)}
+\FunctionTok{library}\NormalTok{(kableExtra)}
+\FunctionTok{library}\NormalTok{(glue)}
+\FunctionTok{library}\NormalTok{(RCurl)}
+\FunctionTok{library}\NormalTok{(webshot2)}
+\FunctionTok{library}\NormalTok{(ggridges)}
+\FunctionTok{library}\NormalTok{(igraph)}
+\FunctionTok{library}\NormalTok{(stringr)}
+\FunctionTok{library}\NormalTok{(data.table)}
+\FunctionTok{library}\NormalTok{(patchwork)}
+\FunctionTok{library}\NormalTok{(ggdendro)}
+\FunctionTok{library}\NormalTok{(pheatmap)}
+\FunctionTok{library}\NormalTok{(RColorBrewer)}
+
+\CommentTok{\# Bioconductor packages}
+\FunctionTok{library}\NormalTok{(gprofiler2)}
+\FunctionTok{library}\NormalTok{(GSA)}
+\FunctionTok{library}\NormalTok{(fgsea)}
+\FunctionTok{library}\NormalTok{(clusterProfiler)}
+\FunctionTok{library}\NormalTok{(enrichplot)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Step 2 - Prepare the rank file , upload the gmt file and run fgsea}\label{step-2---prepare-the-rank-file-upload-the-gmt-file-and-run-fgsea}
+
+\href{https://bioconductor.org/packages/release/bioc/html/fgsea.html}{fGSEA} is an R package that runs a fast Gene Set Enrichment Analysis.
+
+In the below command the following options have been specified:
+
+\begin{itemize}
+\tightlist
+\item
+  pathways - list of genesets to use for the calculation
+\item
+  stats - genes and their associated statistic, sorted ( rank file)
+\item
+  max\_size - maximum size for individual gene sets.
+\item
+  min\_size - minimum size for individual gene sets
+\item
+  gseaParam - GSEA parameter value
+\end{itemize}
+
+\begin{rmd-caution}
+gseaParam - GSEA parameter value. All ranks will be raised to this power
+when calculating the ES scores. Equivalent to the weight in the original
+GSEA algorithm.
+\end{rmd-caution}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{res }\OtherTok{=} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"results/edgeR\_resistant\_vs\_parental\_all\_genes.csv"}\NormalTok{)}
+
+\NormalTok{gmtfile }\OtherTok{=} \StringTok{"data/Human\_GOBP\_AllPathways\_noPFOCR\_no\_GO\_iea\_September\_14\_2026\_symbol.gmt"}
+\NormalTok{pathways }\OtherTok{\textless{}{-}}\NormalTok{ fgsea}\SpecialCharTok{::}\FunctionTok{gmtPathways}\NormalTok{(gmtfile)}
+
+\DocumentationTok{\#\# rank file formatted for gsea}
+\NormalTok{ranks }\OtherTok{\textless{}{-}} \FunctionTok{setNames}\NormalTok{(res}\SpecialCharTok{$}\NormalTok{score, res}\SpecialCharTok{$}\NormalTok{gene)}
+\NormalTok{ranks }\OtherTok{\textless{}{-}}\NormalTok{ ranks[}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(ranks) }\SpecialCharTok{\&} \SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(}\FunctionTok{names}\NormalTok{(ranks))]}
+\NormalTok{ranks }\OtherTok{\textless{}{-}} \FunctionTok{sort}\NormalTok{(ranks, }\AttributeTok{decreasing =} \ConstantTok{TRUE}\NormalTok{)}
+
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{543}\NormalTok{) }\DocumentationTok{\#\# to get reproducible results}
+
+\DocumentationTok{\#\# running fgsea}
+\NormalTok{fgseaRes }\OtherTok{\textless{}{-}} \FunctionTok{fgsea}\NormalTok{(}
+
+\AttributeTok{pathways =}\NormalTok{ pathways,}
+\AttributeTok{stats =}\NormalTok{ ranks,}
+\AttributeTok{minSize =} \DecValTok{10}\NormalTok{,}
+\AttributeTok{maxSize =} \DecValTok{500}\NormalTok{,}
+\AttributeTok{nperm =} \DecValTok{2000}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in fgsea(pathways = pathways, stats = ranks, minSize = 10, maxSize =
+## 500, : You are trying to run fgseaSimple. It is recommended to use
+## fgseaMultilevel. To run fgseaMultilevel, you need to remove the nperm argument
+## in the fgsea function call.
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in preparePathwaysAndStats(pathways, stats, minSize, maxSize, gseaParam, : There are ties in the preranked stats (0.01% of the list).
+## The order of those tied genes will be arbitrary, which may produce unexpected results.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fgseaRes }\OtherTok{\textless{}{-}}\NormalTok{ fgseaRes[}\FunctionTok{order}\NormalTok{(fgseaRes}\SpecialCharTok{$}\NormalTok{padj), ]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{rmd-tip}
+Set \textbf{gseaParam} to 2 if you want to add more weight on the most
+top up-regulated and top down-regulated. \textbf{2} is a more stringent
+parameter and it will result in less gene-sets significant under FDR
+\textless0.05.
+\end{rmd-tip}
+
+\subsection{Step 3 - Examine the results}\label{step-3---examine-the-results}
+
+Examining the results
+
+Get the top results and visualize as table
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{topPathwaysUp }\OtherTok{\textless{}{-}}\NormalTok{ fgseaRes[ES }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{][}\FunctionTok{head}\NormalTok{(}\FunctionTok{order}\NormalTok{(pval), }\AttributeTok{n=}\DecValTok{10}\NormalTok{), pathway]}
+\NormalTok{topPathwaysDown }\OtherTok{\textless{}{-}}\NormalTok{ fgseaRes[ES }\SpecialCharTok{\textless{}} \DecValTok{0}\NormalTok{][}\FunctionTok{head}\NormalTok{(}\FunctionTok{order}\NormalTok{(pval), }\AttributeTok{n=}\DecValTok{10}\NormalTok{), pathway]}
+\NormalTok{topPathways }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(topPathwaysUp, }\FunctionTok{rev}\NormalTok{(topPathwaysDown))}
+\FunctionTok{plotGseaTable}\NormalTok{(pathways[topPathways], ranks, fgseaRes, }\AttributeTok{gseaParam=}\FloatTok{0.5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## i Please use `linewidth` instead.
+## i The deprecated feature was likely used in the fgsea package.
+##   Please report the issue at <https://github.com/ctlab/fgsea/issues>.
+## This warning is displayed once per session.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+\end{verbatim}
+
+\includegraphics{_main_files/figure-latex/top-pathways-1.pdf}
+
+When examining the results there are a few things to look for:
+
+Check the number of gene-sets that have been used for the analysis.
+
+\begin{rmd-tip}
+A small number (a few hundred genesets if using baderlab genesets) could
+indicate an issue with identifier mapping.
+\end{rmd-tip}
+
+Check the number of sets that have FDR less than 0.25 -- in order to determine what thresholds to start with when creating the enrichment map. It is not uncommon to see a thousand gene sets pass the threshold of FDR less than 0.25. FDR less than 0.25 is a very lax threshold and for robust data we can set thresholds of FDR less than 0.05 or lower.
+
+Number of pathways with corrected pvalue \textless{} 0.05
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{length}\NormalTok{(}\FunctionTok{which}\NormalTok{(fgseaRes}\SpecialCharTok{$}\NormalTok{padj }\SpecialCharTok{\textless{}} \FloatTok{0.05}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 325
+\end{verbatim}
+
+Number of pathways with corrected pvalue \textless{} 0.01
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{length}\NormalTok{(}\FunctionTok{which}\NormalTok{(fgseaRes}\SpecialCharTok{$}\NormalTok{padj }\SpecialCharTok{\textless{}} \FloatTok{0.01}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0
+\end{verbatim}
+
+Number of Palbo-resistant (up -regulated) pathways with corrected pvalue \textless{} 0.05
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{length}\NormalTok{(}\FunctionTok{which}\NormalTok{(fgseaRes}\SpecialCharTok{$}\NormalTok{padj }\SpecialCharTok{\textless{}} \FloatTok{0.05} \SpecialCharTok{\&}\NormalTok{ fgseaRes}\SpecialCharTok{$}\NormalTok{ES }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 297
+\end{verbatim}
+
+Number of Parental (down -regulated) pathways with corrected pvalue \textless{} 0.05
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{length}\NormalTok{(}\FunctionTok{which}\NormalTok{(fgseaRes}\SpecialCharTok{$}\NormalTok{padj }\SpecialCharTok{\textless{}} \FloatTok{0.05} \SpecialCharTok{\&}\NormalTok{ fgseaRes}\SpecialCharTok{$}\NormalTok{ES }\SpecialCharTok{\textless{}} \DecValTok{0}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 28
+\end{verbatim}
+
+\subsection{Step 4 - Explore the tabular format of the results}\label{step-4---explore-the-tabular-format-of-the-results}
+
+\subsubsection{Palbo-resistant (up-regulated genes)}\label{palbo-resistant-up-regulated-genes}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{topPathwaysUp }\OtherTok{\textless{}{-}}\NormalTok{ fgseaRes[ES }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{][}\FunctionTok{head}\NormalTok{(}\FunctionTok{order}\NormalTok{(pval), }\AttributeTok{n=}\DecValTok{5}\NormalTok{), pathway]}
+
+\NormalTok{top\_palbo\_hits }\OtherTok{\textless{}{-}}\NormalTok{ fgseaRes[}\FunctionTok{which}\NormalTok{(fgseaRes}\SpecialCharTok{$}\NormalTok{pathway }\SpecialCharTok{\%in\%}\NormalTok{ topPathwaysUp),]}
+
+\CommentTok{\#format the pathway name colum so that it is easier to see the whole table}
+\NormalTok{top\_palbo\_hits}\SpecialCharTok{$}\NormalTok{pathway }\OtherTok{\textless{}{-}} \FunctionTok{substr}\NormalTok{(top\_palbo\_hits}\SpecialCharTok{$}\NormalTok{pathway, }\AttributeTok{start =} \DecValTok{1}\NormalTok{, }\AttributeTok{stop=}\DecValTok{35}\NormalTok{)}
+
+\FunctionTok{kable}\NormalTok{(}\FunctionTok{head}\NormalTok{(top\_palbo\_hits), }\AttributeTok{caption =} \StringTok{"Top Palbo{-}resistant pathways"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{bootstrap\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{, }\StringTok{"condensed"}\NormalTok{), }\AttributeTok{font\_size =} \DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+\centering
+\caption{\label{tab:top-pathways-up}Top Palbo-resistant pathways}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{l|r|r|r|r|r|r|l}
+\hline
+pathway & pval & padj & ES & NES & nMoreExtreme & size & leadingEdge\\
+\hline
+TRANSLATION\%REACTOME DATABASE ID RE & 0.0009524 & 0.0297521 & 0.5492338 & 2.367385 & 0 & 338 & EEF1A2, ....\\
+\hline
+POSITIVE REGULATION OF CELL MIGRATI & 0.0009615 & 0.0297521 & 0.3432083 & 1.470604 & 0 & 324 & CAV1, SE....\\
+\hline
+NEURON PROJECTION DEVELOPMENT\%GOBP\% & 0.0009671 & 0.0297521 & 0.3491315 & 1.507575 & 0 & 355 & ADGRB1, ....\\
+\hline
+CIRCULATORY SYSTEM DEVELOPMENT\%GOBP & 0.0009615 & 0.0297521 & 0.3364868 & 1.456819 & 0 & 361 & CAV1, SE....\\
+\hline
+ANATOMICAL STRUCTURE FORMATION INVO & 0.0009690 & 0.0297521 & 0.3734786 & 1.610248 & 0 & 345 & COL6A1, ....\\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Parental (down-regulated genes)}\label{parental-down-regulated-genes}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{topPathwaysDown }\OtherTok{\textless{}{-}}\NormalTok{ fgseaRes[ES }\SpecialCharTok{\textless{}} \DecValTok{0}\NormalTok{][}\FunctionTok{head}\NormalTok{(}\FunctionTok{order}\NormalTok{(pval), }\AttributeTok{n=}\DecValTok{5}\NormalTok{), pathway]}
+
+\NormalTok{top\_parental\_hits }\OtherTok{\textless{}{-}}\NormalTok{ fgseaRes[}\FunctionTok{which}\NormalTok{(fgseaRes}\SpecialCharTok{$}\NormalTok{pathway }\SpecialCharTok{\%in\%}\NormalTok{ topPathwaysDown),]}
+
+\CommentTok{\#format the pathway name colum so that it is easier to see the whole table}
+\NormalTok{top\_parental\_hits}\SpecialCharTok{$}\NormalTok{pathway }\OtherTok{\textless{}{-}} \FunctionTok{substr}\NormalTok{(top\_parental\_hits}\SpecialCharTok{$}\NormalTok{pathway, }\AttributeTok{start =} \DecValTok{1}\NormalTok{, }\AttributeTok{stop=}\DecValTok{35}\NormalTok{)}
+
+\FunctionTok{kable}\NormalTok{(}\FunctionTok{head}\NormalTok{(top\_parental\_hits), }\AttributeTok{caption =} \StringTok{"Top Parental pathways"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{bootstrap\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{, }\StringTok{"condensed"}\NormalTok{), }\AttributeTok{font\_size =} \DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+\centering
+\caption{\label{tab:top-pathways-down}Top Parental pathways}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}[t]{l|r|r|r|r|r|r|l}
+\hline
+pathway & pval & padj & ES & NES & nMoreExtreme & size & leadingEdge\\
+\hline
+METAPATHWAY BIOTRANSFORMATION PHASE & 0.0009843 & 0.0297521 & -0.4964078 & -1.728867 & 0 & 68 & CYP2J2, ....\\
+\hline
+TIGHT JUNCTION ORGANIZATION\%GOBP\%GO & 0.0009872 & 0.0297521 & -0.6351792 & -1.936928 & 0 & 33 & GRHL2, M....\\
+\hline
+INDOLE-CONTAINING COMPOUND METABOLI & 0.0009881 & 0.0297521 & -0.7990183 & -1.920113 & 0 & 13 & KYNU, QP....\\
+\hline
+DIGESTION\%GOBP\%GO:0007586 & 0.0009804 & 0.0297521 & -0.6713524 & -1.987560 & 0 & 29 & AKR1C2, ....\\
+\hline
+TIGHT JUNCTION ASSEMBLY\%GOBP\%GO:012 & 0.0009833 & 0.0297521 & -0.6194630 & -1.878603 & 0 & 32 & GRHL2, M....\\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Step 5 - Visualize the top results}\label{step-5---visualize-the-top-results}
+
+Visualize the top results as different sorts of plots, as demonstrated in the first part of the lab.
+
+\subsubsection{GSEA style Enrichment Plots}\label{gsea-style-enrichment-plots}
+
+In order to create GSEA Enrichment plots we need to use the packages:
+
+\begin{itemize}
+\tightlist
+\item
+  \href{https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html}{clusterProfiler} and
+\item
+  \href{https://bioconductor.org/packages/release/bioc/html/enrichplot.html}{enrichplot}
+\end{itemize}
+
+clusterProfiler runs with its own set of pathways that it parses from GO or KEGG or MSigDB or other sources that are coded into the package. It does not take as input the standard GMT file. If you want to use your own pathway definitions you need to translate it into a dataframe where for every gene in a given pathway there is a row with the pathway name and the gene.
+
+In order to generate an enrichment plot with enrichplot we need the fgsea results in the datastructure returned by clusterProfiler. To run fGSEA in this way we need:
+
+\begin{itemize}
+\tightlist
+\item
+  the ranks file, as before
+\item
+  the pathways as a data frame.
+\end{itemize}
+
+Below we show how to run fGSEA using the clusterProfiler package and user supplied pathway definitions.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#translate our gmt file (a named list of genesets) into a dataframe}
+\CommentTok{\#with one row per gene in each pathway.}
+\NormalTok{TERMS }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{name =} \FunctionTok{rep}\NormalTok{(}\FunctionTok{names}\NormalTok{(pathways), }\FunctionTok{lengths}\NormalTok{(pathways)),}
+    \AttributeTok{gene =} \FunctionTok{unlist}\NormalTok{(pathways, }\AttributeTok{use.names =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{  )}
+
+\CommentTok{\# specify the gene ranks, and make sure it is in descending order.}
+\NormalTok{gsea\_scores }\OtherTok{\textless{}{-}}\NormalTok{ ranks}
+\NormalTok{gsea\_scores }\OtherTok{\textless{}{-}}\NormalTok{ gsea\_scores[}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(gsea\_scores)]}
+\NormalTok{gsea\_scores }\OtherTok{\textless{}{-}} \FunctionTok{sort}\NormalTok{(gsea\_scores, }\AttributeTok{decreasing =} \ConstantTok{TRUE}\NormalTok{)}
+
+\CommentTok{\# Set a seed for reproducibility}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+
+\CommentTok{\#Run fgsea using clusterProfiler, with the same gene{-}set size limits as above.}
+\NormalTok{selected\_gsea }\OtherTok{\textless{}{-}}\NormalTok{ clusterProfiler}\SpecialCharTok{::}\FunctionTok{GSEA}\NormalTok{(}
+    \AttributeTok{geneList =}\NormalTok{ gsea\_scores,}
+    \AttributeTok{TERM2GENE =}\NormalTok{ TERMS,}
+    \AttributeTok{minGSSize =} \DecValTok{10}\NormalTok{,}
+    \AttributeTok{maxGSSize =} \DecValTok{500}\NormalTok{,}
+    \AttributeTok{pvalueCutoff =} \DecValTok{1}\NormalTok{,}
+    \AttributeTok{verbose =} \ConstantTok{FALSE}\NormalTok{,}
+    \AttributeTok{pAdjustMethod =} \StringTok{"fdr"}\NormalTok{,}
+    \AttributeTok{scoreType =} \StringTok{"std"}\NormalTok{,}
+    \AttributeTok{eps =} \DecValTok{0}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in preparePathwaysAndStats(pathways, stats, minSize, maxSize, gseaParam, : There are ties in the preranked stats (0.01% of the list).
+## The order of those tied genes will be arbitrary, which may produce unexpected results.
+\end{verbatim}
+
+Print out a few of the top enrichment plots
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{all\_figures }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{()}
+
+\CommentTok{\#generate GSEA plots for the top Parental (down{-}regulated) genesets that we have already seen in the table above}
+\NormalTok{rows\_to\_use }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(selected\_gsea}\SpecialCharTok{@}\NormalTok{result}\SpecialCharTok{$}\NormalTok{ID }\SpecialCharTok{\%in\%}\NormalTok{ topPathwaysDown)}
+
+\ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \FunctionTok{seq\_along}\NormalTok{(rows\_to\_use))\{}
+\NormalTok{  row\_number }\OtherTok{=}\NormalTok{ rows\_to\_use[i]}
+
+  \CommentTok{\#format the title for the enrichment plot}
+\NormalTok{  pw\_des }\OtherTok{\textless{}{-}}\NormalTok{ selected\_gsea}\SpecialCharTok{@}\NormalTok{result}\SpecialCharTok{$}\NormalTok{Description[row\_number]}
+\NormalTok{  pw\_pval }\OtherTok{\textless{}{-}}\NormalTok{ selected\_gsea}\SpecialCharTok{@}\NormalTok{result}\SpecialCharTok{$}\NormalTok{pvalue[row\_number]}
+\NormalTok{  pw\_pval }\OtherTok{\textless{}{-}} \FunctionTok{format}\NormalTok{(pw\_pval, }\AttributeTok{scientific =}\NormalTok{ F, }\AttributeTok{digits =} \DecValTok{3}\NormalTok{)}
+\NormalTok{  pw\_qval }\OtherTok{\textless{}{-}}\NormalTok{ selected\_gsea}\SpecialCharTok{@}\NormalTok{result}\SpecialCharTok{$}\NormalTok{p.adjust[row\_number]}
+\NormalTok{  pw\_qval }\OtherTok{\textless{}{-}} \FunctionTok{format}\NormalTok{(pw\_qval, }\AttributeTok{scientific =}\NormalTok{ F, }\AttributeTok{digits =} \DecValTok{3}\NormalTok{)}
+\NormalTok{  pw\_nes }\OtherTok{\textless{}{-}}\NormalTok{ selected\_gsea}\SpecialCharTok{@}\NormalTok{result}\SpecialCharTok{$}\NormalTok{NES[row\_number]}
+\NormalTok{  pw\_nes }\OtherTok{\textless{}{-}} \FunctionTok{format}\NormalTok{(pw\_nes, }\AttributeTok{scientific =}\NormalTok{ F, }\AttributeTok{digits =} \DecValTok{2}\NormalTok{)}
+\NormalTok{  pw\_es }\OtherTok{\textless{}{-}}\NormalTok{ selected\_gsea}\SpecialCharTok{@}\NormalTok{result}\SpecialCharTok{$}\NormalTok{enrichmentScore[row\_number]}
+\NormalTok{  pw\_es }\OtherTok{\textless{}{-}} \FunctionTok{format}\NormalTok{(pw\_es, }\AttributeTok{scientific =}\NormalTok{ F, }\AttributeTok{digits =} \DecValTok{2}\NormalTok{)}
+\NormalTok{  mytitle }\OtherTok{\textless{}{-}}\NormalTok{ glue}\SpecialCharTok{::}\FunctionTok{glue}\NormalTok{(}\StringTok{\textquotesingle{}\{pw\_des\}}\SpecialCharTok{\textbackslash{}n}\StringTok{(pval: \{pw\_pval\}, qval: \{pw\_qval\}, NES: \{pw\_nes\}, ES: \{pw\_es\})\textquotesingle{}}\NormalTok{)}
+
+
+\NormalTok{  figure }\OtherTok{\textless{}{-}}\NormalTok{ enrichplot}\SpecialCharTok{::}\FunctionTok{gseaplot2}\NormalTok{(}
+\NormalTok{    selected\_gsea,}
+    \AttributeTok{geneSetID =}\NormalTok{ selected\_gsea}\SpecialCharTok{@}\NormalTok{result}\SpecialCharTok{$}\NormalTok{ID[row\_number],}
+    \AttributeTok{title =}\NormalTok{ mytitle,}
+    \AttributeTok{color =} \StringTok{"green2"}\NormalTok{,}
+    \AttributeTok{base\_size =} \DecValTok{12}\NormalTok{,}
+    \AttributeTok{rel\_heights =} \FunctionTok{c}\NormalTok{(}\FloatTok{1.5}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\DecValTok{1}\NormalTok{),}
+    \AttributeTok{subplots =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{3}\NormalTok{,}
+    \AttributeTok{pvalue\_table =}\NormalTok{ F,}
+    \AttributeTok{ES\_geom =} \StringTok{"line"}
+\NormalTok{  )}
+
+\NormalTok{  all\_figures[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ figure}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: `aes_()` was deprecated in ggplot2 3.0.0.
+## i Please use tidy evaluation idioms with `aes()`
+## i The deprecated feature was likely used in the enrichplot package.
+##   Please report the issue at
+##   <https://github.com/GuangchuangYu/enrichplot/issues>.
+## This warning is displayed once per session.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#display the first 3 enrichment plots}
+\ControlFlowTok{for}\NormalTok{ (figure }\ControlFlowTok{in} \FunctionTok{head}\NormalTok{(all\_figures, }\DecValTok{3}\NormalTok{)) \{}
+  \FunctionTok{print}\NormalTok{(figure)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{_main_files/figure-latex/unnamed-chunk-45-1.pdf} \includegraphics{_main_files/figure-latex/unnamed-chunk-45-2.pdf} \includegraphics{_main_files/figure-latex/unnamed-chunk-45-3.pdf}
+
+\subsubsection{Bar plots}\label{bar-plots}
+
+\begin{itemize}
+\tightlist
+\item
+  top pathways associated with Parental
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{topPathwaysDown }\OtherTok{\textless{}{-}}\NormalTok{ fgseaRes[ES }\SpecialCharTok{\textless{}} \DecValTok{0}\NormalTok{][}\FunctionTok{head}\NormalTok{(}\FunctionTok{order}\NormalTok{(pval), }\AttributeTok{n=}\DecValTok{20}\NormalTok{), pathway]}
+
+\NormalTok{enrichment\_results\_topdown }\OtherTok{\textless{}{-}}\NormalTok{ fgseaRes[}\FunctionTok{which}\NormalTok{(fgseaRes}\SpecialCharTok{$}\NormalTok{pathway }\SpecialCharTok{\%in\%}\NormalTok{ topPathwaysDown),]}
+
+\CommentTok{\#change the name to be just the first part of the name}
+\NormalTok{enrichment\_results\_topdown}\SpecialCharTok{$}\NormalTok{pathway }\OtherTok{\textless{}{-}} \FunctionTok{unlist}\NormalTok{(}\FunctionTok{lapply}\NormalTok{(enrichment\_results\_topdown}\SpecialCharTok{$}\NormalTok{pathway, }\AttributeTok{FUN=}\ControlFlowTok{function}\NormalTok{(x)\{}\FunctionTok{unlist}\NormalTok{(}\FunctionTok{strsplit}\NormalTok{(x,}\AttributeTok{split =} \StringTok{"\%"}\NormalTok{))[}\DecValTok{1}\NormalTok{]\}))}
+\CommentTok{\#make sure that names are unique after shortening them (the same name can come from different databases)}
+\NormalTok{enrichment\_results\_topdown}\SpecialCharTok{$}\NormalTok{pathway }\OtherTok{\textless{}{-}} \FunctionTok{make.unique}\NormalTok{(enrichment\_results\_topdown}\SpecialCharTok{$}\NormalTok{pathway)}
+
+\DocumentationTok{\#\#Calculate a score: the absolute value of the NES.}
+\DocumentationTok{\#\#(the pvalues of the top pathways are all very close to each other, so the NES is more informative here)}
+\NormalTok{enrichment\_results\_topdown}\SpecialCharTok{$}\NormalTok{score }\OtherTok{=} \FunctionTok{abs}\NormalTok{(enrichment\_results\_topdown}\SpecialCharTok{$}\NormalTok{NES)}
+
+\NormalTok{enrichmentTidy }\OtherTok{\textless{}{-}}\NormalTok{ enrichment\_results\_topdown }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{as\_tibble}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(score)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{slice\_head}\NormalTok{(}\AttributeTok{n =} \DecValTok{20}\NormalTok{)}
+
+\NormalTok{p }\OtherTok{=} \FunctionTok{ggplot}\NormalTok{(enrichmentTidy, }\FunctionTok{aes}\NormalTok{(}\FunctionTok{reorder}\NormalTok{(pathway, score), score)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_col}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{fill =}\NormalTok{ score), }\AttributeTok{width=}\FloatTok{0.8}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_fill\_gradient}\NormalTok{(}\AttributeTok{low =} \StringTok{"\#C1F6F8"}\NormalTok{, }\AttributeTok{high =} \StringTok{"\#00BFC4"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{coord\_flip}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x=}\StringTok{""}\NormalTok{, }\AttributeTok{y=}\StringTok{"Normalized Enrichment Score (absolute value)"}\NormalTok{,}
+       \AttributeTok{title=}\StringTok{"Pathway enrichment analysis {-} }\SpecialCharTok{\textbackslash{}n}\StringTok{Parental"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+
+\NormalTok{p}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{_main_files/figure-latex/unnamed-chunk-46-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#YOUR TURN\#\#}
+
+\DocumentationTok{\#\# Generate the same bar plot for the top 20 Palbo{-}resistant results.}
+\DocumentationTok{\#\# Change the colour of the bars to a different colour as}
+\DocumentationTok{\#\# they are a different phenotype than the Parental set.}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{Dot plot}\label{dot-plot}
+
+\begin{itemize}
+\tightlist
+\item
+  top pathways associated with Parental
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p }\OtherTok{=} \FunctionTok{ggplot}\NormalTok{(enrichment\_results\_topdown, }\FunctionTok{aes}\NormalTok{(}
+  \AttributeTok{y =} \FunctionTok{fct\_reorder}\NormalTok{(pathway, score),}
+  \AttributeTok{x =}\NormalTok{ score,}
+  \AttributeTok{color =}\NormalTok{ score,}
+  \AttributeTok{size =}\NormalTok{ size}
+\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{scale\_color\_gradientn}\NormalTok{(}
+    \AttributeTok{colours =} \FunctionTok{c}\NormalTok{(}\StringTok{"lightpink"}\NormalTok{, }\StringTok{"lightblue"}\NormalTok{, }\StringTok{"blue"}\NormalTok{),}
+    \AttributeTok{guide =} \FunctionTok{guide\_colorbar}\NormalTok{(}\AttributeTok{reverse =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{order =} \DecValTok{1}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{scale\_size\_continuous}\NormalTok{(}\AttributeTok{range =} \FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{8}\NormalTok{), }\AttributeTok{name =} \StringTok{"genes in set"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{(}\AttributeTok{base\_size =} \DecValTok{12}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"Normalized Enrichment Score (absolute value)"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{ylab}\NormalTok{(}\ConstantTok{NULL}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"Pathway Enrichment Analysis {-} }\SpecialCharTok{\textbackslash{}n}\StringTok{ Parental"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}
+    \AttributeTok{axis.text.y =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{7}\NormalTok{)}
+\NormalTok{  )}
+\NormalTok{p}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{_main_files/figure-latex/unnamed-chunk-48-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#YOUR TURN\#\#}
+
+\DocumentationTok{\#\# Generate the same dot plot for the top 20 Palbo{-}resistant results.}
+\DocumentationTok{\#\# Change the colour of the dots to a different colour range as}
+\DocumentationTok{\#\# they are a different phenotype than the Parental set.}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{Ridge plots}\label{ridge-plots}
+
+\begin{itemize}
+\tightlist
+\item
+  top pathways associated with either class
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Filter significant pathways (adjusted p{-}value \textless{} 0.05) and take}
+\CommentTok{\# the top 5 for each class (highest positive NES and most negative NES)}
+\NormalTok{significant\_pathways }\OtherTok{\textless{}{-}}\NormalTok{ fgseaRes[padj }\SpecialCharTok{\textless{}} \FloatTok{0.05}\NormalTok{]}
+\NormalTok{topPathways }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(}
+  \FunctionTok{head}\NormalTok{(significant\_pathways[NES }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{][}\FunctionTok{order}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{NES)], }\DecValTok{5}\NormalTok{),}
+  \FunctionTok{head}\NormalTok{(significant\_pathways[NES }\SpecialCharTok{\textless{}} \DecValTok{0}\NormalTok{][}\FunctionTok{order}\NormalTok{(NES)], }\DecValTok{5}\NormalTok{)}
+\NormalTok{)}
+
+\CommentTok{\# Create a data.frame for plotting with the gene ranks for each of the top pathways}
+\NormalTok{ridge\_data }\OtherTok{\textless{}{-}} \FunctionTok{rbindlist}\NormalTok{(}\FunctionTok{lapply}\NormalTok{(topPathways}\SpecialCharTok{$}\NormalTok{pathway, }\ControlFlowTok{function}\NormalTok{(pw) \{}
+\NormalTok{  genes }\OtherTok{\textless{}{-}}\NormalTok{ pathways[[pw]]}
+  \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{gene =}\NormalTok{ genes,}
+    \AttributeTok{stat =}\NormalTok{ ranks[genes],}
+    \AttributeTok{pathway =}\NormalTok{ pw}
+\NormalTok{  )}
+\NormalTok{\}))}
+
+
+\CommentTok{\# get NES for each of the top pathways}
+\NormalTok{nes\_map }\OtherTok{\textless{}{-}} \FunctionTok{setNames}\NormalTok{(topPathways}\SpecialCharTok{$}\NormalTok{NES, topPathways}\SpecialCharTok{$}\NormalTok{pathway)}
+
+\CommentTok{\# Add NES values to ridge\_data}
+\NormalTok{ridge\_data}\SpecialCharTok{$}\NormalTok{NES }\OtherTok{\textless{}{-}}\NormalTok{ nes\_map[ridge\_data}\SpecialCharTok{$}\NormalTok{pathway]}
+
+\CommentTok{\#change the name to be just the first part of the name (because the actual names are too long)}
+\CommentTok{\#and make sure that names are unique after shortening them}
+\NormalTok{short\_names }\OtherTok{\textless{}{-}} \FunctionTok{make.unique}\NormalTok{(}\FunctionTok{unlist}\NormalTok{(}\FunctionTok{lapply}\NormalTok{(topPathways}\SpecialCharTok{$}\NormalTok{pathway, }\AttributeTok{FUN=}\ControlFlowTok{function}\NormalTok{(x)\{}\FunctionTok{unlist}\NormalTok{(}\FunctionTok{strsplit}\NormalTok{(x,}\AttributeTok{split =} \StringTok{"\%"}\NormalTok{))[}\DecValTok{1}\NormalTok{]\})))}
+\FunctionTok{names}\NormalTok{(short\_names) }\OtherTok{\textless{}{-}}\NormalTok{ topPathways}\SpecialCharTok{$}\NormalTok{pathway}
+\NormalTok{ridge\_data}\SpecialCharTok{$}\NormalTok{pathway }\OtherTok{\textless{}{-}}\NormalTok{ short\_names[ridge\_data}\SpecialCharTok{$}\NormalTok{pathway]}
+
+\CommentTok{\#get rid of na values for genes found in the gene set but not ranked in our dataset.}
+\NormalTok{ridge\_data }\OtherTok{\textless{}{-}}\NormalTok{ ridge\_data[}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(ridge\_data}\SpecialCharTok{$}\NormalTok{stat),]}
+
+\FunctionTok{ggplot}\NormalTok{(ridge\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ stat, }\AttributeTok{y =} \FunctionTok{reorder}\NormalTok{(pathway, NES), }\AttributeTok{fill =}\NormalTok{ NES)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density\_ridges}\NormalTok{(}\AttributeTok{scale =} \DecValTok{2}\NormalTok{, }\AttributeTok{alpha =} \FloatTok{0.8}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_fill\_gradient2}\NormalTok{(}
+    \AttributeTok{low =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{mid =} \StringTok{"white"}\NormalTok{, }\AttributeTok{high =} \StringTok{"red"}\NormalTok{, }\AttributeTok{midpoint =} \DecValTok{0}\NormalTok{,}
+    \AttributeTok{name =} \StringTok{"NES"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_ridges}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"right"}\NormalTok{,}\AttributeTok{axis.text.y =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{6}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Ridgeplot of Gene Stats}\SpecialCharTok{\textbackslash{}n}\StringTok{ for Top Enriched Pathways"}\NormalTok{,}
+    \AttributeTok{x =} \StringTok{"Gene{-}level Statistic"}\NormalTok{,}
+    \AttributeTok{y =} \StringTok{"Pathway"}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{_main_files/figure-latex/unnamed-chunk-50-1.pdf}
 
 Dataset is coming from :
 \url{https://pubmed.ncbi.nlm.nih.gov/37384539/}

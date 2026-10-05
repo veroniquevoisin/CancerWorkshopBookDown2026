@@ -1,4 +1,4 @@
-# Pathway Enrichment Analysis using a defined genelist {-}
+# Defined genelist {-}
 
 **This work is licensed under a [Creative Commons Attribution-ShareAlike 4.0 Unported License](https://creativecommons.org/licenses/by-sa/4.0/deed.en). This means that you are able to copy, share and modify the work, as long as the result is distributed under the same license.**
 
@@ -29,8 +29,7 @@ The [gprofielr2](https://biit.cs.ut.ee/gprofiler/page/r) -[g:Profiler](https://b
 
 g:Profiler requires a list of genes. For this analysis, we used genes we found to be differentially expressed in palbociclib-resistant samples compared with parental samples from the breast cancer cell line MCF7 (see chapter 1.
 
-
-## Exercise 1 - prepare the gene lists {#exercise-1}
+## Exercise 1 - prepare the gene lists {#exercise-1-defined}
 
 This exercise requires the file "edgeR_resistant_vs_parental_all_genes.csv" located in the results folder.
 
