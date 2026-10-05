@@ -1613,9 +1613,9 @@ Note: it took about 2 minutes to run this chunck of code.</p>
 <span id="cb44-2"><a href="defined-genelist.html#cb44-2" tabindex="-1"></a></span>
 <span id="cb44-3"><a href="defined-genelist.html#cb44-3" tabindex="-1"></a>custom_gmt_max500 <span class="ot">&lt;-</span> <span class="fu">upload_GMT_file</span>(</span>
 <span id="cb44-4"><a href="defined-genelist.html#cb44-4" tabindex="-1"></a>                        <span class="at">gmtfile=</span>dest_gmt_file_500)</span></code></pre></div>
-<pre><code>## Your custom annotations ID is gp__TUg4_6evv_iFk.
+<pre><code>## Your custom annotations ID is gp__r9ET_EiRJ_LkE.
 ## You can use this ID as an &#39;organism&#39; name in all the related enrichment tests against this custom source.</code></pre>
-<pre><code>## Just use: gost(my_genes, organism = &#39;gp__TUg4_6evv_iFk&#39;)</code></pre>
+<pre><code>## Just use: gost(my_genes, organism = &#39;gp__r9ET_EiRJ_LkE&#39;)</code></pre>
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="defined-genelist.html#cb47-1" tabindex="-1"></a>UPgenes <span class="ot">&lt;-</span> res<span class="sc">$</span>gene[res<span class="sc">$</span>logFC<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">&amp;</span>  res<span class="sc">$</span>FDR <span class="sc">&lt;=</span> <span class="fl">0.001</span>]</span>
 <span id="cb47-2"><a href="defined-genelist.html#cb47-2" tabindex="-1"></a>DOWNgenes <span class="ot">&lt;-</span> res<span class="sc">$</span>gene[res<span class="sc">$</span>logFC<span class="sc">&lt;</span><span class="dv">0</span> <span class="sc">&amp;</span>  res<span class="sc">$</span>FDR <span class="sc">&lt;=</span> <span class="fl">0.001</span>]</span>
 <span id="cb47-3"><a href="defined-genelist.html#cb47-3" tabindex="-1"></a></span>
