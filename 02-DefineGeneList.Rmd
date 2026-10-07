@@ -36,33 +36,17 @@ This exercise requires the file "edgeR_resistant_vs_parental_all_genes.csv" loca
 
 ### Step 1 - Install and Load libraries
 ```{r message=FALSE, warning=FALSE}
-# CRAN and Bioconductor setup
-if (!requireNamespace("BiocManager", quietly = TRUE))
-  install.packages("BiocManager")
 # List of CRAN packages
 cran_packages <- c(
   "tidyverse",
   "knitr",
   "kableExtra",
   "glue",
-  "RCurl",
-  "webshot2",
-  "ggridges",
-  "igraph",
-  "stringr",
-  "data.table",
   "patchwork",
   "ggdendro",
   "pheatmap",
-  "RColorBrewer"
-)
-# List of Bioconductor packages
-bioc_packages <- c(
   "gprofiler2",
-  "GSA",
-  "fgsea",
-  "clusterProfiler",
-  "enrichplot"
+  "GSA"
 )
 # Install CRAN packages if not already installed
 for (pkg in cran_packages) {
@@ -70,34 +54,16 @@ for (pkg in cran_packages) {
     install.packages(pkg)
   }
 }
-# Install Bioconductor packages if not already installed
-for (pkg in bioc_packages) {
-  if (!requireNamespace(pkg, quietly = TRUE)) {
-    BiocManager::install(pkg)
-  }
-}
 # Load the libraries
 library(tidyverse)
 library(knitr)
 library(kableExtra)
 library(glue)
-library(RCurl)
-library(webshot2)
-library(ggridges)
-library(igraph)
-library(stringr)
-library(data.table)
 library(patchwork)
 library(ggdendro)
 library(pheatmap)
-library(RColorBrewer)
-
-# Bioconductor packages
 library(gprofiler2)
 library(GSA)
-library(fgsea)
-library(clusterProfiler)
-library(enrichplot)
 ```
 
 
@@ -577,8 +543,6 @@ for (i in seq_len(n)) {
   }
 }
 
-library(corrplot)
-library(RColorBrewer)
 
 labs <- formatted_results$term_name
 labs <- ifelse(nchar(labs) > 30, paste0(substr(labs, 1, 27), "..."), labs)

@@ -14,14 +14,12 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 ## List of CRAN packages
 cran_packages <- c(
   "tidyverse",
-  "gprofiler2",
   "ggrepel"
 )
 
 # List of Bioconductor packages
 bioc_packages <- c(
-  "edgeR",
-  "fgsea"
+  "edgeR"
 )
 
 # Install CRAN packages if not already installed
@@ -42,11 +40,9 @@ for (pkg in bioc_packages) {
 
 # CRAN packages
 library(tidyverse)
-library(gprofiler2)
 library(ggrepel)
 # Bioconductor packages
 library(edgeR)
-library(fgsea)
 
 ```
 

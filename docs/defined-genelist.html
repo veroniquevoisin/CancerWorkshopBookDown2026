@@ -242,75 +242,41 @@ We wil also upload our custom geneset file.</p>
 <p>This exercise requires the file “edgeR_resistant_vs_parental_all_genes.csv” located in the results folder.</p>
 <div id="step-1---install-and-load-libraries" class="section level3 hasAnchor" number="0.12.1">
 <h3><span class="header-section-number">0.12.1</span> Step 1 - Install and Load libraries<a href="defined-genelist.html#step-1---install-and-load-libraries" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="defined-genelist.html#cb27-1" tabindex="-1"></a><span class="co"># CRAN and Bioconductor setup</span></span>
-<span id="cb27-2"><a href="defined-genelist.html#cb27-2" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;BiocManager&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb27-3"><a href="defined-genelist.html#cb27-3" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">&quot;BiocManager&quot;</span>)</span>
-<span id="cb27-4"><a href="defined-genelist.html#cb27-4" tabindex="-1"></a><span class="co"># List of CRAN packages</span></span>
-<span id="cb27-5"><a href="defined-genelist.html#cb27-5" tabindex="-1"></a>cran_packages <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb27-6"><a href="defined-genelist.html#cb27-6" tabindex="-1"></a>  <span class="st">&quot;tidyverse&quot;</span>,</span>
-<span id="cb27-7"><a href="defined-genelist.html#cb27-7" tabindex="-1"></a>  <span class="st">&quot;knitr&quot;</span>,</span>
-<span id="cb27-8"><a href="defined-genelist.html#cb27-8" tabindex="-1"></a>  <span class="st">&quot;kableExtra&quot;</span>,</span>
-<span id="cb27-9"><a href="defined-genelist.html#cb27-9" tabindex="-1"></a>  <span class="st">&quot;glue&quot;</span>,</span>
-<span id="cb27-10"><a href="defined-genelist.html#cb27-10" tabindex="-1"></a>  <span class="st">&quot;RCurl&quot;</span>,</span>
-<span id="cb27-11"><a href="defined-genelist.html#cb27-11" tabindex="-1"></a>  <span class="st">&quot;webshot2&quot;</span>,</span>
-<span id="cb27-12"><a href="defined-genelist.html#cb27-12" tabindex="-1"></a>  <span class="st">&quot;ggridges&quot;</span>,</span>
-<span id="cb27-13"><a href="defined-genelist.html#cb27-13" tabindex="-1"></a>  <span class="st">&quot;igraph&quot;</span>,</span>
-<span id="cb27-14"><a href="defined-genelist.html#cb27-14" tabindex="-1"></a>  <span class="st">&quot;stringr&quot;</span>,</span>
-<span id="cb27-15"><a href="defined-genelist.html#cb27-15" tabindex="-1"></a>  <span class="st">&quot;data.table&quot;</span>,</span>
-<span id="cb27-16"><a href="defined-genelist.html#cb27-16" tabindex="-1"></a>  <span class="st">&quot;patchwork&quot;</span>,</span>
-<span id="cb27-17"><a href="defined-genelist.html#cb27-17" tabindex="-1"></a>  <span class="st">&quot;ggdendro&quot;</span>,</span>
-<span id="cb27-18"><a href="defined-genelist.html#cb27-18" tabindex="-1"></a>  <span class="st">&quot;pheatmap&quot;</span>,</span>
-<span id="cb27-19"><a href="defined-genelist.html#cb27-19" tabindex="-1"></a>  <span class="st">&quot;RColorBrewer&quot;</span></span>
-<span id="cb27-20"><a href="defined-genelist.html#cb27-20" tabindex="-1"></a>)</span>
-<span id="cb27-21"><a href="defined-genelist.html#cb27-21" tabindex="-1"></a><span class="co"># List of Bioconductor packages</span></span>
-<span id="cb27-22"><a href="defined-genelist.html#cb27-22" tabindex="-1"></a>bioc_packages <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb27-23"><a href="defined-genelist.html#cb27-23" tabindex="-1"></a>  <span class="st">&quot;gprofiler2&quot;</span>,</span>
-<span id="cb27-24"><a href="defined-genelist.html#cb27-24" tabindex="-1"></a>  <span class="st">&quot;GSA&quot;</span>,</span>
-<span id="cb27-25"><a href="defined-genelist.html#cb27-25" tabindex="-1"></a>  <span class="st">&quot;fgsea&quot;</span>,</span>
-<span id="cb27-26"><a href="defined-genelist.html#cb27-26" tabindex="-1"></a>  <span class="st">&quot;clusterProfiler&quot;</span>,</span>
-<span id="cb27-27"><a href="defined-genelist.html#cb27-27" tabindex="-1"></a>  <span class="st">&quot;enrichplot&quot;</span></span>
-<span id="cb27-28"><a href="defined-genelist.html#cb27-28" tabindex="-1"></a>)</span>
-<span id="cb27-29"><a href="defined-genelist.html#cb27-29" tabindex="-1"></a><span class="co"># Install CRAN packages if not already installed</span></span>
-<span id="cb27-30"><a href="defined-genelist.html#cb27-30" tabindex="-1"></a><span class="cf">for</span> (pkg <span class="cf">in</span> cran_packages) {</span>
-<span id="cb27-31"><a href="defined-genelist.html#cb27-31" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(pkg, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
-<span id="cb27-32"><a href="defined-genelist.html#cb27-32" tabindex="-1"></a>    <span class="fu">install.packages</span>(pkg)</span>
-<span id="cb27-33"><a href="defined-genelist.html#cb27-33" tabindex="-1"></a>  }</span>
-<span id="cb27-34"><a href="defined-genelist.html#cb27-34" tabindex="-1"></a>}</span>
-<span id="cb27-35"><a href="defined-genelist.html#cb27-35" tabindex="-1"></a><span class="co"># Install Bioconductor packages if not already installed</span></span>
-<span id="cb27-36"><a href="defined-genelist.html#cb27-36" tabindex="-1"></a><span class="cf">for</span> (pkg <span class="cf">in</span> bioc_packages) {</span>
-<span id="cb27-37"><a href="defined-genelist.html#cb27-37" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(pkg, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
-<span id="cb27-38"><a href="defined-genelist.html#cb27-38" tabindex="-1"></a>    BiocManager<span class="sc">::</span><span class="fu">install</span>(pkg)</span>
-<span id="cb27-39"><a href="defined-genelist.html#cb27-39" tabindex="-1"></a>  }</span>
-<span id="cb27-40"><a href="defined-genelist.html#cb27-40" tabindex="-1"></a>}</span>
-<span id="cb27-41"><a href="defined-genelist.html#cb27-41" tabindex="-1"></a><span class="co"># Load the libraries</span></span>
-<span id="cb27-42"><a href="defined-genelist.html#cb27-42" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb27-43"><a href="defined-genelist.html#cb27-43" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
-<span id="cb27-44"><a href="defined-genelist.html#cb27-44" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
-<span id="cb27-45"><a href="defined-genelist.html#cb27-45" tabindex="-1"></a><span class="fu">library</span>(glue)</span>
-<span id="cb27-46"><a href="defined-genelist.html#cb27-46" tabindex="-1"></a><span class="fu">library</span>(RCurl)</span>
-<span id="cb27-47"><a href="defined-genelist.html#cb27-47" tabindex="-1"></a><span class="fu">library</span>(webshot2)</span>
-<span id="cb27-48"><a href="defined-genelist.html#cb27-48" tabindex="-1"></a><span class="fu">library</span>(ggridges)</span>
-<span id="cb27-49"><a href="defined-genelist.html#cb27-49" tabindex="-1"></a><span class="fu">library</span>(igraph)</span>
-<span id="cb27-50"><a href="defined-genelist.html#cb27-50" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
-<span id="cb27-51"><a href="defined-genelist.html#cb27-51" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
-<span id="cb27-52"><a href="defined-genelist.html#cb27-52" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb27-53"><a href="defined-genelist.html#cb27-53" tabindex="-1"></a><span class="fu">library</span>(ggdendro)</span>
-<span id="cb27-54"><a href="defined-genelist.html#cb27-54" tabindex="-1"></a><span class="fu">library</span>(pheatmap)</span>
-<span id="cb27-55"><a href="defined-genelist.html#cb27-55" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
-<span id="cb27-56"><a href="defined-genelist.html#cb27-56" tabindex="-1"></a></span>
-<span id="cb27-57"><a href="defined-genelist.html#cb27-57" tabindex="-1"></a><span class="co"># Bioconductor packages</span></span>
-<span id="cb27-58"><a href="defined-genelist.html#cb27-58" tabindex="-1"></a><span class="fu">library</span>(gprofiler2)</span>
-<span id="cb27-59"><a href="defined-genelist.html#cb27-59" tabindex="-1"></a><span class="fu">library</span>(GSA)</span>
-<span id="cb27-60"><a href="defined-genelist.html#cb27-60" tabindex="-1"></a><span class="fu">library</span>(fgsea)</span>
-<span id="cb27-61"><a href="defined-genelist.html#cb27-61" tabindex="-1"></a><span class="fu">library</span>(clusterProfiler)</span>
-<span id="cb27-62"><a href="defined-genelist.html#cb27-62" tabindex="-1"></a><span class="fu">library</span>(enrichplot)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="defined-genelist.html#cb26-1" tabindex="-1"></a><span class="co"># List of CRAN packages</span></span>
+<span id="cb26-2"><a href="defined-genelist.html#cb26-2" tabindex="-1"></a>cran_packages <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb26-3"><a href="defined-genelist.html#cb26-3" tabindex="-1"></a>  <span class="st">&quot;tidyverse&quot;</span>,</span>
+<span id="cb26-4"><a href="defined-genelist.html#cb26-4" tabindex="-1"></a>  <span class="st">&quot;knitr&quot;</span>,</span>
+<span id="cb26-5"><a href="defined-genelist.html#cb26-5" tabindex="-1"></a>  <span class="st">&quot;kableExtra&quot;</span>,</span>
+<span id="cb26-6"><a href="defined-genelist.html#cb26-6" tabindex="-1"></a>  <span class="st">&quot;glue&quot;</span>,</span>
+<span id="cb26-7"><a href="defined-genelist.html#cb26-7" tabindex="-1"></a>  <span class="st">&quot;patchwork&quot;</span>,</span>
+<span id="cb26-8"><a href="defined-genelist.html#cb26-8" tabindex="-1"></a>  <span class="st">&quot;ggdendro&quot;</span>,</span>
+<span id="cb26-9"><a href="defined-genelist.html#cb26-9" tabindex="-1"></a>  <span class="st">&quot;pheatmap&quot;</span>,</span>
+<span id="cb26-10"><a href="defined-genelist.html#cb26-10" tabindex="-1"></a>  <span class="st">&quot;gprofiler2&quot;</span>,</span>
+<span id="cb26-11"><a href="defined-genelist.html#cb26-11" tabindex="-1"></a>  <span class="st">&quot;GSA&quot;</span></span>
+<span id="cb26-12"><a href="defined-genelist.html#cb26-12" tabindex="-1"></a>)</span>
+<span id="cb26-13"><a href="defined-genelist.html#cb26-13" tabindex="-1"></a><span class="co"># Install CRAN packages if not already installed</span></span>
+<span id="cb26-14"><a href="defined-genelist.html#cb26-14" tabindex="-1"></a><span class="cf">for</span> (pkg <span class="cf">in</span> cran_packages) {</span>
+<span id="cb26-15"><a href="defined-genelist.html#cb26-15" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(pkg, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb26-16"><a href="defined-genelist.html#cb26-16" tabindex="-1"></a>    <span class="fu">install.packages</span>(pkg)</span>
+<span id="cb26-17"><a href="defined-genelist.html#cb26-17" tabindex="-1"></a>  }</span>
+<span id="cb26-18"><a href="defined-genelist.html#cb26-18" tabindex="-1"></a>}</span>
+<span id="cb26-19"><a href="defined-genelist.html#cb26-19" tabindex="-1"></a><span class="co"># Load the libraries</span></span>
+<span id="cb26-20"><a href="defined-genelist.html#cb26-20" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb26-21"><a href="defined-genelist.html#cb26-21" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb26-22"><a href="defined-genelist.html#cb26-22" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb26-23"><a href="defined-genelist.html#cb26-23" tabindex="-1"></a><span class="fu">library</span>(glue)</span>
+<span id="cb26-24"><a href="defined-genelist.html#cb26-24" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb26-25"><a href="defined-genelist.html#cb26-25" tabindex="-1"></a><span class="fu">library</span>(ggdendro)</span>
+<span id="cb26-26"><a href="defined-genelist.html#cb26-26" tabindex="-1"></a><span class="fu">library</span>(pheatmap)</span>
+<span id="cb26-27"><a href="defined-genelist.html#cb26-27" tabindex="-1"></a><span class="fu">library</span>(gprofiler2)</span>
+<span id="cb26-28"><a href="defined-genelist.html#cb26-28" tabindex="-1"></a><span class="fu">library</span>(GSA)</span></code></pre></div>
 </div>
 <div id="step-2---prepare-the-define-gene-lists" class="section level3 hasAnchor" number="0.12.2">
 <h3><span class="header-section-number">0.12.2</span> Step 2 - Prepare the define gene lists<a href="defined-genelist.html#step-2---prepare-the-define-gene-lists" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="defined-genelist.html#cb28-1" tabindex="-1"></a>res <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;results/edgeR_resistant_vs_parental_all_genes.csv&quot;</span>)</span>
-<span id="cb28-2"><a href="defined-genelist.html#cb28-2" tabindex="-1"></a></span>
-<span id="cb28-3"><a href="defined-genelist.html#cb28-3" tabindex="-1"></a>UPgenes <span class="ot">&lt;-</span> res<span class="sc">$</span>gene[res<span class="sc">$</span>logFC<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">&amp;</span>  res<span class="sc">$</span>FDR <span class="sc">&lt;=</span> <span class="fl">0.001</span>]</span>
-<span id="cb28-4"><a href="defined-genelist.html#cb28-4" tabindex="-1"></a>DOWNgenes <span class="ot">&lt;-</span> res<span class="sc">$</span>gene[res<span class="sc">$</span>logFC<span class="sc">&lt;</span><span class="dv">0</span> <span class="sc">&amp;</span>  res<span class="sc">$</span>FDR <span class="sc">&lt;=</span> <span class="fl">0.001</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="defined-genelist.html#cb27-1" tabindex="-1"></a>res <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;results/edgeR_resistant_vs_parental_all_genes.csv&quot;</span>)</span>
+<span id="cb27-2"><a href="defined-genelist.html#cb27-2" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="defined-genelist.html#cb27-3" tabindex="-1"></a>UPgenes <span class="ot">&lt;-</span> res<span class="sc">$</span>gene[res<span class="sc">$</span>logFC<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">&amp;</span>  res<span class="sc">$</span>FDR <span class="sc">&lt;=</span> <span class="fl">0.001</span>]</span>
+<span id="cb27-4"><a href="defined-genelist.html#cb27-4" tabindex="-1"></a>DOWNgenes <span class="ot">&lt;-</span> res<span class="sc">$</span>gene[res<span class="sc">$</span>logFC<span class="sc">&lt;</span><span class="dv">0</span> <span class="sc">&amp;</span>  res<span class="sc">$</span>FDR <span class="sc">&lt;=</span> <span class="fl">0.001</span>]</span></code></pre></div>
 </div>
 <div id="step-3---run-gprofiler" class="section level3 hasAnchor" number="0.12.3">
 <h3><span class="header-section-number">0.12.3</span> Step 3 - Run g:Profiler<a href="defined-genelist.html#step-3---run-gprofiler" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -328,30 +294,30 @@ For detailed descriptions of all the parameters that can be specified for the go
 </ul>
 <div id="run-gprofiler-with-the-up-genes" class="section level4 hasAnchor" number="0.12.3.1">
 <h4><span class="header-section-number">0.12.3.1</span> run g:Profiler with the up genes<a href="defined-genelist.html#run-gprofiler-with-the-up-genes" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="defined-genelist.html#cb29-1" tabindex="-1"></a>query_set <span class="ot">=</span> UPgenes </span>
-<span id="cb29-2"><a href="defined-genelist.html#cb29-2" tabindex="-1"></a></span>
-<span id="cb29-3"><a href="defined-genelist.html#cb29-3" tabindex="-1"></a>gprofiler_results_UPgenes <span class="ot">&lt;-</span> <span class="fu">gost</span>(<span class="at">query =</span> query_set ,</span>
-<span id="cb29-4"><a href="defined-genelist.html#cb29-4" tabindex="-1"></a>                          <span class="at">significant=</span><span class="cn">TRUE</span>,</span>
-<span id="cb29-5"><a href="defined-genelist.html#cb29-5" tabindex="-1"></a>                          <span class="at">ordered_query =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb29-6"><a href="defined-genelist.html#cb29-6" tabindex="-1"></a>                          <span class="at">exclude_iea=</span><span class="cn">TRUE</span>,</span>
-<span id="cb29-7"><a href="defined-genelist.html#cb29-7" tabindex="-1"></a>                          <span class="at">correction_method =</span> <span class="st">&quot;fdr&quot;</span>,</span>
-<span id="cb29-8"><a href="defined-genelist.html#cb29-8" tabindex="-1"></a>                          <span class="at">organism =</span> <span class="st">&quot;hsapiens&quot;</span>,</span>
-<span id="cb29-9"><a href="defined-genelist.html#cb29-9" tabindex="-1"></a>                          <span class="at">source =</span> <span class="fu">c</span>(<span class="st">&quot;REAC&quot;</span>,<span class="st">&quot;WP&quot;</span>,<span class="st">&quot;GO:BP&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="defined-genelist.html#cb28-1" tabindex="-1"></a>query_set <span class="ot">=</span> UPgenes </span>
+<span id="cb28-2"><a href="defined-genelist.html#cb28-2" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="defined-genelist.html#cb28-3" tabindex="-1"></a>gprofiler_results_UPgenes <span class="ot">&lt;-</span> <span class="fu">gost</span>(<span class="at">query =</span> query_set ,</span>
+<span id="cb28-4"><a href="defined-genelist.html#cb28-4" tabindex="-1"></a>                          <span class="at">significant=</span><span class="cn">TRUE</span>,</span>
+<span id="cb28-5"><a href="defined-genelist.html#cb28-5" tabindex="-1"></a>                          <span class="at">ordered_query =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb28-6"><a href="defined-genelist.html#cb28-6" tabindex="-1"></a>                          <span class="at">exclude_iea=</span><span class="cn">TRUE</span>,</span>
+<span id="cb28-7"><a href="defined-genelist.html#cb28-7" tabindex="-1"></a>                          <span class="at">correction_method =</span> <span class="st">&quot;fdr&quot;</span>,</span>
+<span id="cb28-8"><a href="defined-genelist.html#cb28-8" tabindex="-1"></a>                          <span class="at">organism =</span> <span class="st">&quot;hsapiens&quot;</span>,</span>
+<span id="cb28-9"><a href="defined-genelist.html#cb28-9" tabindex="-1"></a>                          <span class="at">source =</span> <span class="fu">c</span>(<span class="st">&quot;REAC&quot;</span>,<span class="st">&quot;WP&quot;</span>,<span class="st">&quot;GO:BP&quot;</span>))</span></code></pre></div>
 </div>
 <div id="observe-the-results" class="section level4 hasAnchor" number="0.12.3.2">
 <h4><span class="header-section-number">0.12.3.2</span> observe the results<a href="defined-genelist.html#observe-the-results" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="defined-genelist.html#cb30-1" tabindex="-1"></a><span class="co">#get the gprofiler results table</span></span>
-<span id="cb30-2"><a href="defined-genelist.html#cb30-2" tabindex="-1"></a>enrichment_results <span class="ot">&lt;-</span> gprofiler_results_UPgenes<span class="sc">$</span>result</span>
-<span id="cb30-3"><a href="defined-genelist.html#cb30-3" tabindex="-1"></a></span>
-<span id="cb30-4"><a href="defined-genelist.html#cb30-4" tabindex="-1"></a><span class="co">#display the names of all columns</span></span>
-<span id="cb30-5"><a href="defined-genelist.html#cb30-5" tabindex="-1"></a><span class="fu">colnames</span>(enrichment_results)</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="defined-genelist.html#cb29-1" tabindex="-1"></a><span class="co">#get the gprofiler results table</span></span>
+<span id="cb29-2"><a href="defined-genelist.html#cb29-2" tabindex="-1"></a>enrichment_results <span class="ot">&lt;-</span> gprofiler_results_UPgenes<span class="sc">$</span>result</span>
+<span id="cb29-3"><a href="defined-genelist.html#cb29-3" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="defined-genelist.html#cb29-4" tabindex="-1"></a><span class="co">#display the names of all columns</span></span>
+<span id="cb29-5"><a href="defined-genelist.html#cb29-5" tabindex="-1"></a><span class="fu">colnames</span>(enrichment_results)</span></code></pre></div>
 <pre><code>##  [1] &quot;query&quot;                 &quot;significant&quot;           &quot;p_value&quot;              
 ##  [4] &quot;term_size&quot;             &quot;query_size&quot;            &quot;intersection_size&quot;    
 ##  [7] &quot;precision&quot;             &quot;recall&quot;                &quot;term_id&quot;              
 ## [10] &quot;source&quot;                &quot;term_name&quot;             &quot;effective_domain_size&quot;
 ## [13] &quot;source_order&quot;          &quot;parents&quot;</code></pre>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="defined-genelist.html#cb32-1" tabindex="-1"></a><span class="co">#display the top rows</span></span>
-<span id="cb32-2"><a href="defined-genelist.html#cb32-2" tabindex="-1"></a><span class="fu">head</span>(enrichment_results)</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="defined-genelist.html#cb31-1" tabindex="-1"></a><span class="co">#display the top rows</span></span>
+<span id="cb31-2"><a href="defined-genelist.html#cb31-2" tabindex="-1"></a><span class="fu">head</span>(enrichment_results)</span></code></pre></div>
 <pre><code>##     query significant     p_value term_size query_size intersection_size
 ## 1 query_1        TRUE 0.005977645       635         74                13
 ## 2 query_1        TRUE 0.005977645       509         74                11
@@ -373,28 +339,28 @@ For detailed descriptions of all the parameters that can be specified for the go
 ## 4 regulation of multicellular organismal development                 16180
 ## 5                                        coagulation                 16180
 ## 6                         collagen metabolic process                 16180
-##   source_order      parents
-## 1         8374 GO:00072....
-## 2          542 GO:00487....
-## 3        12418 GO:00508....
-## 4        23538 GO:00072....
-## 5        12417   GO:0032501
-## 6         7434   GO:0008152</code></pre>
+##   source_order                            parents
+## 1         8374             GO:0007275, GO:0048856
+## 2          542             GO:0048731, GO:0072359
+## 3        12418             GO:0050817, GO:0051239
+## 4        23538 GO:0007275, GO:0050793, GO:0051239
+## 5        12417                         GO:0032501
+## 6         7434                         GO:0008152</code></pre>
 </div>
 <div id="your-turn-run-gprofiler-with-the-down-genes-use-same-parameters-as-above" class="section level4 hasAnchor" number="0.12.3.3">
 <h4><span class="header-section-number">0.12.3.3</span> YOUR TURN: run g:Profiler with the down genes (use same parameters as above)<a href="defined-genelist.html#your-turn-run-gprofiler-with-the-down-genes-use-same-parameters-as-above" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="defined-genelist.html#cb34-1" tabindex="-1"></a><span class="do">##Tip: remove eval=FALSE chunk option to run the code</span></span>
-<span id="cb34-2"><a href="defined-genelist.html#cb34-2" tabindex="-1"></a>query_set <span class="ot">=</span> XXXX</span>
-<span id="cb34-3"><a href="defined-genelist.html#cb34-3" tabindex="-1"></a></span>
-<span id="cb34-4"><a href="defined-genelist.html#cb34-4" tabindex="-1"></a>gprofiler_results_DOWNgenes <span class="ot">&lt;-</span> <span class="fu">gost</span>(<span class="at">query =</span> XXXX,</span>
-<span id="cb34-5"><a href="defined-genelist.html#cb34-5" tabindex="-1"></a>                          <span class="at">significant =</span> XXXX,</span>
-<span id="cb34-6"><a href="defined-genelist.html#cb34-6" tabindex="-1"></a>                          <span class="at">ordered_query =</span> XXXX,</span>
-<span id="cb34-7"><a href="defined-genelist.html#cb34-7" tabindex="-1"></a>                          <span class="at">exclude_iea =</span> XXXX,</span>
-<span id="cb34-8"><a href="defined-genelist.html#cb34-8" tabindex="-1"></a>                          <span class="at">correction_method =</span> XXXX,</span>
-<span id="cb34-9"><a href="defined-genelist.html#cb34-9" tabindex="-1"></a>                          <span class="at">organism =</span> XXXX,</span>
-<span id="cb34-10"><a href="defined-genelist.html#cb34-10" tabindex="-1"></a>                          <span class="at">source =</span> <span class="fu">c</span>(<span class="st">&quot;XXXX&quot;</span>,<span class="st">&quot;XXXX&quot;</span>,<span class="st">&quot;XXXX&quot;</span>))</span>
-<span id="cb34-11"><a href="defined-genelist.html#cb34-11" tabindex="-1"></a></span>
-<span id="cb34-12"><a href="defined-genelist.html#cb34-12" tabindex="-1"></a><span class="do">##observe the results (same as for the UP genes)</span></span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="defined-genelist.html#cb33-1" tabindex="-1"></a><span class="do">##Tip: remove eval=FALSE chunk option to run the code</span></span>
+<span id="cb33-2"><a href="defined-genelist.html#cb33-2" tabindex="-1"></a>query_set <span class="ot">=</span> XXXX</span>
+<span id="cb33-3"><a href="defined-genelist.html#cb33-3" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="defined-genelist.html#cb33-4" tabindex="-1"></a>gprofiler_results_DOWNgenes <span class="ot">&lt;-</span> <span class="fu">gost</span>(<span class="at">query =</span> XXXX,</span>
+<span id="cb33-5"><a href="defined-genelist.html#cb33-5" tabindex="-1"></a>                          <span class="at">significant =</span> XXXX,</span>
+<span id="cb33-6"><a href="defined-genelist.html#cb33-6" tabindex="-1"></a>                          <span class="at">ordered_query =</span> XXXX,</span>
+<span id="cb33-7"><a href="defined-genelist.html#cb33-7" tabindex="-1"></a>                          <span class="at">exclude_iea =</span> XXXX,</span>
+<span id="cb33-8"><a href="defined-genelist.html#cb33-8" tabindex="-1"></a>                          <span class="at">correction_method =</span> XXXX,</span>
+<span id="cb33-9"><a href="defined-genelist.html#cb33-9" tabindex="-1"></a>                          <span class="at">organism =</span> XXXX,</span>
+<span id="cb33-10"><a href="defined-genelist.html#cb33-10" tabindex="-1"></a>                          <span class="at">source =</span> <span class="fu">c</span>(<span class="st">&quot;XXXX&quot;</span>,<span class="st">&quot;XXXX&quot;</span>,<span class="st">&quot;XXXX&quot;</span>))</span>
+<span id="cb33-11"><a href="defined-genelist.html#cb33-11" tabindex="-1"></a></span>
+<span id="cb33-12"><a href="defined-genelist.html#cb33-12" tabindex="-1"></a><span class="do">##observe the results (same as for the UP genes)</span></span></code></pre></div>
 </div>
 </div>
 <div id="clear-visualization-of-the-results" class="section level3 hasAnchor" number="0.12.4">
@@ -407,13 +373,13 @@ For detailed descriptions of all the parameters that can be specified for the go
 <li>pvalue: adjusted pvalue (corrected for multiple hypothesis testing using the Benjamini-Hochberg method)</li>
 </ul>
 <p>The results are ordered by significance, from the most significant pathway (lowest p-value) to the least significant.</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="defined-genelist.html#cb35-1" tabindex="-1"></a>enrichment_results <span class="ot">&lt;-</span> gprofiler_results_UPgenes<span class="sc">$</span>result</span>
-<span id="cb35-2"><a href="defined-genelist.html#cb35-2" tabindex="-1"></a>enrichment_results<span class="sc">$</span>p_value <span class="ot">&lt;-</span> <span class="fu">formatC</span>(enrichment_results<span class="sc">$</span>p_value, <span class="at">format =</span> <span class="st">&quot;e&quot;</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span>
-<span id="cb35-3"><a href="defined-genelist.html#cb35-3" tabindex="-1"></a></span>
-<span id="cb35-4"><a href="defined-genelist.html#cb35-4" tabindex="-1"></a>enrichment_results <span class="ot">=</span> enrichment_results[ , <span class="fu">c</span>(<span class="st">&quot;source&quot;</span>, <span class="st">&quot;term_name&quot;</span>, <span class="st">&quot;term_size&quot;</span>, <span class="st">&quot;query_size&quot;</span>, <span class="st">&quot;intersection_size&quot;</span>, <span class="st">&quot;p_value&quot;</span>)]</span>
-<span id="cb35-5"><a href="defined-genelist.html#cb35-5" tabindex="-1"></a></span>
-<span id="cb35-6"><a href="defined-genelist.html#cb35-6" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(enrichment_results, <span class="at">n=</span><span class="dv">20</span>), <span class="at">caption =</span> <span class="st">&quot;Enrichment Result&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb35-7"><a href="defined-genelist.html#cb35-7" tabindex="-1"></a><span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;condensed&quot;</span>), <span class="at">font_size =</span> <span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="defined-genelist.html#cb34-1" tabindex="-1"></a>enrichment_results <span class="ot">&lt;-</span> gprofiler_results_UPgenes<span class="sc">$</span>result</span>
+<span id="cb34-2"><a href="defined-genelist.html#cb34-2" tabindex="-1"></a>enrichment_results<span class="sc">$</span>p_value <span class="ot">&lt;-</span> <span class="fu">formatC</span>(enrichment_results<span class="sc">$</span>p_value, <span class="at">format =</span> <span class="st">&quot;e&quot;</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span>
+<span id="cb34-3"><a href="defined-genelist.html#cb34-3" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="defined-genelist.html#cb34-4" tabindex="-1"></a>enrichment_results <span class="ot">=</span> enrichment_results[ , <span class="fu">c</span>(<span class="st">&quot;source&quot;</span>, <span class="st">&quot;term_name&quot;</span>, <span class="st">&quot;term_size&quot;</span>, <span class="st">&quot;query_size&quot;</span>, <span class="st">&quot;intersection_size&quot;</span>, <span class="st">&quot;p_value&quot;</span>)]</span>
+<span id="cb34-5"><a href="defined-genelist.html#cb34-5" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="defined-genelist.html#cb34-6" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(enrichment_results, <span class="at">n=</span><span class="dv">20</span>), <span class="at">caption =</span> <span class="st">&quot;Enrichment Result&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb34-7"><a href="defined-genelist.html#cb34-7" tabindex="-1"></a><span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;condensed&quot;</span>), <span class="at">font_size =</span> <span class="dv">10</span>)</span></code></pre></div>
 <table class="table table-striped table-condensed" style="font-size: 10px; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
 <span id="tab:unnamed-chunk-16">Table 1: </span><span id="tab:unnamed-chunk-16">Table 2: </span>Enrichment Result
@@ -845,32 +811,32 @@ blood coagulation
 </table>
 <div id="your-turn-visualize-the-results-with-the-down-genes-use-same-parameters-as-above" class="section level4 hasAnchor" number="0.12.4.1">
 <h4><span class="header-section-number">0.12.4.1</span> YOUR TURN: visualize the results with the down genes (use same parameters as above)<a href="defined-genelist.html#your-turn-visualize-the-results-with-the-down-genes-use-same-parameters-as-above" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="defined-genelist.html#cb36-1" tabindex="-1"></a><span class="do">##Tip: remove eval=FALSE chunk option to run the code</span></span>
-<span id="cb36-2"><a href="defined-genelist.html#cb36-2" tabindex="-1"></a></span>
-<span id="cb36-3"><a href="defined-genelist.html#cb36-3" tabindex="-1"></a>enrichment_results <span class="ot">&lt;-</span> XXXX</span>
-<span id="cb36-4"><a href="defined-genelist.html#cb36-4" tabindex="-1"></a>enrichment_results<span class="sc">$</span>p_value <span class="ot">&lt;-</span> <span class="fu">formatC</span>(XXXX)</span>
-<span id="cb36-5"><a href="defined-genelist.html#cb36-5" tabindex="-1"></a></span>
-<span id="cb36-6"><a href="defined-genelist.html#cb36-6" tabindex="-1"></a>enrichment_results <span class="ot">=</span> enrichment_results[ , <span class="fu">c</span>(<span class="st">&quot;XXXX&quot;</span>, <span class="st">&quot;XXXX&quot;</span>, <span class="st">&quot;XXXX&quot;</span>, <span class="st">&quot;XXXX&quot;</span>, <span class="st">&quot;XXXX&quot;</span>, <span class="st">&quot;XXXX&quot;</span>)]</span>
-<span id="cb36-7"><a href="defined-genelist.html#cb36-7" tabindex="-1"></a></span>
-<span id="cb36-8"><a href="defined-genelist.html#cb36-8" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(enrichment_results, <span class="at">n=</span><span class="dv">20</span>), <span class="at">caption =</span> <span class="st">&quot;Enrichment Result&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb36-9"><a href="defined-genelist.html#cb36-9" tabindex="-1"></a><span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;condensed&quot;</span>), <span class="at">font_size =</span> <span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="defined-genelist.html#cb35-1" tabindex="-1"></a><span class="do">##Tip: remove eval=FALSE chunk option to run the code</span></span>
+<span id="cb35-2"><a href="defined-genelist.html#cb35-2" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="defined-genelist.html#cb35-3" tabindex="-1"></a>enrichment_results <span class="ot">&lt;-</span> XXXX</span>
+<span id="cb35-4"><a href="defined-genelist.html#cb35-4" tabindex="-1"></a>enrichment_results<span class="sc">$</span>p_value <span class="ot">&lt;-</span> <span class="fu">formatC</span>(XXXX)</span>
+<span id="cb35-5"><a href="defined-genelist.html#cb35-5" tabindex="-1"></a></span>
+<span id="cb35-6"><a href="defined-genelist.html#cb35-6" tabindex="-1"></a>enrichment_results <span class="ot">=</span> enrichment_results[ , <span class="fu">c</span>(<span class="st">&quot;XXXX&quot;</span>, <span class="st">&quot;XXXX&quot;</span>, <span class="st">&quot;XXXX&quot;</span>, <span class="st">&quot;XXXX&quot;</span>, <span class="st">&quot;XXXX&quot;</span>, <span class="st">&quot;XXXX&quot;</span>)]</span>
+<span id="cb35-7"><a href="defined-genelist.html#cb35-7" tabindex="-1"></a></span>
+<span id="cb35-8"><a href="defined-genelist.html#cb35-8" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(enrichment_results, <span class="at">n=</span><span class="dv">20</span>), <span class="at">caption =</span> <span class="st">&quot;Enrichment Result&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb35-9"><a href="defined-genelist.html#cb35-9" tabindex="-1"></a><span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;condensed&quot;</span>), <span class="at">font_size =</span> <span class="dv">10</span>)</span></code></pre></div>
 </div>
 </div>
 <div id="step-4---explore-top-table-of-results" class="section level3 hasAnchor" number="0.12.5">
 <h3><span class="header-section-number">0.12.5</span> Step 4 - Explore top table of results<a href="defined-genelist.html#step-4---explore-top-table-of-results" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>For this analysis, we chose to use 3 databases: <a href="GO:BP" class="uri">GO:BP</a>, Reactome and Wikipathways.
 If we look at the top table only, we are only going to see the results of <a href="GO:BP" class="uri">GO:BP</a> but it is interesting to look at the top results for each of the 3 databunique(enrichment_results$source)</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="defined-genelist.html#cb37-1" tabindex="-1"></a>enrichment_results <span class="ot">&lt;-</span> gprofiler_results_UPgenes<span class="sc">$</span>result</span>
-<span id="cb37-2"><a href="defined-genelist.html#cb37-2" tabindex="-1"></a><span class="do">##Get the name of the databases</span></span>
-<span id="cb37-3"><a href="defined-genelist.html#cb37-3" tabindex="-1"></a><span class="fu">unique</span>(enrichment_results<span class="sc">$</span>source) </span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="defined-genelist.html#cb36-1" tabindex="-1"></a>enrichment_results <span class="ot">&lt;-</span> gprofiler_results_UPgenes<span class="sc">$</span>result</span>
+<span id="cb36-2"><a href="defined-genelist.html#cb36-2" tabindex="-1"></a><span class="do">##Get the name of the databases</span></span>
+<span id="cb36-3"><a href="defined-genelist.html#cb36-3" tabindex="-1"></a><span class="fu">unique</span>(enrichment_results<span class="sc">$</span>source) </span></code></pre></div>
 <pre><code>## [1] &quot;GO:BP&quot; &quot;REAC&quot;  &quot;WP&quot;</code></pre>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="defined-genelist.html#cb39-1" tabindex="-1"></a><span class="do">##Filter the dataframe to retrieve only the Reactome results</span></span>
-<span id="cb39-2"><a href="defined-genelist.html#cb39-2" tabindex="-1"></a>enrichment_results_Reac <span class="ot">&lt;-</span> enrichment_results <span class="sc">%&gt;%</span></span>
-<span id="cb39-3"><a href="defined-genelist.html#cb39-3" tabindex="-1"></a>  <span class="fu">filter</span>(source <span class="sc">==</span> <span class="st">&quot;REAC&quot;</span>)</span>
-<span id="cb39-4"><a href="defined-genelist.html#cb39-4" tabindex="-1"></a></span>
-<span id="cb39-5"><a href="defined-genelist.html#cb39-5" tabindex="-1"></a><span class="do">##Now display the top 20 pathways</span></span>
-<span id="cb39-6"><a href="defined-genelist.html#cb39-6" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(enrichment_results_Reac, <span class="at">n=</span><span class="dv">20</span>), <span class="at">caption =</span> <span class="st">&quot;Enrichment Result&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb39-7"><a href="defined-genelist.html#cb39-7" tabindex="-1"></a><span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;condensed&quot;</span>), <span class="at">font_size =</span> <span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="defined-genelist.html#cb38-1" tabindex="-1"></a><span class="do">##Filter the dataframe to retrieve only the Reactome results</span></span>
+<span id="cb38-2"><a href="defined-genelist.html#cb38-2" tabindex="-1"></a>enrichment_results_Reac <span class="ot">&lt;-</span> enrichment_results <span class="sc">%&gt;%</span></span>
+<span id="cb38-3"><a href="defined-genelist.html#cb38-3" tabindex="-1"></a>  <span class="fu">filter</span>(source <span class="sc">==</span> <span class="st">&quot;REAC&quot;</span>)</span>
+<span id="cb38-4"><a href="defined-genelist.html#cb38-4" tabindex="-1"></a></span>
+<span id="cb38-5"><a href="defined-genelist.html#cb38-5" tabindex="-1"></a><span class="do">##Now display the top 20 pathways</span></span>
+<span id="cb38-6"><a href="defined-genelist.html#cb38-6" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(enrichment_results_Reac, <span class="at">n=</span><span class="dv">20</span>), <span class="at">caption =</span> <span class="st">&quot;Enrichment Result&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb38-7"><a href="defined-genelist.html#cb38-7" tabindex="-1"></a><span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;condensed&quot;</span>), <span class="at">font_size =</span> <span class="dv">10</span>)</span></code></pre></div>
 <table class="table table-striped table-condensed" style="font-size: 10px; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
 <span id="tab:unnamed-chunk-18">Table 3: </span><span id="tab:unnamed-chunk-18">Table 4: </span>Enrichment Result
@@ -1007,7 +973,7 @@ Collagen formation
 403
 </td>
 <td style="text-align:left;">
-REAC:R-H….
+REAC:R-HSA-1474244
 </td>
 </tr>
 <tr>
@@ -1051,7 +1017,7 @@ Collagen biosynthesis and modifying enzymes
 400
 </td>
 <td style="text-align:left;">
-REAC:R-H….
+REAC:R-HSA-1474290
 </td>
 </tr>
 <tr>
@@ -1095,7 +1061,7 @@ ECM proteoglycans
 851
 </td>
 <td style="text-align:left;">
-REAC:R-H….
+REAC:R-HSA-1474244
 </td>
 </tr>
 <tr>
@@ -1139,7 +1105,7 @@ Elastic fibre formation
 875
 </td>
 <td style="text-align:left;">
-REAC:R-H….
+REAC:R-HSA-1474244
 </td>
 </tr>
 <tr>
@@ -1183,7 +1149,7 @@ Integrin cell surface interactions
 1267
 </td>
 <td style="text-align:left;">
-REAC:R-H….
+REAC:R-HSA-1474244
 </td>
 </tr>
 <tr>
@@ -1227,7 +1193,7 @@ Assembly of collagen fibrils and other multimeric structures
 186
 </td>
 <td style="text-align:left;">
-REAC:R-H….
+REAC:R-HSA-1474290
 </td>
 </tr>
 <tr>
@@ -1271,7 +1237,7 @@ Degradation of the extracellular matrix
 748
 </td>
 <td style="text-align:left;">
-REAC:R-H….
+REAC:R-HSA-1474244
 </td>
 </tr>
 <tr>
@@ -1315,7 +1281,7 @@ Formation of Fibrin Clot (Clotting Cascade)
 986
 </td>
 <td style="text-align:left;">
-REAC:R-H….
+REAC:R-HSA-109582
 </td>
 </tr>
 <tr>
@@ -1359,7 +1325,7 @@ NCAM1 interactions
 1577
 </td>
 <td style="text-align:left;">
-REAC:R-H….
+REAC:R-HSA-375165
 </td>
 </tr>
 <tr>
@@ -1403,7 +1369,7 @@ Signaling by Receptor Tyrosine Kinases
 2399
 </td>
 <td style="text-align:left;">
-REAC:R-H….
+REAC:R-HSA-162582
 </td>
 </tr>
 <tr>
@@ -1447,7 +1413,7 @@ Collagen chain trimerization
 401
 </td>
 <td style="text-align:left;">
-REAC:R-H….
+REAC:R-HSA-1650814
 </td>
 </tr>
 <tr>
@@ -1498,17 +1464,17 @@ REAC:0000000
 </table>
 <div id="your-turn-display-the-top-20-pathways-for-the-wikipathway-database-wp-and-the-down-genes" class="section level4 hasAnchor" number="0.12.5.1">
 <h4><span class="header-section-number">0.12.5.1</span> YOUR TURN: DISPLAY THE TOP 20 PATHWAYS FOR THE WIKIPATHWAY DATABASE (“WP”) and the down genes<a href="defined-genelist.html#your-turn-display-the-top-20-pathways-for-the-wikipathway-database-wp-and-the-down-genes" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="defined-genelist.html#cb40-1" tabindex="-1"></a>enrichment_results <span class="ot">&lt;-</span> gprofiler_results_DOWNgenes<span class="sc">$</span>result</span>
-<span id="cb40-2"><a href="defined-genelist.html#cb40-2" tabindex="-1"></a><span class="do">##Get the name of the databases</span></span>
-<span id="cb40-3"><a href="defined-genelist.html#cb40-3" tabindex="-1"></a><span class="fu">unique</span>(enrichment_results<span class="sc">$</span>source) </span>
-<span id="cb40-4"><a href="defined-genelist.html#cb40-4" tabindex="-1"></a></span>
-<span id="cb40-5"><a href="defined-genelist.html#cb40-5" tabindex="-1"></a><span class="do">##Filter the dataframe to retrieve only the Reactome results</span></span>
-<span id="cb40-6"><a href="defined-genelist.html#cb40-6" tabindex="-1"></a>enrichment_results_WP <span class="ot">&lt;-</span> enrichment_results <span class="sc">%&gt;%</span></span>
-<span id="cb40-7"><a href="defined-genelist.html#cb40-7" tabindex="-1"></a>  <span class="fu">XXXX</span>(source <span class="sc">==</span> <span class="st">&quot;XXXX&quot;</span>)</span>
-<span id="cb40-8"><a href="defined-genelist.html#cb40-8" tabindex="-1"></a></span>
-<span id="cb40-9"><a href="defined-genelist.html#cb40-9" tabindex="-1"></a><span class="do">##Now display the top 20 pathways</span></span>
-<span id="cb40-10"><a href="defined-genelist.html#cb40-10" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(enrichment_results_WP, <span class="at">n=</span><span class="dv">20</span>), <span class="at">caption =</span> <span class="st">&quot;Enrichment Result&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb40-11"><a href="defined-genelist.html#cb40-11" tabindex="-1"></a><span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;condensed&quot;</span>), <span class="at">font_size =</span> <span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="defined-genelist.html#cb39-1" tabindex="-1"></a>enrichment_results <span class="ot">&lt;-</span> gprofiler_results_DOWNgenes<span class="sc">$</span>result</span>
+<span id="cb39-2"><a href="defined-genelist.html#cb39-2" tabindex="-1"></a><span class="do">##Get the name of the databases</span></span>
+<span id="cb39-3"><a href="defined-genelist.html#cb39-3" tabindex="-1"></a><span class="fu">unique</span>(enrichment_results<span class="sc">$</span>source) </span>
+<span id="cb39-4"><a href="defined-genelist.html#cb39-4" tabindex="-1"></a></span>
+<span id="cb39-5"><a href="defined-genelist.html#cb39-5" tabindex="-1"></a><span class="do">##Filter the dataframe to retrieve only the Reactome results</span></span>
+<span id="cb39-6"><a href="defined-genelist.html#cb39-6" tabindex="-1"></a>enrichment_results_WP <span class="ot">&lt;-</span> enrichment_results <span class="sc">%&gt;%</span></span>
+<span id="cb39-7"><a href="defined-genelist.html#cb39-7" tabindex="-1"></a>  <span class="fu">XXXX</span>(source <span class="sc">==</span> <span class="st">&quot;XXXX&quot;</span>)</span>
+<span id="cb39-8"><a href="defined-genelist.html#cb39-8" tabindex="-1"></a></span>
+<span id="cb39-9"><a href="defined-genelist.html#cb39-9" tabindex="-1"></a><span class="do">##Now display the top 20 pathways</span></span>
+<span id="cb39-10"><a href="defined-genelist.html#cb39-10" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(enrichment_results_WP, <span class="at">n=</span><span class="dv">20</span>), <span class="at">caption =</span> <span class="st">&quot;Enrichment Result&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb39-11"><a href="defined-genelist.html#cb39-11" tabindex="-1"></a><span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;condensed&quot;</span>), <span class="at">font_size =</span> <span class="dv">10</span>)</span></code></pre></div>
 </div>
 </div>
 <div id="step-5---filter-results-by-geneset-size" class="section level3 hasAnchor" number="0.12.6">
@@ -1519,28 +1485,28 @@ REAC:0000000
 <li>minimum gene-set size of 10: will remove small pathways where the pvalue is significant athough the overlap size is very small</li>
 <li>p_thres: aim is to retrieve only pathways that are significant under this adjusted pvalue threshold of 0.01 (1% false positive)</li>
 </ul>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="defined-genelist.html#cb41-1" tabindex="-1"></a>enrichment_results <span class="ot">&lt;-</span> gprofiler_results_UPgenes<span class="sc">$</span>result </span>
-<span id="cb41-2"><a href="defined-genelist.html#cb41-2" tabindex="-1"></a></span>
-<span id="cb41-3"><a href="defined-genelist.html#cb41-3" tabindex="-1"></a>min_gs_size <span class="ot">=</span> <span class="dv">10</span></span>
-<span id="cb41-4"><a href="defined-genelist.html#cb41-4" tabindex="-1"></a>max_gs_size <span class="ot">=</span> <span class="dv">1000</span></span>
-<span id="cb41-5"><a href="defined-genelist.html#cb41-5" tabindex="-1"></a>p_thres <span class="ot">=</span> <span class="fl">0.01</span></span>
-<span id="cb41-6"><a href="defined-genelist.html#cb41-6" tabindex="-1"></a><span class="co"># filter by params defined above</span></span>
-<span id="cb41-7"><a href="defined-genelist.html#cb41-7" tabindex="-1"></a><span class="co"># by default we have set the max and min gs size to 250 and 3, respectively.</span></span>
-<span id="cb41-8"><a href="defined-genelist.html#cb41-8" tabindex="-1"></a></span>
-<span id="cb41-9"><a href="defined-genelist.html#cb41-9" tabindex="-1"></a></span>
-<span id="cb41-10"><a href="defined-genelist.html#cb41-10" tabindex="-1"></a><span class="do">##the pvalue was stored as a character vector, we have to transform back into a numerical vector to be able to use it to filter values</span></span>
-<span id="cb41-11"><a href="defined-genelist.html#cb41-11" tabindex="-1"></a>enrichment_results<span class="sc">$</span>p_value <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(enrichment_results<span class="sc">$</span>p_value) </span>
-<span id="cb41-12"><a href="defined-genelist.html#cb41-12" tabindex="-1"></a></span>
-<span id="cb41-13"><a href="defined-genelist.html#cb41-13" tabindex="-1"></a>enrichment_results_mxgssize_1000_min_10_adjp_0_01 <span class="ot">&lt;-</span> </span>
-<span id="cb41-14"><a href="defined-genelist.html#cb41-14" tabindex="-1"></a>                        <span class="fu">subset</span>(enrichment_results,</span>
-<span id="cb41-15"><a href="defined-genelist.html#cb41-15" tabindex="-1"></a>                                   term_size <span class="sc">&gt;=</span> min_gs_size <span class="sc">&amp;</span> </span>
-<span id="cb41-16"><a href="defined-genelist.html#cb41-16" tabindex="-1"></a>                                   term_size <span class="sc">&lt;=</span> max_gs_size <span class="sc">&amp;</span> </span>
-<span id="cb41-17"><a href="defined-genelist.html#cb41-17" tabindex="-1"></a>                                   p_value <span class="sc">&lt;=</span> p_thres )</span>
-<span id="cb41-18"><a href="defined-genelist.html#cb41-18" tabindex="-1"></a></span>
-<span id="cb41-19"><a href="defined-genelist.html#cb41-19" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb41-20"><a href="defined-genelist.html#cb41-20" tabindex="-1"></a>myrows <span class="ot">=</span> <span class="fu">nrow</span>(enrichment_results_mxgssize_1000_min_10_adjp_0_01)</span>
-<span id="cb41-21"><a href="defined-genelist.html#cb41-21" tabindex="-1"></a></span>
-<span id="cb41-22"><a href="defined-genelist.html#cb41-22" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">glue</span>(<span class="st">&quot;It results in {myrows} selected pathways with maximum gene-set size of {max_gs_size} and minimum gene-set of {min_gs_size} with an adjusted p-value of {p_thres} . &quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="defined-genelist.html#cb40-1" tabindex="-1"></a>enrichment_results <span class="ot">&lt;-</span> gprofiler_results_UPgenes<span class="sc">$</span>result </span>
+<span id="cb40-2"><a href="defined-genelist.html#cb40-2" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="defined-genelist.html#cb40-3" tabindex="-1"></a>min_gs_size <span class="ot">=</span> <span class="dv">10</span></span>
+<span id="cb40-4"><a href="defined-genelist.html#cb40-4" tabindex="-1"></a>max_gs_size <span class="ot">=</span> <span class="dv">1000</span></span>
+<span id="cb40-5"><a href="defined-genelist.html#cb40-5" tabindex="-1"></a>p_thres <span class="ot">=</span> <span class="fl">0.01</span></span>
+<span id="cb40-6"><a href="defined-genelist.html#cb40-6" tabindex="-1"></a><span class="co"># filter by params defined above</span></span>
+<span id="cb40-7"><a href="defined-genelist.html#cb40-7" tabindex="-1"></a><span class="co"># by default we have set the max and min gs size to 250 and 3, respectively.</span></span>
+<span id="cb40-8"><a href="defined-genelist.html#cb40-8" tabindex="-1"></a></span>
+<span id="cb40-9"><a href="defined-genelist.html#cb40-9" tabindex="-1"></a></span>
+<span id="cb40-10"><a href="defined-genelist.html#cb40-10" tabindex="-1"></a><span class="do">##the pvalue was stored as a character vector, we have to transform back into a numerical vector to be able to use it to filter values</span></span>
+<span id="cb40-11"><a href="defined-genelist.html#cb40-11" tabindex="-1"></a>enrichment_results<span class="sc">$</span>p_value <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(enrichment_results<span class="sc">$</span>p_value) </span>
+<span id="cb40-12"><a href="defined-genelist.html#cb40-12" tabindex="-1"></a></span>
+<span id="cb40-13"><a href="defined-genelist.html#cb40-13" tabindex="-1"></a>enrichment_results_mxgssize_1000_min_10_adjp_0_01 <span class="ot">&lt;-</span> </span>
+<span id="cb40-14"><a href="defined-genelist.html#cb40-14" tabindex="-1"></a>                        <span class="fu">subset</span>(enrichment_results,</span>
+<span id="cb40-15"><a href="defined-genelist.html#cb40-15" tabindex="-1"></a>                                   term_size <span class="sc">&gt;=</span> min_gs_size <span class="sc">&amp;</span> </span>
+<span id="cb40-16"><a href="defined-genelist.html#cb40-16" tabindex="-1"></a>                                   term_size <span class="sc">&lt;=</span> max_gs_size <span class="sc">&amp;</span> </span>
+<span id="cb40-17"><a href="defined-genelist.html#cb40-17" tabindex="-1"></a>                                   p_value <span class="sc">&lt;=</span> p_thres )</span>
+<span id="cb40-18"><a href="defined-genelist.html#cb40-18" tabindex="-1"></a></span>
+<span id="cb40-19"><a href="defined-genelist.html#cb40-19" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb40-20"><a href="defined-genelist.html#cb40-20" tabindex="-1"></a>myrows <span class="ot">=</span> <span class="fu">nrow</span>(enrichment_results_mxgssize_1000_min_10_adjp_0_01)</span>
+<span id="cb40-21"><a href="defined-genelist.html#cb40-21" tabindex="-1"></a></span>
+<span id="cb40-22"><a href="defined-genelist.html#cb40-22" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">glue</span>(<span class="st">&quot;It results in {myrows} selected pathways with maximum gene-set size of {max_gs_size} and minimum gene-set of {min_gs_size} with an adjusted p-value of {p_thres} . &quot;</span>))</span></code></pre></div>
 <pre><code>## It results in 15 selected pathways with maximum gene-set size of 1000 and minimum gene-set of 10 with an adjusted p-value of 0.01 .</code></pre>
 <div id="your-turn-using-the-enrichment-results-for-the-down-genes-use-gene-set-size-filters-and-fdr-filters-and-display-the-results" class="section level4 hasAnchor" number="0.12.6.1">
 <h4><span class="header-section-number">0.12.6.1</span> YOUR TURN: using the enrichment results for the down genes, use gene-set size filters and FDR filters and display the results<a href="defined-genelist.html#your-turn-using-the-enrichment-results-for-the-down-genes-use-gene-set-size-filters-and-fdr-filters-and-display-the-results" class="anchor-section" aria-label="Anchor link to header"></a></h4>
@@ -1561,24 +1527,24 @@ REAC:0000000
 </ul></li>
 </ul>
 <p>How many pathways do you get for each option (nrow())??</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="defined-genelist.html#cb43-1" tabindex="-1"></a>enrichment_results <span class="ot">&lt;-</span> gprofiler_results_DOWNgenes<span class="sc">$</span>result </span>
-<span id="cb43-2"><a href="defined-genelist.html#cb43-2" tabindex="-1"></a></span>
-<span id="cb43-3"><a href="defined-genelist.html#cb43-3" tabindex="-1"></a>min_gs_size <span class="ot">=</span> XXXX</span>
-<span id="cb43-4"><a href="defined-genelist.html#cb43-4" tabindex="-1"></a>max_gs_size <span class="ot">=</span> XXXX</span>
-<span id="cb43-5"><a href="defined-genelist.html#cb43-5" tabindex="-1"></a>p_thres <span class="ot">=</span> XXXX</span>
-<span id="cb43-6"><a href="defined-genelist.html#cb43-6" tabindex="-1"></a><span class="co"># filter by params defined above</span></span>
-<span id="cb43-7"><a href="defined-genelist.html#cb43-7" tabindex="-1"></a><span class="co"># by default we have set the max and min gs size to 250 and 3, respectively.</span></span>
-<span id="cb43-8"><a href="defined-genelist.html#cb43-8" tabindex="-1"></a></span>
-<span id="cb43-9"><a href="defined-genelist.html#cb43-9" tabindex="-1"></a></span>
-<span id="cb43-10"><a href="defined-genelist.html#cb43-10" tabindex="-1"></a><span class="do">##the pvalue was stored as a character vector, we have to transform back into a numerical vector to be able to use it to filter values</span></span>
-<span id="cb43-11"><a href="defined-genelist.html#cb43-11" tabindex="-1"></a>enrichment_results<span class="sc">$</span>p_value <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(enrichment_results<span class="sc">$</span>p_value) </span>
-<span id="cb43-12"><a href="defined-genelist.html#cb43-12" tabindex="-1"></a></span>
-<span id="cb43-13"><a href="defined-genelist.html#cb43-13" tabindex="-1"></a>enrichment_results <span class="ot">&lt;-</span> XXXXX</span>
-<span id="cb43-14"><a href="defined-genelist.html#cb43-14" tabindex="-1"></a>                        </span>
-<span id="cb43-15"><a href="defined-genelist.html#cb43-15" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb43-16"><a href="defined-genelist.html#cb43-16" tabindex="-1"></a>myrows <span class="ot">=</span> <span class="fu">nrow</span>(enrichment_results)</span>
-<span id="cb43-17"><a href="defined-genelist.html#cb43-17" tabindex="-1"></a></span>
-<span id="cb43-18"><a href="defined-genelist.html#cb43-18" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">glue</span>(<span class="st">&quot;It results in {myrows} selected pathways with maximum gene-set size of {max_gs_size} and minimum gene-set of {min_gs_size} with an adjusted p-value of {p_thres} . &quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="defined-genelist.html#cb42-1" tabindex="-1"></a>enrichment_results <span class="ot">&lt;-</span> gprofiler_results_DOWNgenes<span class="sc">$</span>result </span>
+<span id="cb42-2"><a href="defined-genelist.html#cb42-2" tabindex="-1"></a></span>
+<span id="cb42-3"><a href="defined-genelist.html#cb42-3" tabindex="-1"></a>min_gs_size <span class="ot">=</span> XXXX</span>
+<span id="cb42-4"><a href="defined-genelist.html#cb42-4" tabindex="-1"></a>max_gs_size <span class="ot">=</span> XXXX</span>
+<span id="cb42-5"><a href="defined-genelist.html#cb42-5" tabindex="-1"></a>p_thres <span class="ot">=</span> XXXX</span>
+<span id="cb42-6"><a href="defined-genelist.html#cb42-6" tabindex="-1"></a><span class="co"># filter by params defined above</span></span>
+<span id="cb42-7"><a href="defined-genelist.html#cb42-7" tabindex="-1"></a><span class="co"># by default we have set the max and min gs size to 250 and 3, respectively.</span></span>
+<span id="cb42-8"><a href="defined-genelist.html#cb42-8" tabindex="-1"></a></span>
+<span id="cb42-9"><a href="defined-genelist.html#cb42-9" tabindex="-1"></a></span>
+<span id="cb42-10"><a href="defined-genelist.html#cb42-10" tabindex="-1"></a><span class="do">##the pvalue was stored as a character vector, we have to transform back into a numerical vector to be able to use it to filter values</span></span>
+<span id="cb42-11"><a href="defined-genelist.html#cb42-11" tabindex="-1"></a>enrichment_results<span class="sc">$</span>p_value <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(enrichment_results<span class="sc">$</span>p_value) </span>
+<span id="cb42-12"><a href="defined-genelist.html#cb42-12" tabindex="-1"></a></span>
+<span id="cb42-13"><a href="defined-genelist.html#cb42-13" tabindex="-1"></a>enrichment_results <span class="ot">&lt;-</span> XXXXX</span>
+<span id="cb42-14"><a href="defined-genelist.html#cb42-14" tabindex="-1"></a>                        </span>
+<span id="cb42-15"><a href="defined-genelist.html#cb42-15" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb42-16"><a href="defined-genelist.html#cb42-16" tabindex="-1"></a>myrows <span class="ot">=</span> <span class="fu">nrow</span>(enrichment_results)</span>
+<span id="cb42-17"><a href="defined-genelist.html#cb42-17" tabindex="-1"></a></span>
+<span id="cb42-18"><a href="defined-genelist.html#cb42-18" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">glue</span>(<span class="st">&quot;It results in {myrows} selected pathways with maximum gene-set size of {max_gs_size} and minimum gene-set of {min_gs_size} with an adjusted p-value of {p_thres} . &quot;</span>))</span></code></pre></div>
 </div>
 </div>
 <div id="step-6---run-gprofiler-with-your-own-genesets-example-using-baderlab-genesets" class="section level3 hasAnchor" number="0.12.7">
@@ -1609,35 +1575,35 @@ The capture.output() function is only there to redirect the printed messages for
 <p>In order to use your own genesets with g:Profiler you need to upload the the file to g:Profiler server first. The function will return an ID that you need to specify in the organism parameter of the g:Profiler gost function call.
 It is done by using the upload_GMT_file() function which is included in the gprofiler2 package.
 Note: it took about 2 minutes to run this chunck of code.</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="defined-genelist.html#cb44-1" tabindex="-1"></a>dest_gmt_file_500 <span class="ot">=</span><span class="st">&quot;data/Human_GOBP_AllPathways_filtered_500orLessV2.gmt&quot;</span></span>
-<span id="cb44-2"><a href="defined-genelist.html#cb44-2" tabindex="-1"></a></span>
-<span id="cb44-3"><a href="defined-genelist.html#cb44-3" tabindex="-1"></a>custom_gmt_max500 <span class="ot">&lt;-</span> <span class="fu">upload_GMT_file</span>(</span>
-<span id="cb44-4"><a href="defined-genelist.html#cb44-4" tabindex="-1"></a>                        <span class="at">gmtfile=</span>dest_gmt_file_500)</span></code></pre></div>
-<pre><code>## Your custom annotations ID is gp__r9ET_EiRJ_LkE.
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="defined-genelist.html#cb43-1" tabindex="-1"></a>dest_gmt_file_500 <span class="ot">=</span><span class="st">&quot;data/Human_GOBP_AllPathways_filtered_500orLessV2.gmt&quot;</span></span>
+<span id="cb43-2"><a href="defined-genelist.html#cb43-2" tabindex="-1"></a></span>
+<span id="cb43-3"><a href="defined-genelist.html#cb43-3" tabindex="-1"></a>custom_gmt_max500 <span class="ot">&lt;-</span> <span class="fu">upload_GMT_file</span>(</span>
+<span id="cb43-4"><a href="defined-genelist.html#cb43-4" tabindex="-1"></a>                        <span class="at">gmtfile=</span>dest_gmt_file_500)</span></code></pre></div>
+<pre><code>## Your custom annotations ID is gp__8waY_gTrE_Jsw.
 ## You can use this ID as an &#39;organism&#39; name in all the related enrichment tests against this custom source.</code></pre>
-<pre><code>## Just use: gost(my_genes, organism = &#39;gp__r9ET_EiRJ_LkE&#39;)</code></pre>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="defined-genelist.html#cb47-1" tabindex="-1"></a>UPgenes <span class="ot">&lt;-</span> res<span class="sc">$</span>gene[res<span class="sc">$</span>logFC<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">&amp;</span>  res<span class="sc">$</span>FDR <span class="sc">&lt;=</span> <span class="fl">0.001</span>]</span>
-<span id="cb47-2"><a href="defined-genelist.html#cb47-2" tabindex="-1"></a>DOWNgenes <span class="ot">&lt;-</span> res<span class="sc">$</span>gene[res<span class="sc">$</span>logFC<span class="sc">&lt;</span><span class="dv">0</span> <span class="sc">&amp;</span>  res<span class="sc">$</span>FDR <span class="sc">&lt;=</span> <span class="fl">0.001</span>]</span>
-<span id="cb47-3"><a href="defined-genelist.html#cb47-3" tabindex="-1"></a></span>
-<span id="cb47-4"><a href="defined-genelist.html#cb47-4" tabindex="-1"></a></span>
-<span id="cb47-5"><a href="defined-genelist.html#cb47-5" tabindex="-1"></a>gprofiler_results_custom_max500_UPgenes <span class="ot">&lt;-</span> <span class="fu">gost</span>(<span class="at">query =</span> UPgenes  ,</span>
-<span id="cb47-6"><a href="defined-genelist.html#cb47-6" tabindex="-1"></a>                                     <span class="at">significant=</span><span class="cn">TRUE</span>,</span>
-<span id="cb47-7"><a href="defined-genelist.html#cb47-7" tabindex="-1"></a>                                      <span class="at">ordered_query =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb47-8"><a href="defined-genelist.html#cb47-8" tabindex="-1"></a>                                      <span class="at">exclude_iea=</span><span class="cn">TRUE</span>,</span>
-<span id="cb47-9"><a href="defined-genelist.html#cb47-9" tabindex="-1"></a>                                     <span class="at">correction_method =</span> <span class="st">&quot;fdr&quot;</span>,</span>
-<span id="cb47-10"><a href="defined-genelist.html#cb47-10" tabindex="-1"></a>                                 <span class="at">organism =</span> custom_gmt_max500</span>
-<span id="cb47-11"><a href="defined-genelist.html#cb47-11" tabindex="-1"></a>                                     )</span></code></pre></div>
+<pre><code>## Just use: gost(my_genes, organism = &#39;gp__8waY_gTrE_Jsw&#39;)</code></pre>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="defined-genelist.html#cb46-1" tabindex="-1"></a>UPgenes <span class="ot">&lt;-</span> res<span class="sc">$</span>gene[res<span class="sc">$</span>logFC<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">&amp;</span>  res<span class="sc">$</span>FDR <span class="sc">&lt;=</span> <span class="fl">0.001</span>]</span>
+<span id="cb46-2"><a href="defined-genelist.html#cb46-2" tabindex="-1"></a>DOWNgenes <span class="ot">&lt;-</span> res<span class="sc">$</span>gene[res<span class="sc">$</span>logFC<span class="sc">&lt;</span><span class="dv">0</span> <span class="sc">&amp;</span>  res<span class="sc">$</span>FDR <span class="sc">&lt;=</span> <span class="fl">0.001</span>]</span>
+<span id="cb46-3"><a href="defined-genelist.html#cb46-3" tabindex="-1"></a></span>
+<span id="cb46-4"><a href="defined-genelist.html#cb46-4" tabindex="-1"></a></span>
+<span id="cb46-5"><a href="defined-genelist.html#cb46-5" tabindex="-1"></a>gprofiler_results_custom_max500_UPgenes <span class="ot">&lt;-</span> <span class="fu">gost</span>(<span class="at">query =</span> UPgenes  ,</span>
+<span id="cb46-6"><a href="defined-genelist.html#cb46-6" tabindex="-1"></a>                                     <span class="at">significant=</span><span class="cn">TRUE</span>,</span>
+<span id="cb46-7"><a href="defined-genelist.html#cb46-7" tabindex="-1"></a>                                      <span class="at">ordered_query =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb46-8"><a href="defined-genelist.html#cb46-8" tabindex="-1"></a>                                      <span class="at">exclude_iea=</span><span class="cn">TRUE</span>,</span>
+<span id="cb46-9"><a href="defined-genelist.html#cb46-9" tabindex="-1"></a>                                     <span class="at">correction_method =</span> <span class="st">&quot;fdr&quot;</span>,</span>
+<span id="cb46-10"><a href="defined-genelist.html#cb46-10" tabindex="-1"></a>                                 <span class="at">organism =</span> custom_gmt_max500</span>
+<span id="cb46-11"><a href="defined-genelist.html#cb46-11" tabindex="-1"></a>                                     )</span></code></pre></div>
 <pre><code>## Detected custom GMT source request</code></pre>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="defined-genelist.html#cb49-1" tabindex="-1"></a>enrichment_results_UPgenes <span class="ot">&lt;-</span> gprofiler_results_custom_max500_UPgenes<span class="sc">$</span>result</span>
-<span id="cb49-2"><a href="defined-genelist.html#cb49-2" tabindex="-1"></a></span>
-<span id="cb49-3"><a href="defined-genelist.html#cb49-3" tabindex="-1"></a>enrichment_results_UPgenes<span class="sc">$</span>parents <span class="ot">&lt;-</span> <span class="fu">sapply</span>(</span>
-<span id="cb49-4"><a href="defined-genelist.html#cb49-4" tabindex="-1"></a>  enrichment_results_UPgenes<span class="sc">$</span>parents,</span>
-<span id="cb49-5"><a href="defined-genelist.html#cb49-5" tabindex="-1"></a>  <span class="cf">function</span>(x) <span class="fu">paste</span>(x, <span class="at">collapse =</span> <span class="st">&quot;, &quot;</span>)</span>
-<span id="cb49-6"><a href="defined-genelist.html#cb49-6" tabindex="-1"></a>)</span>
-<span id="cb49-7"><a href="defined-genelist.html#cb49-7" tabindex="-1"></a> </span>
-<span id="cb49-8"><a href="defined-genelist.html#cb49-8" tabindex="-1"></a><span class="do">##Now display the top 20 pathways</span></span>
-<span id="cb49-9"><a href="defined-genelist.html#cb49-9" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(enrichment_results_UPgenes, <span class="at">n=</span><span class="dv">20</span>), <span class="at">caption =</span> <span class="st">&quot;Enrichment Result&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb49-10"><a href="defined-genelist.html#cb49-10" tabindex="-1"></a><span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;condensed&quot;</span>), <span class="at">font_size =</span> <span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="defined-genelist.html#cb48-1" tabindex="-1"></a>enrichment_results_UPgenes <span class="ot">&lt;-</span> gprofiler_results_custom_max500_UPgenes<span class="sc">$</span>result</span>
+<span id="cb48-2"><a href="defined-genelist.html#cb48-2" tabindex="-1"></a></span>
+<span id="cb48-3"><a href="defined-genelist.html#cb48-3" tabindex="-1"></a>enrichment_results_UPgenes<span class="sc">$</span>parents <span class="ot">&lt;-</span> <span class="fu">sapply</span>(</span>
+<span id="cb48-4"><a href="defined-genelist.html#cb48-4" tabindex="-1"></a>  enrichment_results_UPgenes<span class="sc">$</span>parents,</span>
+<span id="cb48-5"><a href="defined-genelist.html#cb48-5" tabindex="-1"></a>  <span class="cf">function</span>(x) <span class="fu">paste</span>(x, <span class="at">collapse =</span> <span class="st">&quot;, &quot;</span>)</span>
+<span id="cb48-6"><a href="defined-genelist.html#cb48-6" tabindex="-1"></a>)</span>
+<span id="cb48-7"><a href="defined-genelist.html#cb48-7" tabindex="-1"></a> </span>
+<span id="cb48-8"><a href="defined-genelist.html#cb48-8" tabindex="-1"></a><span class="do">##Now display the top 20 pathways</span></span>
+<span id="cb48-9"><a href="defined-genelist.html#cb48-9" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(enrichment_results_UPgenes, <span class="at">n=</span><span class="dv">20</span>), <span class="at">caption =</span> <span class="st">&quot;Enrichment Result&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb48-10"><a href="defined-genelist.html#cb48-10" tabindex="-1"></a><span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;condensed&quot;</span>), <span class="at">font_size =</span> <span class="dv">10</span>)</span></code></pre></div>
 <table class="table table-striped table-condensed" style="font-size: 10px; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
 <span id="tab:unnamed-chunk-22">Table 5: </span><span id="tab:unnamed-chunk-22">Table 6: </span>Enrichment Result
@@ -2551,30 +2517,30 @@ positive regulation of coagulation
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="defined-genelist.html#cb50-1" tabindex="-1"></a><span class="fu">write.csv</span>( enrichment_results_UPgenes, <span class="st">&quot;results/enrichment_results_gprofiler_UPgenes.csv&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="defined-genelist.html#cb49-1" tabindex="-1"></a><span class="fu">write.csv</span>( enrichment_results_UPgenes, <span class="st">&quot;results/enrichment_results_gprofiler_UPgenes.csv&quot;</span>)</span></code></pre></div>
 <div id="your-turn-perform-the-same-task-with-the-down-genes" class="section level4 hasAnchor" number="0.12.7.1">
 <h4><span class="header-section-number">0.12.7.1</span> YOUR TURN: perform the same task with the down genes<a href="defined-genelist.html#your-turn-perform-the-same-task-with-the-down-genes" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="defined-genelist.html#cb51-1" tabindex="-1"></a>gprofiler_results_custom_max500_DNgenes <span class="ot">&lt;-</span> <span class="fu">gost</span>(</span>
-<span id="cb51-2"><a href="defined-genelist.html#cb51-2" tabindex="-1"></a>                                      <span class="at">query =</span> XXXX  ,</span>
-<span id="cb51-3"><a href="defined-genelist.html#cb51-3" tabindex="-1"></a>                                     <span class="at">significant=</span>XXXX,</span>
-<span id="cb51-4"><a href="defined-genelist.html#cb51-4" tabindex="-1"></a>                                      <span class="at">ordered_query =</span> XXXX,</span>
-<span id="cb51-5"><a href="defined-genelist.html#cb51-5" tabindex="-1"></a>                                      <span class="at">exclude_iea=</span>XXXX,</span>
-<span id="cb51-6"><a href="defined-genelist.html#cb51-6" tabindex="-1"></a>                                     <span class="at">correction_method =</span> <span class="st">&quot;XXX&quot;</span>,</span>
-<span id="cb51-7"><a href="defined-genelist.html#cb51-7" tabindex="-1"></a>                                 <span class="at">organism =</span> XXXX</span>
-<span id="cb51-8"><a href="defined-genelist.html#cb51-8" tabindex="-1"></a>                                     )</span>
-<span id="cb51-9"><a href="defined-genelist.html#cb51-9" tabindex="-1"></a></span>
-<span id="cb51-10"><a href="defined-genelist.html#cb51-10" tabindex="-1"></a>enrichment_results_DNgenes <span class="ot">&lt;-</span> gprofiler_results_custom_max500_DNgenes<span class="sc">$</span>result</span>
-<span id="cb51-11"><a href="defined-genelist.html#cb51-11" tabindex="-1"></a></span>
-<span id="cb51-12"><a href="defined-genelist.html#cb51-12" tabindex="-1"></a></span>
-<span id="cb51-13"><a href="defined-genelist.html#cb51-13" tabindex="-1"></a>enrichment_results_DNgenes<span class="sc">$</span>parents <span class="ot">&lt;-</span> <span class="fu">sapply</span>(</span>
-<span id="cb51-14"><a href="defined-genelist.html#cb51-14" tabindex="-1"></a>  enrichment_results_DNgenes<span class="sc">$</span>parents,</span>
-<span id="cb51-15"><a href="defined-genelist.html#cb51-15" tabindex="-1"></a>  <span class="cf">function</span>(x) <span class="fu">paste</span>(x, <span class="at">collapse =</span> <span class="st">&quot;, &quot;</span>)</span>
-<span id="cb51-16"><a href="defined-genelist.html#cb51-16" tabindex="-1"></a>)</span>
-<span id="cb51-17"><a href="defined-genelist.html#cb51-17" tabindex="-1"></a></span>
-<span id="cb51-18"><a href="defined-genelist.html#cb51-18" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(enrichment_results_DNgenes, <span class="at">n=</span><span class="dv">20</span>), <span class="at">caption =</span> <span class="st">&quot;Enrichment Result&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb51-19"><a href="defined-genelist.html#cb51-19" tabindex="-1"></a><span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;condensed&quot;</span>), <span class="at">font_size =</span> <span class="dv">10</span>)</span>
-<span id="cb51-20"><a href="defined-genelist.html#cb51-20" tabindex="-1"></a></span>
-<span id="cb51-21"><a href="defined-genelist.html#cb51-21" tabindex="-1"></a><span class="fu">write.csv</span>( enrichment_results_DNgenes, <span class="st">&quot;results/enrichment_results_gprofiler_DNgenes.csv&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="defined-genelist.html#cb50-1" tabindex="-1"></a>gprofiler_results_custom_max500_DNgenes <span class="ot">&lt;-</span> <span class="fu">gost</span>(</span>
+<span id="cb50-2"><a href="defined-genelist.html#cb50-2" tabindex="-1"></a>                                      <span class="at">query =</span> XXXX  ,</span>
+<span id="cb50-3"><a href="defined-genelist.html#cb50-3" tabindex="-1"></a>                                     <span class="at">significant=</span>XXXX,</span>
+<span id="cb50-4"><a href="defined-genelist.html#cb50-4" tabindex="-1"></a>                                      <span class="at">ordered_query =</span> XXXX,</span>
+<span id="cb50-5"><a href="defined-genelist.html#cb50-5" tabindex="-1"></a>                                      <span class="at">exclude_iea=</span>XXXX,</span>
+<span id="cb50-6"><a href="defined-genelist.html#cb50-6" tabindex="-1"></a>                                     <span class="at">correction_method =</span> <span class="st">&quot;XXX&quot;</span>,</span>
+<span id="cb50-7"><a href="defined-genelist.html#cb50-7" tabindex="-1"></a>                                 <span class="at">organism =</span> XXXX</span>
+<span id="cb50-8"><a href="defined-genelist.html#cb50-8" tabindex="-1"></a>                                     )</span>
+<span id="cb50-9"><a href="defined-genelist.html#cb50-9" tabindex="-1"></a></span>
+<span id="cb50-10"><a href="defined-genelist.html#cb50-10" tabindex="-1"></a>enrichment_results_DNgenes <span class="ot">&lt;-</span> gprofiler_results_custom_max500_DNgenes<span class="sc">$</span>result</span>
+<span id="cb50-11"><a href="defined-genelist.html#cb50-11" tabindex="-1"></a></span>
+<span id="cb50-12"><a href="defined-genelist.html#cb50-12" tabindex="-1"></a></span>
+<span id="cb50-13"><a href="defined-genelist.html#cb50-13" tabindex="-1"></a>enrichment_results_DNgenes<span class="sc">$</span>parents <span class="ot">&lt;-</span> <span class="fu">sapply</span>(</span>
+<span id="cb50-14"><a href="defined-genelist.html#cb50-14" tabindex="-1"></a>  enrichment_results_DNgenes<span class="sc">$</span>parents,</span>
+<span id="cb50-15"><a href="defined-genelist.html#cb50-15" tabindex="-1"></a>  <span class="cf">function</span>(x) <span class="fu">paste</span>(x, <span class="at">collapse =</span> <span class="st">&quot;, &quot;</span>)</span>
+<span id="cb50-16"><a href="defined-genelist.html#cb50-16" tabindex="-1"></a>)</span>
+<span id="cb50-17"><a href="defined-genelist.html#cb50-17" tabindex="-1"></a></span>
+<span id="cb50-18"><a href="defined-genelist.html#cb50-18" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(enrichment_results_DNgenes, <span class="at">n=</span><span class="dv">20</span>), <span class="at">caption =</span> <span class="st">&quot;Enrichment Result&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb50-19"><a href="defined-genelist.html#cb50-19" tabindex="-1"></a><span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;condensed&quot;</span>), <span class="at">font_size =</span> <span class="dv">10</span>)</span>
+<span id="cb50-20"><a href="defined-genelist.html#cb50-20" tabindex="-1"></a></span>
+<span id="cb50-21"><a href="defined-genelist.html#cb50-21" tabindex="-1"></a><span class="fu">write.csv</span>( enrichment_results_DNgenes, <span class="st">&quot;results/enrichment_results_gprofiler_DNgenes.csv&quot;</span>)</span></code></pre></div>
 </div>
 </div>
 </div>
@@ -2582,106 +2548,106 @@ positive regulation of coagulation
 <h2><span class="header-section-number">0.13</span> Exercise 2 - visualization<a href="defined-genelist.html#exercise-2---visualization" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>We will use clusterProfiler style visualization.
 ### Step 1 - Bar plot</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="defined-genelist.html#cb52-1" tabindex="-1"></a><span class="do">##Calculate a score (small very significant adjusted p value will turn into a large score)</span></span>
-<span id="cb52-2"><a href="defined-genelist.html#cb52-2" tabindex="-1"></a></span>
-<span id="cb52-3"><a href="defined-genelist.html#cb52-3" tabindex="-1"></a>enrichment_results_UPgenes <span class="ot">&lt;-</span> gprofiler_results_custom_max500_UPgenes<span class="sc">$</span>result</span>
-<span id="cb52-4"><a href="defined-genelist.html#cb52-4" tabindex="-1"></a></span>
-<span id="cb52-5"><a href="defined-genelist.html#cb52-5" tabindex="-1"></a>enrichment_results_UPgenes<span class="sc">$</span>score <span class="ot">=</span> <span class="sc">-</span><span class="fu">log10</span>(<span class="fu">as.numeric</span>(enrichment_results_UPgenes<span class="sc">$</span>p_value))</span>
-<span id="cb52-6"><a href="defined-genelist.html#cb52-6" tabindex="-1"></a></span>
-<span id="cb52-7"><a href="defined-genelist.html#cb52-7" tabindex="-1"></a>enrichment <span class="ot">&lt;-</span> enrichment_results_UPgenes <span class="sc">%&gt;%</span></span>
-<span id="cb52-8"><a href="defined-genelist.html#cb52-8" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb52-9"><a href="defined-genelist.html#cb52-9" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(score)) <span class="sc">%&gt;%</span></span>
-<span id="cb52-10"><a href="defined-genelist.html#cb52-10" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">20</span>)</span>
-<span id="cb52-11"><a href="defined-genelist.html#cb52-11" tabindex="-1"></a></span>
-<span id="cb52-12"><a href="defined-genelist.html#cb52-12" tabindex="-1"></a>p <span class="ot">=</span> <span class="fu">ggplot</span>(enrichment, <span class="fu">aes</span>(<span class="fu">reorder</span>(term_name, score), score)) <span class="sc">+</span></span>
-<span id="cb52-13"><a href="defined-genelist.html#cb52-13" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">fill =</span> score), <span class="at">width=</span><span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb52-14"><a href="defined-genelist.html#cb52-14" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;#C1F6F8&quot;</span>, <span class="at">high =</span> <span class="st">&quot;#00BFC4&quot;</span>)<span class="sc">+</span></span>
-<span id="cb52-15"><a href="defined-genelist.html#cb52-15" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb52-16"><a href="defined-genelist.html#cb52-16" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">&quot;&quot;</span>, <span class="at">y=</span><span class="st">&quot;Normalized Enrichment Score&quot;</span>,<span class="at">title=</span><span class="st">&quot;Pathway enrichment analysis &quot;</span>) <span class="sc">+</span> </span>
-<span id="cb52-17"><a href="defined-genelist.html#cb52-17" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
-<span id="cb52-18"><a href="defined-genelist.html#cb52-18" tabindex="-1"></a></span>
-<span id="cb52-19"><a href="defined-genelist.html#cb52-19" tabindex="-1"></a>p</span></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="defined-genelist.html#cb51-1" tabindex="-1"></a><span class="do">##Calculate a score (small very significant adjusted p value will turn into a large score)</span></span>
+<span id="cb51-2"><a href="defined-genelist.html#cb51-2" tabindex="-1"></a></span>
+<span id="cb51-3"><a href="defined-genelist.html#cb51-3" tabindex="-1"></a>enrichment_results_UPgenes <span class="ot">&lt;-</span> gprofiler_results_custom_max500_UPgenes<span class="sc">$</span>result</span>
+<span id="cb51-4"><a href="defined-genelist.html#cb51-4" tabindex="-1"></a></span>
+<span id="cb51-5"><a href="defined-genelist.html#cb51-5" tabindex="-1"></a>enrichment_results_UPgenes<span class="sc">$</span>score <span class="ot">=</span> <span class="sc">-</span><span class="fu">log10</span>(<span class="fu">as.numeric</span>(enrichment_results_UPgenes<span class="sc">$</span>p_value))</span>
+<span id="cb51-6"><a href="defined-genelist.html#cb51-6" tabindex="-1"></a></span>
+<span id="cb51-7"><a href="defined-genelist.html#cb51-7" tabindex="-1"></a>enrichment <span class="ot">&lt;-</span> enrichment_results_UPgenes <span class="sc">%&gt;%</span></span>
+<span id="cb51-8"><a href="defined-genelist.html#cb51-8" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb51-9"><a href="defined-genelist.html#cb51-9" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(score)) <span class="sc">%&gt;%</span></span>
+<span id="cb51-10"><a href="defined-genelist.html#cb51-10" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">20</span>)</span>
+<span id="cb51-11"><a href="defined-genelist.html#cb51-11" tabindex="-1"></a></span>
+<span id="cb51-12"><a href="defined-genelist.html#cb51-12" tabindex="-1"></a>p <span class="ot">=</span> <span class="fu">ggplot</span>(enrichment, <span class="fu">aes</span>(<span class="fu">reorder</span>(term_name, score), score)) <span class="sc">+</span></span>
+<span id="cb51-13"><a href="defined-genelist.html#cb51-13" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">fill =</span> score), <span class="at">width=</span><span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb51-14"><a href="defined-genelist.html#cb51-14" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;#C1F6F8&quot;</span>, <span class="at">high =</span> <span class="st">&quot;#00BFC4&quot;</span>)<span class="sc">+</span></span>
+<span id="cb51-15"><a href="defined-genelist.html#cb51-15" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb51-16"><a href="defined-genelist.html#cb51-16" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">&quot;&quot;</span>, <span class="at">y=</span><span class="st">&quot;Normalized Enrichment Score&quot;</span>,<span class="at">title=</span><span class="st">&quot;Pathway enrichment analysis &quot;</span>) <span class="sc">+</span> </span>
+<span id="cb51-17"><a href="defined-genelist.html#cb51-17" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb51-18"><a href="defined-genelist.html#cb51-18" tabindex="-1"></a></span>
+<span id="cb51-19"><a href="defined-genelist.html#cb51-19" tabindex="-1"></a>p</span></code></pre></div>
 <p><img src="_main_files/figure-html/unnamed-chunk-24-1.png" alt="" width="672" /></p>
 <div id="step-2---dot-plot-with-segment" class="section level3 hasAnchor" number="0.13.1">
 <h3><span class="header-section-number">0.13.1</span> Step 2 - Dot plot with segment<a href="defined-genelist.html#step-2---dot-plot-with-segment" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="defined-genelist.html#cb53-1" tabindex="-1"></a>enrichmentTop20 <span class="ot">&lt;-</span> enrichment <span class="sc">%&gt;%</span></span>
-<span id="cb53-2"><a href="defined-genelist.html#cb53-2" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(score)) <span class="sc">%&gt;%</span></span>
-<span id="cb53-3"><a href="defined-genelist.html#cb53-3" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">20</span>)</span>
-<span id="cb53-4"><a href="defined-genelist.html#cb53-4" tabindex="-1"></a></span>
-<span id="cb53-5"><a href="defined-genelist.html#cb53-5" tabindex="-1"></a>p <span class="ot">=</span> <span class="fu">ggplot</span>(enrichmentTop20, <span class="fu">aes</span>(</span>
-<span id="cb53-6"><a href="defined-genelist.html#cb53-6" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">fct_reorder</span>(term_name, score),</span>
-<span id="cb53-7"><a href="defined-genelist.html#cb53-7" tabindex="-1"></a>  <span class="at">x =</span> score,</span>
-<span id="cb53-8"><a href="defined-genelist.html#cb53-8" tabindex="-1"></a>  <span class="at">color =</span> score,</span>
-<span id="cb53-9"><a href="defined-genelist.html#cb53-9" tabindex="-1"></a>  <span class="at">size =</span> score</span>
-<span id="cb53-10"><a href="defined-genelist.html#cb53-10" tabindex="-1"></a>)) <span class="sc">+</span></span>
-<span id="cb53-11"><a href="defined-genelist.html#cb53-11" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb53-12"><a href="defined-genelist.html#cb53-12" tabindex="-1"></a>  <span class="fu">scale_color_gradientn</span>(</span>
-<span id="cb53-13"><a href="defined-genelist.html#cb53-13" tabindex="-1"></a>    <span class="at">colours =</span> <span class="fu">c</span>(<span class="st">&quot;#56A443&quot;</span>, <span class="st">&quot;#8AA443&quot;</span>, <span class="st">&quot;#f7ca64&quot;</span>),</span>
-<span id="cb53-14"><a href="defined-genelist.html#cb53-14" tabindex="-1"></a>    <span class="at">trans =</span> <span class="st">&quot;log10&quot;</span>,</span>
-<span id="cb53-15"><a href="defined-genelist.html#cb53-15" tabindex="-1"></a>    <span class="at">guide =</span> <span class="fu">guide_colorbar</span>(<span class="at">reverse =</span> <span class="cn">FALSE</span>, <span class="at">order =</span> <span class="dv">1</span>)</span>
-<span id="cb53-16"><a href="defined-genelist.html#cb53-16" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb53-17"><a href="defined-genelist.html#cb53-17" tabindex="-1"></a>  <span class="fu">scale_size_continuous</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">8</span>)) <span class="sc">+</span></span>
-<span id="cb53-18"><a href="defined-genelist.html#cb53-18" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
-<span id="cb53-19"><a href="defined-genelist.html#cb53-19" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;score -log10(adj pvalue)&quot;</span>) <span class="sc">+</span></span>
-<span id="cb53-20"><a href="defined-genelist.html#cb53-20" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb53-21"><a href="defined-genelist.html#cb53-21" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Pathway Enrichment Analysis&quot;</span>) <span class="sc">+</span></span>
-<span id="cb53-22"><a href="defined-genelist.html#cb53-22" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb53-23"><a href="defined-genelist.html#cb53-23" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>)</span>
-<span id="cb53-24"><a href="defined-genelist.html#cb53-24" tabindex="-1"></a>  )</span>
-<span id="cb53-25"><a href="defined-genelist.html#cb53-25" tabindex="-1"></a>p</span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="defined-genelist.html#cb52-1" tabindex="-1"></a>enrichmentTop20 <span class="ot">&lt;-</span> enrichment <span class="sc">%&gt;%</span></span>
+<span id="cb52-2"><a href="defined-genelist.html#cb52-2" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(score)) <span class="sc">%&gt;%</span></span>
+<span id="cb52-3"><a href="defined-genelist.html#cb52-3" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">20</span>)</span>
+<span id="cb52-4"><a href="defined-genelist.html#cb52-4" tabindex="-1"></a></span>
+<span id="cb52-5"><a href="defined-genelist.html#cb52-5" tabindex="-1"></a>p <span class="ot">=</span> <span class="fu">ggplot</span>(enrichmentTop20, <span class="fu">aes</span>(</span>
+<span id="cb52-6"><a href="defined-genelist.html#cb52-6" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">fct_reorder</span>(term_name, score),</span>
+<span id="cb52-7"><a href="defined-genelist.html#cb52-7" tabindex="-1"></a>  <span class="at">x =</span> score,</span>
+<span id="cb52-8"><a href="defined-genelist.html#cb52-8" tabindex="-1"></a>  <span class="at">color =</span> score,</span>
+<span id="cb52-9"><a href="defined-genelist.html#cb52-9" tabindex="-1"></a>  <span class="at">size =</span> score</span>
+<span id="cb52-10"><a href="defined-genelist.html#cb52-10" tabindex="-1"></a>)) <span class="sc">+</span></span>
+<span id="cb52-11"><a href="defined-genelist.html#cb52-11" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb52-12"><a href="defined-genelist.html#cb52-12" tabindex="-1"></a>  <span class="fu">scale_color_gradientn</span>(</span>
+<span id="cb52-13"><a href="defined-genelist.html#cb52-13" tabindex="-1"></a>    <span class="at">colours =</span> <span class="fu">c</span>(<span class="st">&quot;#56A443&quot;</span>, <span class="st">&quot;#8AA443&quot;</span>, <span class="st">&quot;#f7ca64&quot;</span>),</span>
+<span id="cb52-14"><a href="defined-genelist.html#cb52-14" tabindex="-1"></a>    <span class="at">trans =</span> <span class="st">&quot;log10&quot;</span>,</span>
+<span id="cb52-15"><a href="defined-genelist.html#cb52-15" tabindex="-1"></a>    <span class="at">guide =</span> <span class="fu">guide_colorbar</span>(<span class="at">reverse =</span> <span class="cn">FALSE</span>, <span class="at">order =</span> <span class="dv">1</span>)</span>
+<span id="cb52-16"><a href="defined-genelist.html#cb52-16" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb52-17"><a href="defined-genelist.html#cb52-17" tabindex="-1"></a>  <span class="fu">scale_size_continuous</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb52-18"><a href="defined-genelist.html#cb52-18" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb52-19"><a href="defined-genelist.html#cb52-19" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;score -log10(adj pvalue)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb52-20"><a href="defined-genelist.html#cb52-20" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb52-21"><a href="defined-genelist.html#cb52-21" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Pathway Enrichment Analysis&quot;</span>) <span class="sc">+</span></span>
+<span id="cb52-22"><a href="defined-genelist.html#cb52-22" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb52-23"><a href="defined-genelist.html#cb52-23" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>)</span>
+<span id="cb52-24"><a href="defined-genelist.html#cb52-24" tabindex="-1"></a>  )</span>
+<span id="cb52-25"><a href="defined-genelist.html#cb52-25" tabindex="-1"></a>p</span></code></pre></div>
 <p><img src="_main_files/figure-html/unnamed-chunk-25-1.png" alt="" width="672" /></p>
 </div>
 <div id="step-4---hierarchical-cluster" class="section level3 hasAnchor" number="0.13.2">
 <h3><span class="header-section-number">0.13.2</span> Step 4 - Hierarchical Cluster<a href="defined-genelist.html#step-4---hierarchical-cluster" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The problem with the earlier visualization, which represents the top 20 pathways, is that it does not account for the overlap between gene sets. As you can observe, many pathways have similar names because they share a substantial number of genes. To provide a more accurate and efficient representation of the results, and to obtain a quicker and clearer overview, it would be more appropriate to aggregate and summarize pathways with substantial gene overlap, thereby reducing redundancy.</p>
 <p>Our first approach is to use hierarchical clustering based on a distance matrix that measures the similarity between pathways according to the number of genes they have in common, allowing us to visualize their relationships.</p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="defined-genelist.html#cb54-1" tabindex="-1"></a>enrichment_results_UPgenes <span class="ot">&lt;-</span> gprofiler_results_custom_max500_UPgenes<span class="sc">$</span>result</span>
-<span id="cb54-2"><a href="defined-genelist.html#cb54-2" tabindex="-1"></a></span>
-<span id="cb54-3"><a href="defined-genelist.html#cb54-3" tabindex="-1"></a>enrichment_results_UPgenes<span class="sc">$</span>score <span class="ot">=</span> <span class="sc">-</span><span class="fu">log10</span>(<span class="fu">as.numeric</span>(enrichment_results_UPgenes<span class="sc">$</span>p_value))</span>
-<span id="cb54-4"><a href="defined-genelist.html#cb54-4" tabindex="-1"></a></span>
-<span id="cb54-5"><a href="defined-genelist.html#cb54-5" tabindex="-1"></a><span class="co"># Top 20 enriched terms</span></span>
-<span id="cb54-6"><a href="defined-genelist.html#cb54-6" tabindex="-1"></a>enrichmentTop20 <span class="ot">&lt;-</span> enrichment_results_UPgenes <span class="sc">%&gt;%</span></span>
-<span id="cb54-7"><a href="defined-genelist.html#cb54-7" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(score)) <span class="sc">%&gt;%</span></span>
-<span id="cb54-8"><a href="defined-genelist.html#cb54-8" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">20</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="defined-genelist.html#cb53-1" tabindex="-1"></a>enrichment_results_UPgenes <span class="ot">&lt;-</span> gprofiler_results_custom_max500_UPgenes<span class="sc">$</span>result</span>
+<span id="cb53-2"><a href="defined-genelist.html#cb53-2" tabindex="-1"></a></span>
+<span id="cb53-3"><a href="defined-genelist.html#cb53-3" tabindex="-1"></a>enrichment_results_UPgenes<span class="sc">$</span>score <span class="ot">=</span> <span class="sc">-</span><span class="fu">log10</span>(<span class="fu">as.numeric</span>(enrichment_results_UPgenes<span class="sc">$</span>p_value))</span>
+<span id="cb53-4"><a href="defined-genelist.html#cb53-4" tabindex="-1"></a></span>
+<span id="cb53-5"><a href="defined-genelist.html#cb53-5" tabindex="-1"></a><span class="co"># Top 20 enriched terms</span></span>
+<span id="cb53-6"><a href="defined-genelist.html#cb53-6" tabindex="-1"></a>enrichmentTop20 <span class="ot">&lt;-</span> enrichment_results_UPgenes <span class="sc">%&gt;%</span></span>
+<span id="cb53-7"><a href="defined-genelist.html#cb53-7" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(score)) <span class="sc">%&gt;%</span></span>
+<span id="cb53-8"><a href="defined-genelist.html#cb53-8" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">20</span>)</span></code></pre></div>
 <div id="get-gene-list-in-each-pathway" class="section level4 hasAnchor" number="0.13.2.1">
 <h4><span class="header-section-number">0.13.2.1</span> Get gene list in each pathway<a href="defined-genelist.html#get-gene-list-in-each-pathway" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>The genes contained in each pathway that overlap with our gene list are unfortunately not included in the enrichment results output. We therefore need to retrieve these genes from the pathway file by extracting the pathways of interest and merging them with our gene list.</p>
 <p>addgenes: helper function to add gene list to enrichment result table</p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="defined-genelist.html#cb55-1" tabindex="-1"></a>addgenes <span class="ot">=</span> <span class="cf">function</span>(gmtfile, enrichmentresult ){</span>
-<span id="cb55-2"><a href="defined-genelist.html#cb55-2" tabindex="-1"></a></span>
-<span id="cb55-3"><a href="defined-genelist.html#cb55-3" tabindex="-1"></a></span>
-<span id="cb55-4"><a href="defined-genelist.html#cb55-4" tabindex="-1"></a>capt_output <span class="ot">&lt;-</span> <span class="fu">capture.output</span>(genesets_baderlab_genesets <span class="ot">&lt;-</span> </span>
-<span id="cb55-5"><a href="defined-genelist.html#cb55-5" tabindex="-1"></a>                                <span class="fu">GSA.read.gmt</span>(<span class="at">filename =</span> dest_gmt_file_500))</span>
-<span id="cb55-6"><a href="defined-genelist.html#cb55-6" tabindex="-1"></a></span>
-<span id="cb55-7"><a href="defined-genelist.html#cb55-7" tabindex="-1"></a><span class="fu">names</span>(genesets_baderlab_genesets<span class="sc">$</span>genesets) <span class="ot">&lt;-</span> </span>
-<span id="cb55-8"><a href="defined-genelist.html#cb55-8" tabindex="-1"></a>                                genesets_baderlab_genesets<span class="sc">$</span>geneset.names</span>
-<span id="cb55-9"><a href="defined-genelist.html#cb55-9" tabindex="-1"></a></span>
-<span id="cb55-10"><a href="defined-genelist.html#cb55-10" tabindex="-1"></a></span>
-<span id="cb55-11"><a href="defined-genelist.html#cb55-11" tabindex="-1"></a>subset_genesets <span class="ot">&lt;-</span> genesets_baderlab_genesets<span class="sc">$</span>genesets[<span class="fu">which</span>(genesets_baderlab_genesets<span class="sc">$</span>geneset.names <span class="sc">%in%</span> enrichmentresult<span class="sc">$</span>term_id)]</span>
-<span id="cb55-12"><a href="defined-genelist.html#cb55-12" tabindex="-1"></a></span>
-<span id="cb55-13"><a href="defined-genelist.html#cb55-13" tabindex="-1"></a>genes <span class="ot">&lt;-</span> <span class="fu">lapply</span>(subset_genesets,<span class="at">FUN=</span><span class="cf">function</span>(x){<span class="fu">intersect</span>(x,query_set)})</span>
-<span id="cb55-14"><a href="defined-genelist.html#cb55-14" tabindex="-1"></a></span>
-<span id="cb55-15"><a href="defined-genelist.html#cb55-15" tabindex="-1"></a><span class="co"># For each of the genes collapse to the comma separate text</span></span>
-<span id="cb55-16"><a href="defined-genelist.html#cb55-16" tabindex="-1"></a>genes_collapsed <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(genes,<span class="at">FUN=</span><span class="cf">function</span>(x){<span class="fu">paste</span>(x,<span class="at">collapse =</span> <span class="st">&quot;,&quot;</span>)}))</span>
-<span id="cb55-17"><a href="defined-genelist.html#cb55-17" tabindex="-1"></a>  </span>
-<span id="cb55-18"><a href="defined-genelist.html#cb55-18" tabindex="-1"></a>genes_collapsed_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb55-19"><a href="defined-genelist.html#cb55-19" tabindex="-1"></a>                            <span class="at">term_id =</span> <span class="fu">names</span>(genes), </span>
-<span id="cb55-20"><a href="defined-genelist.html#cb55-20" tabindex="-1"></a>                            <span class="at">genes =</span> genes_collapsed,<span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb55-21"><a href="defined-genelist.html#cb55-21" tabindex="-1"></a>  </span>
-<span id="cb55-22"><a href="defined-genelist.html#cb55-22" tabindex="-1"></a></span>
-<span id="cb55-23"><a href="defined-genelist.html#cb55-23" tabindex="-1"></a></span>
-<span id="cb55-24"><a href="defined-genelist.html#cb55-24" tabindex="-1"></a>formatted_results <span class="ot">&lt;-</span> <span class="fu">merge</span>(enrichmentresult,genes_collapsed_df,<span class="at">by.x=</span><span class="st">&quot;term_id&quot;</span> , <span class="at">by.y=</span><span class="st">&quot;term_id&quot;</span> )</span>
-<span id="cb55-25"><a href="defined-genelist.html#cb55-25" tabindex="-1"></a></span>
-<span id="cb55-26"><a href="defined-genelist.html#cb55-26" tabindex="-1"></a>formatted_results <span class="ot">&lt;-</span> formatted_results[<span class="fu">order</span>(formatted_results<span class="sc">$</span>p_value),]</span>
-<span id="cb55-27"><a href="defined-genelist.html#cb55-27" tabindex="-1"></a></span>
-<span id="cb55-28"><a href="defined-genelist.html#cb55-28" tabindex="-1"></a><span class="fu">return</span>(formatted_results)</span>
-<span id="cb55-29"><a href="defined-genelist.html#cb55-29" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="defined-genelist.html#cb54-1" tabindex="-1"></a>addgenes <span class="ot">=</span> <span class="cf">function</span>(gmtfile, enrichmentresult ){</span>
+<span id="cb54-2"><a href="defined-genelist.html#cb54-2" tabindex="-1"></a></span>
+<span id="cb54-3"><a href="defined-genelist.html#cb54-3" tabindex="-1"></a></span>
+<span id="cb54-4"><a href="defined-genelist.html#cb54-4" tabindex="-1"></a>capt_output <span class="ot">&lt;-</span> <span class="fu">capture.output</span>(genesets_baderlab_genesets <span class="ot">&lt;-</span> </span>
+<span id="cb54-5"><a href="defined-genelist.html#cb54-5" tabindex="-1"></a>                                <span class="fu">GSA.read.gmt</span>(<span class="at">filename =</span> dest_gmt_file_500))</span>
+<span id="cb54-6"><a href="defined-genelist.html#cb54-6" tabindex="-1"></a></span>
+<span id="cb54-7"><a href="defined-genelist.html#cb54-7" tabindex="-1"></a><span class="fu">names</span>(genesets_baderlab_genesets<span class="sc">$</span>genesets) <span class="ot">&lt;-</span> </span>
+<span id="cb54-8"><a href="defined-genelist.html#cb54-8" tabindex="-1"></a>                                genesets_baderlab_genesets<span class="sc">$</span>geneset.names</span>
+<span id="cb54-9"><a href="defined-genelist.html#cb54-9" tabindex="-1"></a></span>
+<span id="cb54-10"><a href="defined-genelist.html#cb54-10" tabindex="-1"></a></span>
+<span id="cb54-11"><a href="defined-genelist.html#cb54-11" tabindex="-1"></a>subset_genesets <span class="ot">&lt;-</span> genesets_baderlab_genesets<span class="sc">$</span>genesets[<span class="fu">which</span>(genesets_baderlab_genesets<span class="sc">$</span>geneset.names <span class="sc">%in%</span> enrichmentresult<span class="sc">$</span>term_id)]</span>
+<span id="cb54-12"><a href="defined-genelist.html#cb54-12" tabindex="-1"></a></span>
+<span id="cb54-13"><a href="defined-genelist.html#cb54-13" tabindex="-1"></a>genes <span class="ot">&lt;-</span> <span class="fu">lapply</span>(subset_genesets,<span class="at">FUN=</span><span class="cf">function</span>(x){<span class="fu">intersect</span>(x,query_set)})</span>
+<span id="cb54-14"><a href="defined-genelist.html#cb54-14" tabindex="-1"></a></span>
+<span id="cb54-15"><a href="defined-genelist.html#cb54-15" tabindex="-1"></a><span class="co"># For each of the genes collapse to the comma separate text</span></span>
+<span id="cb54-16"><a href="defined-genelist.html#cb54-16" tabindex="-1"></a>genes_collapsed <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(genes,<span class="at">FUN=</span><span class="cf">function</span>(x){<span class="fu">paste</span>(x,<span class="at">collapse =</span> <span class="st">&quot;,&quot;</span>)}))</span>
+<span id="cb54-17"><a href="defined-genelist.html#cb54-17" tabindex="-1"></a>  </span>
+<span id="cb54-18"><a href="defined-genelist.html#cb54-18" tabindex="-1"></a>genes_collapsed_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb54-19"><a href="defined-genelist.html#cb54-19" tabindex="-1"></a>                            <span class="at">term_id =</span> <span class="fu">names</span>(genes), </span>
+<span id="cb54-20"><a href="defined-genelist.html#cb54-20" tabindex="-1"></a>                            <span class="at">genes =</span> genes_collapsed,<span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb54-21"><a href="defined-genelist.html#cb54-21" tabindex="-1"></a>  </span>
+<span id="cb54-22"><a href="defined-genelist.html#cb54-22" tabindex="-1"></a></span>
+<span id="cb54-23"><a href="defined-genelist.html#cb54-23" tabindex="-1"></a></span>
+<span id="cb54-24"><a href="defined-genelist.html#cb54-24" tabindex="-1"></a>formatted_results <span class="ot">&lt;-</span> <span class="fu">merge</span>(enrichmentresult,genes_collapsed_df,<span class="at">by.x=</span><span class="st">&quot;term_id&quot;</span> , <span class="at">by.y=</span><span class="st">&quot;term_id&quot;</span> )</span>
+<span id="cb54-25"><a href="defined-genelist.html#cb54-25" tabindex="-1"></a></span>
+<span id="cb54-26"><a href="defined-genelist.html#cb54-26" tabindex="-1"></a>formatted_results <span class="ot">&lt;-</span> formatted_results[<span class="fu">order</span>(formatted_results<span class="sc">$</span>p_value),]</span>
+<span id="cb54-27"><a href="defined-genelist.html#cb54-27" tabindex="-1"></a></span>
+<span id="cb54-28"><a href="defined-genelist.html#cb54-28" tabindex="-1"></a><span class="fu">return</span>(formatted_results)</span>
+<span id="cb54-29"><a href="defined-genelist.html#cb54-29" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <div id="running-the-function-to-add-genes" class="section level4 hasAnchor" number="0.13.2.2">
 <h4><span class="header-section-number">0.13.2.2</span> Running the function to add genes<a href="defined-genelist.html#running-the-function-to-add-genes" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="defined-genelist.html#cb56-1" tabindex="-1"></a>formatted_results <span class="ot">&lt;-</span> <span class="fu">addgenes</span>(<span class="at">gmtfile =</span> dest_gmt_file_500 , <span class="at">enrichmentresult=</span> enrichment_results_UPgenes)</span>
-<span id="cb56-2"><a href="defined-genelist.html#cb56-2" tabindex="-1"></a></span>
-<span id="cb56-3"><a href="defined-genelist.html#cb56-3" tabindex="-1"></a><span class="fu">head</span>(formatted_results)</span></code></pre></div>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="defined-genelist.html#cb55-1" tabindex="-1"></a>formatted_results <span class="ot">&lt;-</span> <span class="fu">addgenes</span>(<span class="at">gmtfile =</span> dest_gmt_file_500 , <span class="at">enrichmentresult=</span> enrichment_results_UPgenes)</span>
+<span id="cb55-2"><a href="defined-genelist.html#cb55-2" tabindex="-1"></a></span>
+<span id="cb55-3"><a href="defined-genelist.html#cb55-3" tabindex="-1"></a><span class="fu">head</span>(formatted_results)</span></code></pre></div>
 <pre><code>##                                                                                                                                   term_id
 ## 18                                                                             EXTRACELLULAR MATRIX ORGANIZATION%REACTOME%R-HSA-1474244.5
 ## 2  BETA1 INTEGRIN CELL SURFACE INTERACTIONS%PATHWAY INTERACTION DATABASE NCI-NATURE CURATED DATA%BETA1 INTEGRIN CELL SURFACE INTERACTIONS
@@ -2711,12 +2677,12 @@ positive regulation of coagulation
 ## 9  Collagen biosynthesis and modifying enzymes                 17710
 ## 55                            tube development                 17710
 ##    source_order parents    score
-## 18         3114         5.603592
-## 2          1083         3.290313
-## 12         2582         2.696776
-## 42        14756         2.365313
-## 9          3202         2.296079
-## 55         9957         2.167739
+## 18         3114    NULL 5.603592
+## 2          1083    NULL 3.290313
+## 12         2582    NULL 2.696776
+## 42        14756    NULL 2.365313
+## 9          3202    NULL 2.296079
+## 55         9957    NULL 2.167739
 ##                                                                           genes
 ## 18 FBLN1,FBN1,SNTB1,ITGA5,TIMP2,P3H2,P3H3,LOX,COL6A2,COL6A1,COL5A1,SERPINE1,BGN
 ## 2                                         COL6A1,FBN1,ITGA5,TGFBI,COL5A1,COL6A2
@@ -2740,224 +2706,221 @@ Figure 3: Jaccard and overlap coefficients for two gene sets.
 </div>
 <p>We convert these scores into distances (1 − score) and use them to group similar pathways into broader biological themes.</p>
 <p>##Illustration with Jaccard Coefficient</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="defined-genelist.html#cb58-1" tabindex="-1"></a><span class="co"># Convert genes to lists</span></span>
-<span id="cb58-2"><a href="defined-genelist.html#cb58-2" tabindex="-1"></a>gene_lists <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(formatted_results<span class="sc">$</span>genes, <span class="st">&quot;,&quot;</span>)</span>
-<span id="cb58-3"><a href="defined-genelist.html#cb58-3" tabindex="-1"></a></span>
-<span id="cb58-4"><a href="defined-genelist.html#cb58-4" tabindex="-1"></a><span class="co"># Calculate Jaccard similarity matrix</span></span>
-<span id="cb58-5"><a href="defined-genelist.html#cb58-5" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(gene_lists)</span>
-<span id="cb58-6"><a href="defined-genelist.html#cb58-6" tabindex="-1"></a>jaccard_mat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, n, n)</span>
-<span id="cb58-7"><a href="defined-genelist.html#cb58-7" tabindex="-1"></a><span class="fu">rownames</span>(jaccard_mat) <span class="ot">&lt;-</span> formatted_results<span class="sc">$</span>term_name</span>
-<span id="cb58-8"><a href="defined-genelist.html#cb58-8" tabindex="-1"></a><span class="fu">colnames</span>(jaccard_mat) <span class="ot">&lt;-</span> formatted_results<span class="sc">$</span>term_name</span>
-<span id="cb58-9"><a href="defined-genelist.html#cb58-9" tabindex="-1"></a></span>
-<span id="cb58-10"><a href="defined-genelist.html#cb58-10" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(n)) {</span>
-<span id="cb58-11"><a href="defined-genelist.html#cb58-11" tabindex="-1"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="fu">seq_len</span>(n)) {</span>
-<span id="cb58-12"><a href="defined-genelist.html#cb58-12" tabindex="-1"></a>    intersection <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">intersect</span>(gene_lists[[i]], gene_lists[[j]]))</span>
-<span id="cb58-13"><a href="defined-genelist.html#cb58-13" tabindex="-1"></a>    union        <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">union</span>(gene_lists[[i]],     gene_lists[[j]]))</span>
-<span id="cb58-14"><a href="defined-genelist.html#cb58-14" tabindex="-1"></a>    jaccard_mat[i, j] <span class="ot">&lt;-</span> intersection <span class="sc">/</span> union</span>
-<span id="cb58-15"><a href="defined-genelist.html#cb58-15" tabindex="-1"></a>  }</span>
-<span id="cb58-16"><a href="defined-genelist.html#cb58-16" tabindex="-1"></a>}</span>
-<span id="cb58-17"><a href="defined-genelist.html#cb58-17" tabindex="-1"></a></span>
-<span id="cb58-18"><a href="defined-genelist.html#cb58-18" tabindex="-1"></a><span class="fu">library</span>(corrplot)</span></code></pre></div>
-<pre><code>## corrplot 0.95 loaded</code></pre>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="defined-genelist.html#cb60-1" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
-<span id="cb60-2"><a href="defined-genelist.html#cb60-2" tabindex="-1"></a></span>
-<span id="cb60-3"><a href="defined-genelist.html#cb60-3" tabindex="-1"></a>labs <span class="ot">&lt;-</span> formatted_results<span class="sc">$</span>term_name</span>
-<span id="cb60-4"><a href="defined-genelist.html#cb60-4" tabindex="-1"></a>labs <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">nchar</span>(labs) <span class="sc">&gt;</span> <span class="dv">30</span>, <span class="fu">paste0</span>(<span class="fu">substr</span>(labs, <span class="dv">1</span>, <span class="dv">27</span>), <span class="st">&quot;...&quot;</span>), labs)</span>
-<span id="cb60-5"><a href="defined-genelist.html#cb60-5" tabindex="-1"></a><span class="fu">rownames</span>(jaccard_mat) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(jaccard_mat) <span class="ot">&lt;-</span> <span class="fu">make.unique</span>(labs)</span>
-<span id="cb60-6"><a href="defined-genelist.html#cb60-6" tabindex="-1"></a></span>
-<span id="cb60-7"><a href="defined-genelist.html#cb60-7" tabindex="-1"></a>keep <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(jaccard_mat)), <span class="fu">min</span>(<span class="dv">20</span>, <span class="fu">nrow</span>(jaccard_mat)))</span>
-<span id="cb60-8"><a href="defined-genelist.html#cb60-8" tabindex="-1"></a>jaccard_sub <span class="ot">&lt;-</span> jaccard_mat[keep, keep]</span>
-<span id="cb60-9"><a href="defined-genelist.html#cb60-9" tabindex="-1"></a></span>
-<span id="cb60-10"><a href="defined-genelist.html#cb60-10" tabindex="-1"></a></span>
-<span id="cb60-11"><a href="defined-genelist.html#cb60-11" tabindex="-1"></a><span class="co"># Heatmap</span></span>
-<span id="cb60-12"><a href="defined-genelist.html#cb60-12" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">pheatmap</span>(</span>
-<span id="cb60-13"><a href="defined-genelist.html#cb60-13" tabindex="-1"></a>  jaccard_sub,</span>
-<span id="cb60-14"><a href="defined-genelist.html#cb60-14" tabindex="-1"></a>  <span class="at">color           =</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(<span class="st">&quot;white&quot;</span>, <span class="st">&quot;#C6DBEF&quot;</span>, <span class="st">&quot;#6BAED6&quot;</span>, <span class="st">&quot;#2171B5&quot;</span>, <span class="st">&quot;#08306B&quot;</span>))(<span class="dv">100</span>),</span>
-<span id="cb60-15"><a href="defined-genelist.html#cb60-15" tabindex="-1"></a>  <span class="at">breaks          =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">101</span>),</span>
-<span id="cb60-16"><a href="defined-genelist.html#cb60-16" tabindex="-1"></a>  <span class="at">display_numbers =</span> F,</span>
-<span id="cb60-17"><a href="defined-genelist.html#cb60-17" tabindex="-1"></a>  <span class="co">#number_format   = &quot;%.2f&quot;,</span></span>
-<span id="cb60-18"><a href="defined-genelist.html#cb60-18" tabindex="-1"></a>  <span class="co">#number_color    = &quot;black&quot;,</span></span>
-<span id="cb60-19"><a href="defined-genelist.html#cb60-19" tabindex="-1"></a>  <span class="co">#fontsize_number = 8,</span></span>
-<span id="cb60-20"><a href="defined-genelist.html#cb60-20" tabindex="-1"></a>  <span class="at">clustering_distance_rows =</span> <span class="fu">as.dist</span>(<span class="dv">1</span> <span class="sc">-</span> jaccard_sub),</span>
-<span id="cb60-21"><a href="defined-genelist.html#cb60-21" tabindex="-1"></a>  <span class="at">clustering_distance_cols =</span> <span class="fu">as.dist</span>(<span class="dv">1</span> <span class="sc">-</span> jaccard_sub),</span>
-<span id="cb60-22"><a href="defined-genelist.html#cb60-22" tabindex="-1"></a>  <span class="at">border_color    =</span> <span class="st">&quot;grey90&quot;</span>,</span>
-<span id="cb60-23"><a href="defined-genelist.html#cb60-23" tabindex="-1"></a>  <span class="at">fontsize_row    =</span> <span class="dv">7</span>,</span>
-<span id="cb60-24"><a href="defined-genelist.html#cb60-24" tabindex="-1"></a>  <span class="at">fontsize_col    =</span> <span class="dv">7</span>,</span>
-<span id="cb60-25"><a href="defined-genelist.html#cb60-25" tabindex="-1"></a>  <span class="at">angle_col       =</span> <span class="dv">45</span>,</span>
-<span id="cb60-26"><a href="defined-genelist.html#cb60-26" tabindex="-1"></a>  <span class="at">main            =</span> <span class="st">&quot;Jaccard coefficient (20 random gene sets)&quot;</span></span>
-<span id="cb60-27"><a href="defined-genelist.html#cb60-27" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="defined-genelist.html#cb57-1" tabindex="-1"></a><span class="co"># Convert genes to lists</span></span>
+<span id="cb57-2"><a href="defined-genelist.html#cb57-2" tabindex="-1"></a>gene_lists <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(formatted_results<span class="sc">$</span>genes, <span class="st">&quot;,&quot;</span>)</span>
+<span id="cb57-3"><a href="defined-genelist.html#cb57-3" tabindex="-1"></a></span>
+<span id="cb57-4"><a href="defined-genelist.html#cb57-4" tabindex="-1"></a><span class="co"># Calculate Jaccard similarity matrix</span></span>
+<span id="cb57-5"><a href="defined-genelist.html#cb57-5" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(gene_lists)</span>
+<span id="cb57-6"><a href="defined-genelist.html#cb57-6" tabindex="-1"></a>jaccard_mat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, n, n)</span>
+<span id="cb57-7"><a href="defined-genelist.html#cb57-7" tabindex="-1"></a><span class="fu">rownames</span>(jaccard_mat) <span class="ot">&lt;-</span> formatted_results<span class="sc">$</span>term_name</span>
+<span id="cb57-8"><a href="defined-genelist.html#cb57-8" tabindex="-1"></a><span class="fu">colnames</span>(jaccard_mat) <span class="ot">&lt;-</span> formatted_results<span class="sc">$</span>term_name</span>
+<span id="cb57-9"><a href="defined-genelist.html#cb57-9" tabindex="-1"></a></span>
+<span id="cb57-10"><a href="defined-genelist.html#cb57-10" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(n)) {</span>
+<span id="cb57-11"><a href="defined-genelist.html#cb57-11" tabindex="-1"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="fu">seq_len</span>(n)) {</span>
+<span id="cb57-12"><a href="defined-genelist.html#cb57-12" tabindex="-1"></a>    intersection <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">intersect</span>(gene_lists[[i]], gene_lists[[j]]))</span>
+<span id="cb57-13"><a href="defined-genelist.html#cb57-13" tabindex="-1"></a>    union        <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">union</span>(gene_lists[[i]],     gene_lists[[j]]))</span>
+<span id="cb57-14"><a href="defined-genelist.html#cb57-14" tabindex="-1"></a>    jaccard_mat[i, j] <span class="ot">&lt;-</span> intersection <span class="sc">/</span> union</span>
+<span id="cb57-15"><a href="defined-genelist.html#cb57-15" tabindex="-1"></a>  }</span>
+<span id="cb57-16"><a href="defined-genelist.html#cb57-16" tabindex="-1"></a>}</span>
+<span id="cb57-17"><a href="defined-genelist.html#cb57-17" tabindex="-1"></a></span>
+<span id="cb57-18"><a href="defined-genelist.html#cb57-18" tabindex="-1"></a></span>
+<span id="cb57-19"><a href="defined-genelist.html#cb57-19" tabindex="-1"></a>labs <span class="ot">&lt;-</span> formatted_results<span class="sc">$</span>term_name</span>
+<span id="cb57-20"><a href="defined-genelist.html#cb57-20" tabindex="-1"></a>labs <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">nchar</span>(labs) <span class="sc">&gt;</span> <span class="dv">30</span>, <span class="fu">paste0</span>(<span class="fu">substr</span>(labs, <span class="dv">1</span>, <span class="dv">27</span>), <span class="st">&quot;...&quot;</span>), labs)</span>
+<span id="cb57-21"><a href="defined-genelist.html#cb57-21" tabindex="-1"></a><span class="fu">rownames</span>(jaccard_mat) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(jaccard_mat) <span class="ot">&lt;-</span> <span class="fu">make.unique</span>(labs)</span>
+<span id="cb57-22"><a href="defined-genelist.html#cb57-22" tabindex="-1"></a></span>
+<span id="cb57-23"><a href="defined-genelist.html#cb57-23" tabindex="-1"></a>keep <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(jaccard_mat)), <span class="fu">min</span>(<span class="dv">20</span>, <span class="fu">nrow</span>(jaccard_mat)))</span>
+<span id="cb57-24"><a href="defined-genelist.html#cb57-24" tabindex="-1"></a>jaccard_sub <span class="ot">&lt;-</span> jaccard_mat[keep, keep]</span>
+<span id="cb57-25"><a href="defined-genelist.html#cb57-25" tabindex="-1"></a></span>
+<span id="cb57-26"><a href="defined-genelist.html#cb57-26" tabindex="-1"></a></span>
+<span id="cb57-27"><a href="defined-genelist.html#cb57-27" tabindex="-1"></a><span class="co"># Heatmap</span></span>
+<span id="cb57-28"><a href="defined-genelist.html#cb57-28" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">pheatmap</span>(</span>
+<span id="cb57-29"><a href="defined-genelist.html#cb57-29" tabindex="-1"></a>  jaccard_sub,</span>
+<span id="cb57-30"><a href="defined-genelist.html#cb57-30" tabindex="-1"></a>  <span class="at">color           =</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(<span class="st">&quot;white&quot;</span>, <span class="st">&quot;#C6DBEF&quot;</span>, <span class="st">&quot;#6BAED6&quot;</span>, <span class="st">&quot;#2171B5&quot;</span>, <span class="st">&quot;#08306B&quot;</span>))(<span class="dv">100</span>),</span>
+<span id="cb57-31"><a href="defined-genelist.html#cb57-31" tabindex="-1"></a>  <span class="at">breaks          =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">101</span>),</span>
+<span id="cb57-32"><a href="defined-genelist.html#cb57-32" tabindex="-1"></a>  <span class="at">display_numbers =</span> F,</span>
+<span id="cb57-33"><a href="defined-genelist.html#cb57-33" tabindex="-1"></a>  <span class="co">#number_format   = &quot;%.2f&quot;,</span></span>
+<span id="cb57-34"><a href="defined-genelist.html#cb57-34" tabindex="-1"></a>  <span class="co">#number_color    = &quot;black&quot;,</span></span>
+<span id="cb57-35"><a href="defined-genelist.html#cb57-35" tabindex="-1"></a>  <span class="co">#fontsize_number = 8,</span></span>
+<span id="cb57-36"><a href="defined-genelist.html#cb57-36" tabindex="-1"></a>  <span class="at">clustering_distance_rows =</span> <span class="fu">as.dist</span>(<span class="dv">1</span> <span class="sc">-</span> jaccard_sub),</span>
+<span id="cb57-37"><a href="defined-genelist.html#cb57-37" tabindex="-1"></a>  <span class="at">clustering_distance_cols =</span> <span class="fu">as.dist</span>(<span class="dv">1</span> <span class="sc">-</span> jaccard_sub),</span>
+<span id="cb57-38"><a href="defined-genelist.html#cb57-38" tabindex="-1"></a>  <span class="at">border_color    =</span> <span class="st">&quot;grey90&quot;</span>,</span>
+<span id="cb57-39"><a href="defined-genelist.html#cb57-39" tabindex="-1"></a>  <span class="at">fontsize_row    =</span> <span class="dv">7</span>,</span>
+<span id="cb57-40"><a href="defined-genelist.html#cb57-40" tabindex="-1"></a>  <span class="at">fontsize_col    =</span> <span class="dv">7</span>,</span>
+<span id="cb57-41"><a href="defined-genelist.html#cb57-41" tabindex="-1"></a>  <span class="at">angle_col       =</span> <span class="dv">45</span>,</span>
+<span id="cb57-42"><a href="defined-genelist.html#cb57-42" tabindex="-1"></a>  <span class="at">main            =</span> <span class="st">&quot;Jaccard coefficient (20 random gene sets)&quot;</span></span>
+<span id="cb57-43"><a href="defined-genelist.html#cb57-43" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="_main_files/figure-html/unnamed-chunk-29-1.png" alt="" width="672" /></p>
 <p>##Illustration with Overlap Coefficient</p>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="defined-genelist.html#cb61-1" tabindex="-1"></a><span class="co"># Calculate Overlap coefficient matrix (reuses gene_lists and n from above)</span></span>
-<span id="cb61-2"><a href="defined-genelist.html#cb61-2" tabindex="-1"></a>overlap_mat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, n, n)</span>
-<span id="cb61-3"><a href="defined-genelist.html#cb61-3" tabindex="-1"></a></span>
-<span id="cb61-4"><a href="defined-genelist.html#cb61-4" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(n)) {</span>
-<span id="cb61-5"><a href="defined-genelist.html#cb61-5" tabindex="-1"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="fu">seq_len</span>(n)) {</span>
-<span id="cb61-6"><a href="defined-genelist.html#cb61-6" tabindex="-1"></a>    intersection <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">intersect</span>(gene_lists[[i]], gene_lists[[j]]))</span>
-<span id="cb61-7"><a href="defined-genelist.html#cb61-7" tabindex="-1"></a>    smaller      <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="fu">length</span>(gene_lists[[i]]), <span class="fu">length</span>(gene_lists[[j]]))</span>
-<span id="cb61-8"><a href="defined-genelist.html#cb61-8" tabindex="-1"></a>    overlap_mat[i, j] <span class="ot">&lt;-</span> intersection <span class="sc">/</span> smaller</span>
-<span id="cb61-9"><a href="defined-genelist.html#cb61-9" tabindex="-1"></a>  }</span>
-<span id="cb61-10"><a href="defined-genelist.html#cb61-10" tabindex="-1"></a>}</span>
-<span id="cb61-11"><a href="defined-genelist.html#cb61-11" tabindex="-1"></a></span>
-<span id="cb61-12"><a href="defined-genelist.html#cb61-12" tabindex="-1"></a><span class="fu">rownames</span>(overlap_mat) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(overlap_mat) <span class="ot">&lt;-</span> <span class="fu">make.unique</span>(labs)</span>
-<span id="cb61-13"><a href="defined-genelist.html#cb61-13" tabindex="-1"></a></span>
-<span id="cb61-14"><a href="defined-genelist.html#cb61-14" tabindex="-1"></a><span class="co"># Use the same 20 gene sets as the Jaccard heatmap so the two can be compared</span></span>
-<span id="cb61-15"><a href="defined-genelist.html#cb61-15" tabindex="-1"></a>overlap_sub <span class="ot">&lt;-</span> overlap_mat[keep, keep]</span>
-<span id="cb61-16"><a href="defined-genelist.html#cb61-16" tabindex="-1"></a></span>
-<span id="cb61-17"><a href="defined-genelist.html#cb61-17" tabindex="-1"></a></span>
-<span id="cb61-18"><a href="defined-genelist.html#cb61-18" tabindex="-1"></a><span class="co"># Heatmap</span></span>
-<span id="cb61-19"><a href="defined-genelist.html#cb61-19" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">pheatmap</span>(</span>
-<span id="cb61-20"><a href="defined-genelist.html#cb61-20" tabindex="-1"></a>  overlap_sub,</span>
-<span id="cb61-21"><a href="defined-genelist.html#cb61-21" tabindex="-1"></a>  <span class="at">color           =</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(<span class="st">&quot;white&quot;</span>, <span class="st">&quot;#C6DBEF&quot;</span>, <span class="st">&quot;#6BAED6&quot;</span>, <span class="st">&quot;#2171B5&quot;</span>, <span class="st">&quot;#08306B&quot;</span>))(<span class="dv">100</span>),</span>
-<span id="cb61-22"><a href="defined-genelist.html#cb61-22" tabindex="-1"></a>  <span class="at">breaks          =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">101</span>),</span>
-<span id="cb61-23"><a href="defined-genelist.html#cb61-23" tabindex="-1"></a>  <span class="at">display_numbers =</span> F,</span>
-<span id="cb61-24"><a href="defined-genelist.html#cb61-24" tabindex="-1"></a>  <span class="at">clustering_distance_rows =</span> <span class="fu">as.dist</span>(<span class="dv">1</span> <span class="sc">-</span> overlap_sub),</span>
-<span id="cb61-25"><a href="defined-genelist.html#cb61-25" tabindex="-1"></a>  <span class="at">clustering_distance_cols =</span> <span class="fu">as.dist</span>(<span class="dv">1</span> <span class="sc">-</span> overlap_sub),</span>
-<span id="cb61-26"><a href="defined-genelist.html#cb61-26" tabindex="-1"></a>  <span class="at">border_color    =</span> <span class="st">&quot;grey90&quot;</span>,</span>
-<span id="cb61-27"><a href="defined-genelist.html#cb61-27" tabindex="-1"></a>  <span class="at">fontsize_row    =</span> <span class="dv">7</span>,</span>
-<span id="cb61-28"><a href="defined-genelist.html#cb61-28" tabindex="-1"></a>  <span class="at">fontsize_col    =</span> <span class="dv">7</span>,</span>
-<span id="cb61-29"><a href="defined-genelist.html#cb61-29" tabindex="-1"></a>  <span class="at">angle_col       =</span> <span class="dv">45</span>,</span>
-<span id="cb61-30"><a href="defined-genelist.html#cb61-30" tabindex="-1"></a>  <span class="at">main            =</span> <span class="st">&quot;Overlap coefficient (20 random gene sets)&quot;</span></span>
-<span id="cb61-31"><a href="defined-genelist.html#cb61-31" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="defined-genelist.html#cb58-1" tabindex="-1"></a><span class="co"># Calculate Overlap coefficient matrix (reuses gene_lists and n from above)</span></span>
+<span id="cb58-2"><a href="defined-genelist.html#cb58-2" tabindex="-1"></a>overlap_mat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, n, n)</span>
+<span id="cb58-3"><a href="defined-genelist.html#cb58-3" tabindex="-1"></a></span>
+<span id="cb58-4"><a href="defined-genelist.html#cb58-4" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(n)) {</span>
+<span id="cb58-5"><a href="defined-genelist.html#cb58-5" tabindex="-1"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="fu">seq_len</span>(n)) {</span>
+<span id="cb58-6"><a href="defined-genelist.html#cb58-6" tabindex="-1"></a>    intersection <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">intersect</span>(gene_lists[[i]], gene_lists[[j]]))</span>
+<span id="cb58-7"><a href="defined-genelist.html#cb58-7" tabindex="-1"></a>    smaller      <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="fu">length</span>(gene_lists[[i]]), <span class="fu">length</span>(gene_lists[[j]]))</span>
+<span id="cb58-8"><a href="defined-genelist.html#cb58-8" tabindex="-1"></a>    overlap_mat[i, j] <span class="ot">&lt;-</span> intersection <span class="sc">/</span> smaller</span>
+<span id="cb58-9"><a href="defined-genelist.html#cb58-9" tabindex="-1"></a>  }</span>
+<span id="cb58-10"><a href="defined-genelist.html#cb58-10" tabindex="-1"></a>}</span>
+<span id="cb58-11"><a href="defined-genelist.html#cb58-11" tabindex="-1"></a></span>
+<span id="cb58-12"><a href="defined-genelist.html#cb58-12" tabindex="-1"></a><span class="fu">rownames</span>(overlap_mat) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(overlap_mat) <span class="ot">&lt;-</span> <span class="fu">make.unique</span>(labs)</span>
+<span id="cb58-13"><a href="defined-genelist.html#cb58-13" tabindex="-1"></a></span>
+<span id="cb58-14"><a href="defined-genelist.html#cb58-14" tabindex="-1"></a><span class="co"># Use the same 20 gene sets as the Jaccard heatmap so the two can be compared</span></span>
+<span id="cb58-15"><a href="defined-genelist.html#cb58-15" tabindex="-1"></a>overlap_sub <span class="ot">&lt;-</span> overlap_mat[keep, keep]</span>
+<span id="cb58-16"><a href="defined-genelist.html#cb58-16" tabindex="-1"></a></span>
+<span id="cb58-17"><a href="defined-genelist.html#cb58-17" tabindex="-1"></a></span>
+<span id="cb58-18"><a href="defined-genelist.html#cb58-18" tabindex="-1"></a><span class="co"># Heatmap</span></span>
+<span id="cb58-19"><a href="defined-genelist.html#cb58-19" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">pheatmap</span>(</span>
+<span id="cb58-20"><a href="defined-genelist.html#cb58-20" tabindex="-1"></a>  overlap_sub,</span>
+<span id="cb58-21"><a href="defined-genelist.html#cb58-21" tabindex="-1"></a>  <span class="at">color           =</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(<span class="st">&quot;white&quot;</span>, <span class="st">&quot;#C6DBEF&quot;</span>, <span class="st">&quot;#6BAED6&quot;</span>, <span class="st">&quot;#2171B5&quot;</span>, <span class="st">&quot;#08306B&quot;</span>))(<span class="dv">100</span>),</span>
+<span id="cb58-22"><a href="defined-genelist.html#cb58-22" tabindex="-1"></a>  <span class="at">breaks          =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">101</span>),</span>
+<span id="cb58-23"><a href="defined-genelist.html#cb58-23" tabindex="-1"></a>  <span class="at">display_numbers =</span> F,</span>
+<span id="cb58-24"><a href="defined-genelist.html#cb58-24" tabindex="-1"></a>  <span class="at">clustering_distance_rows =</span> <span class="fu">as.dist</span>(<span class="dv">1</span> <span class="sc">-</span> overlap_sub),</span>
+<span id="cb58-25"><a href="defined-genelist.html#cb58-25" tabindex="-1"></a>  <span class="at">clustering_distance_cols =</span> <span class="fu">as.dist</span>(<span class="dv">1</span> <span class="sc">-</span> overlap_sub),</span>
+<span id="cb58-26"><a href="defined-genelist.html#cb58-26" tabindex="-1"></a>  <span class="at">border_color    =</span> <span class="st">&quot;grey90&quot;</span>,</span>
+<span id="cb58-27"><a href="defined-genelist.html#cb58-27" tabindex="-1"></a>  <span class="at">fontsize_row    =</span> <span class="dv">7</span>,</span>
+<span id="cb58-28"><a href="defined-genelist.html#cb58-28" tabindex="-1"></a>  <span class="at">fontsize_col    =</span> <span class="dv">7</span>,</span>
+<span id="cb58-29"><a href="defined-genelist.html#cb58-29" tabindex="-1"></a>  <span class="at">angle_col       =</span> <span class="dv">45</span>,</span>
+<span id="cb58-30"><a href="defined-genelist.html#cb58-30" tabindex="-1"></a>  <span class="at">main            =</span> <span class="st">&quot;Overlap coefficient (20 random gene sets)&quot;</span></span>
+<span id="cb58-31"><a href="defined-genelist.html#cb58-31" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="_main_files/figure-html/unnamed-chunk-30-1.png" alt="" width="672" /></p>
 <p>##Hierarchical Clustering</p>
 <p>plot_hclust_enrichment: helper function to cluster the top enriched pathways by gene overlap (Jaccard distance) and plot them next to the dendrogram</p>
-<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="defined-genelist.html#cb62-1" tabindex="-1"></a>plot_hclust_enrichment <span class="ot">=</span> <span class="cf">function</span>(enrichment_results, <span class="at">n_top =</span> <span class="dv">20</span>, <span class="at">n_clusters =</span> <span class="dv">8</span>) {</span>
-<span id="cb62-2"><a href="defined-genelist.html#cb62-2" tabindex="-1"></a></span>
-<span id="cb62-3"><a href="defined-genelist.html#cb62-3" tabindex="-1"></a>  enrichment_results<span class="sc">$</span>score <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fu">log10</span>(<span class="fu">as.numeric</span>(enrichment_results<span class="sc">$</span>p_value))</span>
-<span id="cb62-4"><a href="defined-genelist.html#cb62-4" tabindex="-1"></a></span>
-<span id="cb62-5"><a href="defined-genelist.html#cb62-5" tabindex="-1"></a>  <span class="co"># Top n_top enriched terms</span></span>
-<span id="cb62-6"><a href="defined-genelist.html#cb62-6" tabindex="-1"></a>  enrichmentTop <span class="ot">&lt;-</span> enrichment_results <span class="sc">%&gt;%</span></span>
-<span id="cb62-7"><a href="defined-genelist.html#cb62-7" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(score)) <span class="sc">%&gt;%</span></span>
-<span id="cb62-8"><a href="defined-genelist.html#cb62-8" tabindex="-1"></a>    <span class="fu">slice_head</span>(<span class="at">n =</span> n_top)</span>
-<span id="cb62-9"><a href="defined-genelist.html#cb62-9" tabindex="-1"></a></span>
-<span id="cb62-10"><a href="defined-genelist.html#cb62-10" tabindex="-1"></a>  <span class="co"># Add the genes of our list found in each pathway</span></span>
-<span id="cb62-11"><a href="defined-genelist.html#cb62-11" tabindex="-1"></a>  top_terms <span class="ot">&lt;-</span> <span class="fu">addgenes</span>(<span class="at">gmtfile =</span> dest_gmt_file_500 , <span class="at">enrichmentresult =</span> enrichmentTop)</span>
-<span id="cb62-12"><a href="defined-genelist.html#cb62-12" tabindex="-1"></a>  top_terms <span class="ot">&lt;-</span> top_terms <span class="sc">%&gt;%</span></span>
-<span id="cb62-13"><a href="defined-genelist.html#cb62-13" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">as.numeric</span>(p_value)) <span class="sc">%&gt;%</span></span>
-<span id="cb62-14"><a href="defined-genelist.html#cb62-14" tabindex="-1"></a>    <span class="fu">slice_head</span>(<span class="at">n =</span> n_top)</span>
-<span id="cb62-15"><a href="defined-genelist.html#cb62-15" tabindex="-1"></a></span>
-<span id="cb62-16"><a href="defined-genelist.html#cb62-16" tabindex="-1"></a>  <span class="co"># Jaccard similarity matrix </span></span>
-<span id="cb62-17"><a href="defined-genelist.html#cb62-17" tabindex="-1"></a>  gene_lists <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(top_terms<span class="sc">$</span>genes, <span class="st">&quot;,&quot;</span>)</span>
-<span id="cb62-18"><a href="defined-genelist.html#cb62-18" tabindex="-1"></a>  n          <span class="ot">&lt;-</span> <span class="fu">length</span>(gene_lists)</span>
-<span id="cb62-19"><a href="defined-genelist.html#cb62-19" tabindex="-1"></a></span>
-<span id="cb62-20"><a href="defined-genelist.html#cb62-20" tabindex="-1"></a>  jaccard_mat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, n, n,</span>
-<span id="cb62-21"><a href="defined-genelist.html#cb62-21" tabindex="-1"></a>                        <span class="at">dimnames =</span> <span class="fu">list</span>(top_terms<span class="sc">$</span>term_name, top_terms<span class="sc">$</span>term_name))</span>
-<span id="cb62-22"><a href="defined-genelist.html#cb62-22" tabindex="-1"></a></span>
-<span id="cb62-23"><a href="defined-genelist.html#cb62-23" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(n)) {</span>
-<span id="cb62-24"><a href="defined-genelist.html#cb62-24" tabindex="-1"></a>    <span class="cf">for</span> (j <span class="cf">in</span> <span class="fu">seq_len</span>(n)) {</span>
-<span id="cb62-25"><a href="defined-genelist.html#cb62-25" tabindex="-1"></a>      inter <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">intersect</span>(gene_lists[[i]], gene_lists[[j]]))</span>
-<span id="cb62-26"><a href="defined-genelist.html#cb62-26" tabindex="-1"></a>      uni   <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">union</span>(gene_lists[[i]],     gene_lists[[j]]))</span>
-<span id="cb62-27"><a href="defined-genelist.html#cb62-27" tabindex="-1"></a>      jaccard_mat[i, j] <span class="ot">&lt;-</span> inter <span class="sc">/</span> uni</span>
-<span id="cb62-28"><a href="defined-genelist.html#cb62-28" tabindex="-1"></a>    }</span>
-<span id="cb62-29"><a href="defined-genelist.html#cb62-29" tabindex="-1"></a>  }</span>
-<span id="cb62-30"><a href="defined-genelist.html#cb62-30" tabindex="-1"></a></span>
-<span id="cb62-31"><a href="defined-genelist.html#cb62-31" tabindex="-1"></a>  <span class="co"># Hierarchical clustering </span></span>
-<span id="cb62-32"><a href="defined-genelist.html#cb62-32" tabindex="-1"></a>  dist_mat   <span class="ot">&lt;-</span> <span class="fu">as.dist</span>(<span class="dv">1</span> <span class="sc">-</span> jaccard_mat)</span>
-<span id="cb62-33"><a href="defined-genelist.html#cb62-33" tabindex="-1"></a>  hc         <span class="ot">&lt;-</span> <span class="fu">hclust</span>(dist_mat, <span class="at">method =</span> <span class="st">&quot;average&quot;</span>)</span>
-<span id="cb62-34"><a href="defined-genelist.html#cb62-34" tabindex="-1"></a>  term_order <span class="ot">&lt;-</span> hc<span class="sc">$</span>labels[hc<span class="sc">$</span>order]</span>
-<span id="cb62-35"><a href="defined-genelist.html#cb62-35" tabindex="-1"></a></span>
-<span id="cb62-36"><a href="defined-genelist.html#cb62-36" tabindex="-1"></a>  <span class="co"># The first level is drawn at the bottom of the bar plot, matching the</span></span>
-<span id="cb62-37"><a href="defined-genelist.html#cb62-37" tabindex="-1"></a>  <span class="co"># first dendrogram leaf (y = 1)</span></span>
-<span id="cb62-38"><a href="defined-genelist.html#cb62-38" tabindex="-1"></a>  top_terms<span class="sc">$</span>term_name <span class="ot">&lt;-</span> <span class="fu">factor</span>(top_terms<span class="sc">$</span>term_name, <span class="at">levels =</span> term_order)</span>
-<span id="cb62-39"><a href="defined-genelist.html#cb62-39" tabindex="-1"></a>  top_terms<span class="sc">$</span>neglog10p <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fu">log10</span>(<span class="fu">as.numeric</span>(top_terms<span class="sc">$</span>p_value))</span>
-<span id="cb62-40"><a href="defined-genelist.html#cb62-40" tabindex="-1"></a></span>
-<span id="cb62-41"><a href="defined-genelist.html#cb62-41" tabindex="-1"></a>  <span class="co">#  Cut tree into k branches (cannot have more branches than terms)</span></span>
-<span id="cb62-42"><a href="defined-genelist.html#cb62-42" tabindex="-1"></a>  k        <span class="ot">&lt;-</span> <span class="fu">min</span>(n_clusters, n)</span>
-<span id="cb62-43"><a href="defined-genelist.html#cb62-43" tabindex="-1"></a>  clusters <span class="ot">&lt;-</span> <span class="fu">cutree</span>(hc, <span class="at">k =</span> k)</span>
-<span id="cb62-44"><a href="defined-genelist.html#cb62-44" tabindex="-1"></a></span>
-<span id="cb62-45"><a href="defined-genelist.html#cb62-45" tabindex="-1"></a>  top_terms<span class="sc">$</span>cluster <span class="ot">&lt;-</span> <span class="fu">factor</span>(clusters[<span class="fu">as.character</span>(top_terms<span class="sc">$</span>term_name)])</span>
-<span id="cb62-46"><a href="defined-genelist.html#cb62-46" tabindex="-1"></a></span>
-<span id="cb62-47"><a href="defined-genelist.html#cb62-47" tabindex="-1"></a>  <span class="co"># Bar plot (full, coloured by cluster)</span></span>
-<span id="cb62-48"><a href="defined-genelist.html#cb62-48" tabindex="-1"></a>  base_colours <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#1D9E75&quot;</span>, <span class="st">&quot;#3A7DC9&quot;</span>, <span class="st">&quot;#E07B39&quot;</span>, <span class="st">&quot;#9B59B6&quot;</span>,</span>
-<span id="cb62-49"><a href="defined-genelist.html#cb62-49" tabindex="-1"></a>                    <span class="st">&quot;#E74C3C&quot;</span>, <span class="st">&quot;#F1C40F&quot;</span>, <span class="st">&quot;#1ABC9C&quot;</span>, <span class="st">&quot;#E91E63&quot;</span>)</span>
-<span id="cb62-50"><a href="defined-genelist.html#cb62-50" tabindex="-1"></a>  <span class="co"># Interpolate extra colours when more than 8 clusters are requested</span></span>
-<span id="cb62-51"><a href="defined-genelist.html#cb62-51" tabindex="-1"></a>  <span class="cf">if</span> (k <span class="sc">&lt;=</span> <span class="fu">length</span>(base_colours)) {</span>
-<span id="cb62-52"><a href="defined-genelist.html#cb62-52" tabindex="-1"></a>    cluster_colours <span class="ot">&lt;-</span> base_colours</span>
-<span id="cb62-53"><a href="defined-genelist.html#cb62-53" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb62-54"><a href="defined-genelist.html#cb62-54" tabindex="-1"></a>    cluster_colours <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(base_colours)(k)</span>
-<span id="cb62-55"><a href="defined-genelist.html#cb62-55" tabindex="-1"></a>  }</span>
-<span id="cb62-56"><a href="defined-genelist.html#cb62-56" tabindex="-1"></a></span>
-<span id="cb62-57"><a href="defined-genelist.html#cb62-57" tabindex="-1"></a>  p_bar <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(top_terms, <span class="fu">aes</span>(<span class="at">x =</span> neglog10p, <span class="at">y =</span> term_name, <span class="at">fill =</span> cluster)) <span class="sc">+</span></span>
-<span id="cb62-58"><a href="defined-genelist.html#cb62-58" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="at">alpha =</span> <span class="fl">0.85</span>, <span class="at">width =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
-<span id="cb62-59"><a href="defined-genelist.html#cb62-59" tabindex="-1"></a>    <span class="fu">scale_y_discrete</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>)) <span class="sc">+</span></span>
-<span id="cb62-60"><a href="defined-genelist.html#cb62-60" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> cluster_colours[<span class="fu">seq_len</span>(k)],</span>
-<span id="cb62-61"><a href="defined-genelist.html#cb62-61" tabindex="-1"></a>                      <span class="at">name   =</span> <span class="st">&quot;Branch&quot;</span>) <span class="sc">+</span></span>
-<span id="cb62-62"><a href="defined-genelist.html#cb62-62" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(<span class="sc">-</span>log[<span class="dv">10</span>](p<span class="sc">-</span>value)), <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb62-63"><a href="defined-genelist.html#cb62-63" tabindex="-1"></a>    <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">10</span>) <span class="sc">+</span></span>
-<span id="cb62-64"><a href="defined-genelist.html#cb62-64" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
-<span id="cb62-65"><a href="defined-genelist.html#cb62-65" tabindex="-1"></a>      <span class="at">panel.grid.major.y =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb62-66"><a href="defined-genelist.html#cb62-66" tabindex="-1"></a>      <span class="at">axis.text.y        =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
-<span id="cb62-67"><a href="defined-genelist.html#cb62-67" tabindex="-1"></a>      <span class="at">legend.position    =</span> <span class="st">&quot;bottom&quot;</span></span>
-<span id="cb62-68"><a href="defined-genelist.html#cb62-68" tabindex="-1"></a>    )</span>
-<span id="cb62-69"><a href="defined-genelist.html#cb62-69" tabindex="-1"></a></span>
-<span id="cb62-70"><a href="defined-genelist.html#cb62-70" tabindex="-1"></a>  <span class="co">#  Dendrogram </span></span>
-<span id="cb62-71"><a href="defined-genelist.html#cb62-71" tabindex="-1"></a>  dend_data <span class="ot">&lt;-</span> <span class="fu">dendro_data</span>(hc, <span class="at">type =</span> <span class="st">&quot;rectangle&quot;</span>)</span>
-<span id="cb62-72"><a href="defined-genelist.html#cb62-72" tabindex="-1"></a>  seg       <span class="ot">&lt;-</span> dend_data<span class="sc">$</span>segments</span>
-<span id="cb62-73"><a href="defined-genelist.html#cb62-73" tabindex="-1"></a></span>
-<span id="cb62-74"><a href="defined-genelist.html#cb62-74" tabindex="-1"></a>  p_dend <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(seg) <span class="sc">+</span></span>
-<span id="cb62-75"><a href="defined-genelist.html#cb62-75" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> y, <span class="at">y =</span> x, <span class="at">xend =</span> yend, <span class="at">yend =</span> xend),</span>
-<span id="cb62-76"><a href="defined-genelist.html#cb62-76" tabindex="-1"></a>                 <span class="at">colour =</span> <span class="st">&quot;grey40&quot;</span>, <span class="at">linewidth =</span> <span class="fl">0.45</span>) <span class="sc">+</span></span>
-<span id="cb62-77"><a href="defined-genelist.html#cb62-77" tabindex="-1"></a>    <span class="fu">scale_x_reverse</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="fl">0.02</span>, <span class="dv">0</span>))) <span class="sc">+</span></span>
-<span id="cb62-78"><a href="defined-genelist.html#cb62-78" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, n <span class="sc">+</span> <span class="fl">0.5</span>), <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
-<span id="cb62-79"><a href="defined-genelist.html#cb62-79" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Jaccard distance&quot;</span>) <span class="sc">+</span></span>
-<span id="cb62-80"><a href="defined-genelist.html#cb62-80" tabindex="-1"></a>    <span class="fu">theme_void</span>() <span class="sc">+</span></span>
-<span id="cb62-81"><a href="defined-genelist.html#cb62-81" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
-<span id="cb62-82"><a href="defined-genelist.html#cb62-82" tabindex="-1"></a>      <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>, <span class="at">colour =</span> <span class="st">&quot;grey50&quot;</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">4</span>)),</span>
-<span id="cb62-83"><a href="defined-genelist.html#cb62-83" tabindex="-1"></a>      <span class="at">axis.text.x  =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>, <span class="at">colour =</span> <span class="st">&quot;grey60&quot;</span>),</span>
-<span id="cb62-84"><a href="defined-genelist.html#cb62-84" tabindex="-1"></a>      <span class="at">plot.margin  =</span> <span class="fu">margin</span>(<span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">0</span>, <span class="dv">0</span>)</span>
-<span id="cb62-85"><a href="defined-genelist.html#cb62-85" tabindex="-1"></a>    )</span>
-<span id="cb62-86"><a href="defined-genelist.html#cb62-86" tabindex="-1"></a></span>
-<span id="cb62-87"><a href="defined-genelist.html#cb62-87" tabindex="-1"></a>  <span class="co">#  Combined plot </span></span>
-<span id="cb62-88"><a href="defined-genelist.html#cb62-88" tabindex="-1"></a>  p_combined <span class="ot">&lt;-</span> p_dend <span class="sc">+</span> p_bar <span class="sc">+</span></span>
-<span id="cb62-89"><a href="defined-genelist.html#cb62-89" tabindex="-1"></a>    <span class="fu">plot_layout</span>(<span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">1</span>))</span>
-<span id="cb62-90"><a href="defined-genelist.html#cb62-90" tabindex="-1"></a></span>
-<span id="cb62-91"><a href="defined-genelist.html#cb62-91" tabindex="-1"></a>  <span class="co">#  Keep only the top hit per branch </span></span>
-<span id="cb62-92"><a href="defined-genelist.html#cb62-92" tabindex="-1"></a>  top_per_cluster <span class="ot">&lt;-</span> top_terms <span class="sc">%&gt;%</span></span>
-<span id="cb62-93"><a href="defined-genelist.html#cb62-93" tabindex="-1"></a>    <span class="fu">group_by</span>(cluster) <span class="sc">%&gt;%</span></span>
-<span id="cb62-94"><a href="defined-genelist.html#cb62-94" tabindex="-1"></a>    <span class="fu">slice_min</span>(<span class="fu">as.numeric</span>(p_value), <span class="at">n =</span> <span class="dv">1</span>, <span class="at">with_ties =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb62-95"><a href="defined-genelist.html#cb62-95" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb62-96"><a href="defined-genelist.html#cb62-96" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">as.numeric</span>(p_value)) <span class="sc">%&gt;%</span></span>
-<span id="cb62-97"><a href="defined-genelist.html#cb62-97" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">term_name =</span> <span class="fu">factor</span>(<span class="fu">as.character</span>(term_name),</span>
-<span id="cb62-98"><a href="defined-genelist.html#cb62-98" tabindex="-1"></a>                              <span class="at">levels =</span> <span class="fu">rev</span>(<span class="fu">as.character</span>(term_name))))</span>
-<span id="cb62-99"><a href="defined-genelist.html#cb62-99" tabindex="-1"></a></span>
-<span id="cb62-100"><a href="defined-genelist.html#cb62-100" tabindex="-1"></a>  <span class="co">#  Simple barplot — one representative term per branch </span></span>
-<span id="cb62-101"><a href="defined-genelist.html#cb62-101" tabindex="-1"></a>  p_simple <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(top_per_cluster,</span>
-<span id="cb62-102"><a href="defined-genelist.html#cb62-102" tabindex="-1"></a>                     <span class="fu">aes</span>(<span class="at">x =</span> neglog10p, <span class="at">y =</span> term_name, <span class="at">fill =</span> cluster)) <span class="sc">+</span></span>
-<span id="cb62-103"><a href="defined-genelist.html#cb62-103" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="at">alpha =</span> <span class="fl">0.88</span>, <span class="at">width =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
-<span id="cb62-104"><a href="defined-genelist.html#cb62-104" tabindex="-1"></a>    <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">sprintf</span>(<span class="st">&quot;p = %.2e&quot;</span>, <span class="fu">as.numeric</span>(p_value))),</span>
-<span id="cb62-105"><a href="defined-genelist.html#cb62-105" tabindex="-1"></a>              <span class="at">hjust =</span> <span class="sc">-</span><span class="fl">0.1</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">colour =</span> <span class="st">&quot;grey30&quot;</span>) <span class="sc">+</span></span>
-<span id="cb62-106"><a href="defined-genelist.html#cb62-106" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> cluster_colours[<span class="fu">seq_len</span>(k)],</span>
-<span id="cb62-107"><a href="defined-genelist.html#cb62-107" tabindex="-1"></a>                      <span class="at">name   =</span> <span class="st">&quot;Branch&quot;</span>) <span class="sc">+</span></span>
-<span id="cb62-108"><a href="defined-genelist.html#cb62-108" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.25</span>))) <span class="sc">+</span></span>
-<span id="cb62-109"><a href="defined-genelist.html#cb62-109" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
-<span id="cb62-110"><a href="defined-genelist.html#cb62-110" tabindex="-1"></a>      <span class="at">x     =</span> <span class="fu">expression</span>(<span class="sc">-</span>log[<span class="dv">10</span>](p<span class="sc">-</span>value)),</span>
-<span id="cb62-111"><a href="defined-genelist.html#cb62-111" tabindex="-1"></a>      <span class="at">y     =</span> <span class="cn">NULL</span>,</span>
-<span id="cb62-112"><a href="defined-genelist.html#cb62-112" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">&quot;Top term per branch&quot;</span></span>
-<span id="cb62-113"><a href="defined-genelist.html#cb62-113" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb62-114"><a href="defined-genelist.html#cb62-114" tabindex="-1"></a>    <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">11</span>) <span class="sc">+</span></span>
-<span id="cb62-115"><a href="defined-genelist.html#cb62-115" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
-<span id="cb62-116"><a href="defined-genelist.html#cb62-116" tabindex="-1"></a>      <span class="at">panel.grid.major.y =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb62-117"><a href="defined-genelist.html#cb62-117" tabindex="-1"></a>      <span class="at">axis.text.y        =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">9</span>),</span>
-<span id="cb62-118"><a href="defined-genelist.html#cb62-118" tabindex="-1"></a>      <span class="at">legend.position    =</span> <span class="st">&quot;bottom&quot;</span>,</span>
-<span id="cb62-119"><a href="defined-genelist.html#cb62-119" tabindex="-1"></a>      <span class="at">plot.title         =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">11</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>)</span>
-<span id="cb62-120"><a href="defined-genelist.html#cb62-120" tabindex="-1"></a>    )</span>
-<span id="cb62-121"><a href="defined-genelist.html#cb62-121" tabindex="-1"></a></span>
-<span id="cb62-122"><a href="defined-genelist.html#cb62-122" tabindex="-1"></a>  <span class="co"># n_terms and n_clusters are returned so the figure height can be set</span></span>
-<span id="cb62-123"><a href="defined-genelist.html#cb62-123" tabindex="-1"></a>  <span class="co"># from them in the chunk options</span></span>
-<span id="cb62-124"><a href="defined-genelist.html#cb62-124" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">combined =</span> p_combined, <span class="at">top_per_branch =</span> p_simple,</span>
-<span id="cb62-125"><a href="defined-genelist.html#cb62-125" tabindex="-1"></a>              <span class="at">n_terms =</span> n, <span class="at">n_clusters =</span> k))</span>
-<span id="cb62-126"><a href="defined-genelist.html#cb62-126" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="defined-genelist.html#cb59-1" tabindex="-1"></a>plot_hclust_enrichment <span class="ot">=</span> <span class="cf">function</span>(enrichment_results, <span class="at">n_top =</span> <span class="dv">20</span>, <span class="at">n_clusters =</span> <span class="dv">8</span>) {</span>
+<span id="cb59-2"><a href="defined-genelist.html#cb59-2" tabindex="-1"></a></span>
+<span id="cb59-3"><a href="defined-genelist.html#cb59-3" tabindex="-1"></a>  enrichment_results<span class="sc">$</span>score <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fu">log10</span>(<span class="fu">as.numeric</span>(enrichment_results<span class="sc">$</span>p_value))</span>
+<span id="cb59-4"><a href="defined-genelist.html#cb59-4" tabindex="-1"></a></span>
+<span id="cb59-5"><a href="defined-genelist.html#cb59-5" tabindex="-1"></a>  <span class="co"># Top n_top enriched terms</span></span>
+<span id="cb59-6"><a href="defined-genelist.html#cb59-6" tabindex="-1"></a>  enrichmentTop <span class="ot">&lt;-</span> enrichment_results <span class="sc">%&gt;%</span></span>
+<span id="cb59-7"><a href="defined-genelist.html#cb59-7" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(score)) <span class="sc">%&gt;%</span></span>
+<span id="cb59-8"><a href="defined-genelist.html#cb59-8" tabindex="-1"></a>    <span class="fu">slice_head</span>(<span class="at">n =</span> n_top)</span>
+<span id="cb59-9"><a href="defined-genelist.html#cb59-9" tabindex="-1"></a></span>
+<span id="cb59-10"><a href="defined-genelist.html#cb59-10" tabindex="-1"></a>  <span class="co"># Add the genes of our list found in each pathway</span></span>
+<span id="cb59-11"><a href="defined-genelist.html#cb59-11" tabindex="-1"></a>  top_terms <span class="ot">&lt;-</span> <span class="fu">addgenes</span>(<span class="at">gmtfile =</span> dest_gmt_file_500 , <span class="at">enrichmentresult =</span> enrichmentTop)</span>
+<span id="cb59-12"><a href="defined-genelist.html#cb59-12" tabindex="-1"></a>  top_terms <span class="ot">&lt;-</span> top_terms <span class="sc">%&gt;%</span></span>
+<span id="cb59-13"><a href="defined-genelist.html#cb59-13" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">as.numeric</span>(p_value)) <span class="sc">%&gt;%</span></span>
+<span id="cb59-14"><a href="defined-genelist.html#cb59-14" tabindex="-1"></a>    <span class="fu">slice_head</span>(<span class="at">n =</span> n_top)</span>
+<span id="cb59-15"><a href="defined-genelist.html#cb59-15" tabindex="-1"></a></span>
+<span id="cb59-16"><a href="defined-genelist.html#cb59-16" tabindex="-1"></a>  <span class="co"># Jaccard similarity matrix </span></span>
+<span id="cb59-17"><a href="defined-genelist.html#cb59-17" tabindex="-1"></a>  gene_lists <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(top_terms<span class="sc">$</span>genes, <span class="st">&quot;,&quot;</span>)</span>
+<span id="cb59-18"><a href="defined-genelist.html#cb59-18" tabindex="-1"></a>  n          <span class="ot">&lt;-</span> <span class="fu">length</span>(gene_lists)</span>
+<span id="cb59-19"><a href="defined-genelist.html#cb59-19" tabindex="-1"></a></span>
+<span id="cb59-20"><a href="defined-genelist.html#cb59-20" tabindex="-1"></a>  jaccard_mat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, n, n,</span>
+<span id="cb59-21"><a href="defined-genelist.html#cb59-21" tabindex="-1"></a>                        <span class="at">dimnames =</span> <span class="fu">list</span>(top_terms<span class="sc">$</span>term_name, top_terms<span class="sc">$</span>term_name))</span>
+<span id="cb59-22"><a href="defined-genelist.html#cb59-22" tabindex="-1"></a></span>
+<span id="cb59-23"><a href="defined-genelist.html#cb59-23" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(n)) {</span>
+<span id="cb59-24"><a href="defined-genelist.html#cb59-24" tabindex="-1"></a>    <span class="cf">for</span> (j <span class="cf">in</span> <span class="fu">seq_len</span>(n)) {</span>
+<span id="cb59-25"><a href="defined-genelist.html#cb59-25" tabindex="-1"></a>      inter <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">intersect</span>(gene_lists[[i]], gene_lists[[j]]))</span>
+<span id="cb59-26"><a href="defined-genelist.html#cb59-26" tabindex="-1"></a>      uni   <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">union</span>(gene_lists[[i]],     gene_lists[[j]]))</span>
+<span id="cb59-27"><a href="defined-genelist.html#cb59-27" tabindex="-1"></a>      jaccard_mat[i, j] <span class="ot">&lt;-</span> inter <span class="sc">/</span> uni</span>
+<span id="cb59-28"><a href="defined-genelist.html#cb59-28" tabindex="-1"></a>    }</span>
+<span id="cb59-29"><a href="defined-genelist.html#cb59-29" tabindex="-1"></a>  }</span>
+<span id="cb59-30"><a href="defined-genelist.html#cb59-30" tabindex="-1"></a></span>
+<span id="cb59-31"><a href="defined-genelist.html#cb59-31" tabindex="-1"></a>  <span class="co"># Hierarchical clustering </span></span>
+<span id="cb59-32"><a href="defined-genelist.html#cb59-32" tabindex="-1"></a>  dist_mat   <span class="ot">&lt;-</span> <span class="fu">as.dist</span>(<span class="dv">1</span> <span class="sc">-</span> jaccard_mat)</span>
+<span id="cb59-33"><a href="defined-genelist.html#cb59-33" tabindex="-1"></a>  hc         <span class="ot">&lt;-</span> <span class="fu">hclust</span>(dist_mat, <span class="at">method =</span> <span class="st">&quot;average&quot;</span>)</span>
+<span id="cb59-34"><a href="defined-genelist.html#cb59-34" tabindex="-1"></a>  term_order <span class="ot">&lt;-</span> hc<span class="sc">$</span>labels[hc<span class="sc">$</span>order]</span>
+<span id="cb59-35"><a href="defined-genelist.html#cb59-35" tabindex="-1"></a></span>
+<span id="cb59-36"><a href="defined-genelist.html#cb59-36" tabindex="-1"></a>  <span class="co"># The first level is drawn at the bottom of the bar plot, matching the</span></span>
+<span id="cb59-37"><a href="defined-genelist.html#cb59-37" tabindex="-1"></a>  <span class="co"># first dendrogram leaf (y = 1)</span></span>
+<span id="cb59-38"><a href="defined-genelist.html#cb59-38" tabindex="-1"></a>  top_terms<span class="sc">$</span>term_name <span class="ot">&lt;-</span> <span class="fu">factor</span>(top_terms<span class="sc">$</span>term_name, <span class="at">levels =</span> term_order)</span>
+<span id="cb59-39"><a href="defined-genelist.html#cb59-39" tabindex="-1"></a>  top_terms<span class="sc">$</span>neglog10p <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fu">log10</span>(<span class="fu">as.numeric</span>(top_terms<span class="sc">$</span>p_value))</span>
+<span id="cb59-40"><a href="defined-genelist.html#cb59-40" tabindex="-1"></a></span>
+<span id="cb59-41"><a href="defined-genelist.html#cb59-41" tabindex="-1"></a>  <span class="co">#  Cut tree into k branches (cannot have more branches than terms)</span></span>
+<span id="cb59-42"><a href="defined-genelist.html#cb59-42" tabindex="-1"></a>  k        <span class="ot">&lt;-</span> <span class="fu">min</span>(n_clusters, n)</span>
+<span id="cb59-43"><a href="defined-genelist.html#cb59-43" tabindex="-1"></a>  clusters <span class="ot">&lt;-</span> <span class="fu">cutree</span>(hc, <span class="at">k =</span> k)</span>
+<span id="cb59-44"><a href="defined-genelist.html#cb59-44" tabindex="-1"></a></span>
+<span id="cb59-45"><a href="defined-genelist.html#cb59-45" tabindex="-1"></a>  top_terms<span class="sc">$</span>cluster <span class="ot">&lt;-</span> <span class="fu">factor</span>(clusters[<span class="fu">as.character</span>(top_terms<span class="sc">$</span>term_name)])</span>
+<span id="cb59-46"><a href="defined-genelist.html#cb59-46" tabindex="-1"></a></span>
+<span id="cb59-47"><a href="defined-genelist.html#cb59-47" tabindex="-1"></a>  <span class="co"># Bar plot (full, coloured by cluster)</span></span>
+<span id="cb59-48"><a href="defined-genelist.html#cb59-48" tabindex="-1"></a>  base_colours <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#1D9E75&quot;</span>, <span class="st">&quot;#3A7DC9&quot;</span>, <span class="st">&quot;#E07B39&quot;</span>, <span class="st">&quot;#9B59B6&quot;</span>,</span>
+<span id="cb59-49"><a href="defined-genelist.html#cb59-49" tabindex="-1"></a>                    <span class="st">&quot;#E74C3C&quot;</span>, <span class="st">&quot;#F1C40F&quot;</span>, <span class="st">&quot;#1ABC9C&quot;</span>, <span class="st">&quot;#E91E63&quot;</span>)</span>
+<span id="cb59-50"><a href="defined-genelist.html#cb59-50" tabindex="-1"></a>  <span class="co"># Interpolate extra colours when more than 8 clusters are requested</span></span>
+<span id="cb59-51"><a href="defined-genelist.html#cb59-51" tabindex="-1"></a>  <span class="cf">if</span> (k <span class="sc">&lt;=</span> <span class="fu">length</span>(base_colours)) {</span>
+<span id="cb59-52"><a href="defined-genelist.html#cb59-52" tabindex="-1"></a>    cluster_colours <span class="ot">&lt;-</span> base_colours</span>
+<span id="cb59-53"><a href="defined-genelist.html#cb59-53" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb59-54"><a href="defined-genelist.html#cb59-54" tabindex="-1"></a>    cluster_colours <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(base_colours)(k)</span>
+<span id="cb59-55"><a href="defined-genelist.html#cb59-55" tabindex="-1"></a>  }</span>
+<span id="cb59-56"><a href="defined-genelist.html#cb59-56" tabindex="-1"></a></span>
+<span id="cb59-57"><a href="defined-genelist.html#cb59-57" tabindex="-1"></a>  p_bar <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(top_terms, <span class="fu">aes</span>(<span class="at">x =</span> neglog10p, <span class="at">y =</span> term_name, <span class="at">fill =</span> cluster)) <span class="sc">+</span></span>
+<span id="cb59-58"><a href="defined-genelist.html#cb59-58" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="at">alpha =</span> <span class="fl">0.85</span>, <span class="at">width =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb59-59"><a href="defined-genelist.html#cb59-59" tabindex="-1"></a>    <span class="fu">scale_y_discrete</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>)) <span class="sc">+</span></span>
+<span id="cb59-60"><a href="defined-genelist.html#cb59-60" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> cluster_colours[<span class="fu">seq_len</span>(k)],</span>
+<span id="cb59-61"><a href="defined-genelist.html#cb59-61" tabindex="-1"></a>                      <span class="at">name   =</span> <span class="st">&quot;Branch&quot;</span>) <span class="sc">+</span></span>
+<span id="cb59-62"><a href="defined-genelist.html#cb59-62" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(<span class="sc">-</span>log[<span class="dv">10</span>](p<span class="sc">-</span>value)), <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb59-63"><a href="defined-genelist.html#cb59-63" tabindex="-1"></a>    <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">10</span>) <span class="sc">+</span></span>
+<span id="cb59-64"><a href="defined-genelist.html#cb59-64" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb59-65"><a href="defined-genelist.html#cb59-65" tabindex="-1"></a>      <span class="at">panel.grid.major.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb59-66"><a href="defined-genelist.html#cb59-66" tabindex="-1"></a>      <span class="at">axis.text.y        =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
+<span id="cb59-67"><a href="defined-genelist.html#cb59-67" tabindex="-1"></a>      <span class="at">legend.position    =</span> <span class="st">&quot;bottom&quot;</span></span>
+<span id="cb59-68"><a href="defined-genelist.html#cb59-68" tabindex="-1"></a>    )</span>
+<span id="cb59-69"><a href="defined-genelist.html#cb59-69" tabindex="-1"></a></span>
+<span id="cb59-70"><a href="defined-genelist.html#cb59-70" tabindex="-1"></a>  <span class="co">#  Dendrogram </span></span>
+<span id="cb59-71"><a href="defined-genelist.html#cb59-71" tabindex="-1"></a>  dend_data <span class="ot">&lt;-</span> <span class="fu">dendro_data</span>(hc, <span class="at">type =</span> <span class="st">&quot;rectangle&quot;</span>)</span>
+<span id="cb59-72"><a href="defined-genelist.html#cb59-72" tabindex="-1"></a>  seg       <span class="ot">&lt;-</span> dend_data<span class="sc">$</span>segments</span>
+<span id="cb59-73"><a href="defined-genelist.html#cb59-73" tabindex="-1"></a></span>
+<span id="cb59-74"><a href="defined-genelist.html#cb59-74" tabindex="-1"></a>  p_dend <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(seg) <span class="sc">+</span></span>
+<span id="cb59-75"><a href="defined-genelist.html#cb59-75" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> y, <span class="at">y =</span> x, <span class="at">xend =</span> yend, <span class="at">yend =</span> xend),</span>
+<span id="cb59-76"><a href="defined-genelist.html#cb59-76" tabindex="-1"></a>                 <span class="at">colour =</span> <span class="st">&quot;grey40&quot;</span>, <span class="at">linewidth =</span> <span class="fl">0.45</span>) <span class="sc">+</span></span>
+<span id="cb59-77"><a href="defined-genelist.html#cb59-77" tabindex="-1"></a>    <span class="fu">scale_x_reverse</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="fl">0.02</span>, <span class="dv">0</span>))) <span class="sc">+</span></span>
+<span id="cb59-78"><a href="defined-genelist.html#cb59-78" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, n <span class="sc">+</span> <span class="fl">0.5</span>), <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb59-79"><a href="defined-genelist.html#cb59-79" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Jaccard distance&quot;</span>) <span class="sc">+</span></span>
+<span id="cb59-80"><a href="defined-genelist.html#cb59-80" tabindex="-1"></a>    <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb59-81"><a href="defined-genelist.html#cb59-81" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb59-82"><a href="defined-genelist.html#cb59-82" tabindex="-1"></a>      <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>, <span class="at">colour =</span> <span class="st">&quot;grey50&quot;</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">4</span>)),</span>
+<span id="cb59-83"><a href="defined-genelist.html#cb59-83" tabindex="-1"></a>      <span class="at">axis.text.x  =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>, <span class="at">colour =</span> <span class="st">&quot;grey60&quot;</span>),</span>
+<span id="cb59-84"><a href="defined-genelist.html#cb59-84" tabindex="-1"></a>      <span class="at">plot.margin  =</span> <span class="fu">margin</span>(<span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb59-85"><a href="defined-genelist.html#cb59-85" tabindex="-1"></a>    )</span>
+<span id="cb59-86"><a href="defined-genelist.html#cb59-86" tabindex="-1"></a></span>
+<span id="cb59-87"><a href="defined-genelist.html#cb59-87" tabindex="-1"></a>  <span class="co">#  Combined plot </span></span>
+<span id="cb59-88"><a href="defined-genelist.html#cb59-88" tabindex="-1"></a>  p_combined <span class="ot">&lt;-</span> p_dend <span class="sc">+</span> p_bar <span class="sc">+</span></span>
+<span id="cb59-89"><a href="defined-genelist.html#cb59-89" tabindex="-1"></a>    <span class="fu">plot_layout</span>(<span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">1</span>))</span>
+<span id="cb59-90"><a href="defined-genelist.html#cb59-90" tabindex="-1"></a></span>
+<span id="cb59-91"><a href="defined-genelist.html#cb59-91" tabindex="-1"></a>  <span class="co">#  Keep only the top hit per branch </span></span>
+<span id="cb59-92"><a href="defined-genelist.html#cb59-92" tabindex="-1"></a>  top_per_cluster <span class="ot">&lt;-</span> top_terms <span class="sc">%&gt;%</span></span>
+<span id="cb59-93"><a href="defined-genelist.html#cb59-93" tabindex="-1"></a>    <span class="fu">group_by</span>(cluster) <span class="sc">%&gt;%</span></span>
+<span id="cb59-94"><a href="defined-genelist.html#cb59-94" tabindex="-1"></a>    <span class="fu">slice_min</span>(<span class="fu">as.numeric</span>(p_value), <span class="at">n =</span> <span class="dv">1</span>, <span class="at">with_ties =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb59-95"><a href="defined-genelist.html#cb59-95" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb59-96"><a href="defined-genelist.html#cb59-96" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">as.numeric</span>(p_value)) <span class="sc">%&gt;%</span></span>
+<span id="cb59-97"><a href="defined-genelist.html#cb59-97" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">term_name =</span> <span class="fu">factor</span>(<span class="fu">as.character</span>(term_name),</span>
+<span id="cb59-98"><a href="defined-genelist.html#cb59-98" tabindex="-1"></a>                              <span class="at">levels =</span> <span class="fu">rev</span>(<span class="fu">as.character</span>(term_name))))</span>
+<span id="cb59-99"><a href="defined-genelist.html#cb59-99" tabindex="-1"></a></span>
+<span id="cb59-100"><a href="defined-genelist.html#cb59-100" tabindex="-1"></a>  <span class="co">#  Simple barplot — one representative term per branch </span></span>
+<span id="cb59-101"><a href="defined-genelist.html#cb59-101" tabindex="-1"></a>  p_simple <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(top_per_cluster,</span>
+<span id="cb59-102"><a href="defined-genelist.html#cb59-102" tabindex="-1"></a>                     <span class="fu">aes</span>(<span class="at">x =</span> neglog10p, <span class="at">y =</span> term_name, <span class="at">fill =</span> cluster)) <span class="sc">+</span></span>
+<span id="cb59-103"><a href="defined-genelist.html#cb59-103" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="at">alpha =</span> <span class="fl">0.88</span>, <span class="at">width =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb59-104"><a href="defined-genelist.html#cb59-104" tabindex="-1"></a>    <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">sprintf</span>(<span class="st">&quot;p = %.2e&quot;</span>, <span class="fu">as.numeric</span>(p_value))),</span>
+<span id="cb59-105"><a href="defined-genelist.html#cb59-105" tabindex="-1"></a>              <span class="at">hjust =</span> <span class="sc">-</span><span class="fl">0.1</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">colour =</span> <span class="st">&quot;grey30&quot;</span>) <span class="sc">+</span></span>
+<span id="cb59-106"><a href="defined-genelist.html#cb59-106" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> cluster_colours[<span class="fu">seq_len</span>(k)],</span>
+<span id="cb59-107"><a href="defined-genelist.html#cb59-107" tabindex="-1"></a>                      <span class="at">name   =</span> <span class="st">&quot;Branch&quot;</span>) <span class="sc">+</span></span>
+<span id="cb59-108"><a href="defined-genelist.html#cb59-108" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.25</span>))) <span class="sc">+</span></span>
+<span id="cb59-109"><a href="defined-genelist.html#cb59-109" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb59-110"><a href="defined-genelist.html#cb59-110" tabindex="-1"></a>      <span class="at">x     =</span> <span class="fu">expression</span>(<span class="sc">-</span>log[<span class="dv">10</span>](p<span class="sc">-</span>value)),</span>
+<span id="cb59-111"><a href="defined-genelist.html#cb59-111" tabindex="-1"></a>      <span class="at">y     =</span> <span class="cn">NULL</span>,</span>
+<span id="cb59-112"><a href="defined-genelist.html#cb59-112" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">&quot;Top term per branch&quot;</span></span>
+<span id="cb59-113"><a href="defined-genelist.html#cb59-113" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb59-114"><a href="defined-genelist.html#cb59-114" tabindex="-1"></a>    <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">11</span>) <span class="sc">+</span></span>
+<span id="cb59-115"><a href="defined-genelist.html#cb59-115" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb59-116"><a href="defined-genelist.html#cb59-116" tabindex="-1"></a>      <span class="at">panel.grid.major.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb59-117"><a href="defined-genelist.html#cb59-117" tabindex="-1"></a>      <span class="at">axis.text.y        =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">9</span>),</span>
+<span id="cb59-118"><a href="defined-genelist.html#cb59-118" tabindex="-1"></a>      <span class="at">legend.position    =</span> <span class="st">&quot;bottom&quot;</span>,</span>
+<span id="cb59-119"><a href="defined-genelist.html#cb59-119" tabindex="-1"></a>      <span class="at">plot.title         =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">11</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>)</span>
+<span id="cb59-120"><a href="defined-genelist.html#cb59-120" tabindex="-1"></a>    )</span>
+<span id="cb59-121"><a href="defined-genelist.html#cb59-121" tabindex="-1"></a></span>
+<span id="cb59-122"><a href="defined-genelist.html#cb59-122" tabindex="-1"></a>  <span class="co"># n_terms and n_clusters are returned so the figure height can be set</span></span>
+<span id="cb59-123"><a href="defined-genelist.html#cb59-123" tabindex="-1"></a>  <span class="co"># from them in the chunk options</span></span>
+<span id="cb59-124"><a href="defined-genelist.html#cb59-124" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">combined =</span> p_combined, <span class="at">top_per_branch =</span> p_simple,</span>
+<span id="cb59-125"><a href="defined-genelist.html#cb59-125" tabindex="-1"></a>              <span class="at">n_terms =</span> n, <span class="at">n_clusters =</span> k))</span>
+<span id="cb59-126"><a href="defined-genelist.html#cb59-126" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <div id="running-the-function-on-the-top-20-pathways" class="section level4 hasAnchor" number="0.13.2.4">
 <h4><span class="header-section-number">0.13.2.4</span> Running the function on the top 20 pathways<a href="defined-genelist.html#running-the-function-on-the-top-20-pathways" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="defined-genelist.html#cb63-1" tabindex="-1"></a>enrichment_results_UPgenes <span class="ot">&lt;-</span> gprofiler_results_custom_max500_UPgenes<span class="sc">$</span>result</span>
-<span id="cb63-2"><a href="defined-genelist.html#cb63-2" tabindex="-1"></a></span>
-<span id="cb63-3"><a href="defined-genelist.html#cb63-3" tabindex="-1"></a>hc_plots <span class="ot">&lt;-</span> <span class="fu">plot_hclust_enrichment</span>(<span class="at">enrichment_results =</span> enrichment_results_UPgenes, <span class="at">n_top =</span> <span class="dv">500</span>, <span class="at">n_clusters =</span> <span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="defined-genelist.html#cb60-1" tabindex="-1"></a>enrichment_results_UPgenes <span class="ot">&lt;-</span> gprofiler_results_custom_max500_UPgenes<span class="sc">$</span>result</span>
+<span id="cb60-2"><a href="defined-genelist.html#cb60-2" tabindex="-1"></a></span>
+<span id="cb60-3"><a href="defined-genelist.html#cb60-3" tabindex="-1"></a>hc_plots <span class="ot">&lt;-</span> <span class="fu">plot_hclust_enrichment</span>(<span class="at">enrichment_results =</span> enrichment_results_UPgenes, <span class="at">n_top =</span> <span class="dv">500</span>, <span class="at">n_clusters =</span> <span class="dv">10</span>)</span></code></pre></div>
 <p>The figure height grows with the number of pathways (combined plot) and the number of clusters (top term per branch), so the bars do not overlap.</p>
-<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="defined-genelist.html#cb64-1" tabindex="-1"></a>hc_plots<span class="sc">$</span>combined</span></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="defined-genelist.html#cb61-1" tabindex="-1"></a>hc_plots<span class="sc">$</span>combined</span></code></pre></div>
 <p><img src="_main_files/figure-html/unnamed-chunk-33-1.png" alt="" width="960" /></p>
-<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="defined-genelist.html#cb65-1" tabindex="-1"></a>hc_plots<span class="sc">$</span>top_per_branch</span></code></pre></div>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="defined-genelist.html#cb62-1" tabindex="-1"></a>hc_plots<span class="sc">$</span>top_per_branch</span></code></pre></div>
 <p><img src="_main_files/figure-html/unnamed-chunk-34-1.png" alt="" width="768" /></p>
 </div>
 <div id="your-turn-running-the-function-with-your-defined-number-of-pathways-and-clusters" class="section level4 hasAnchor" number="0.13.2.5">

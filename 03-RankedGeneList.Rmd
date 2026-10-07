@@ -52,21 +52,11 @@ cran_packages <- c(
   "knitr",
   "kableExtra",
   "glue",
-  "RCurl",
-  "webshot2",
   "ggridges",
-  "igraph",
-  "stringr",
-  "data.table",
-  "patchwork",
-  "ggdendro",
-  "pheatmap",
-  "RColorBrewer"
+  "data.table"
 )
 # List of Bioconductor packages
 bioc_packages <- c(
-  "gprofiler2",
-  "GSA",
   "fgsea",
   "clusterProfiler",
   "enrichplot"
@@ -88,20 +78,10 @@ library(tidyverse)
 library(knitr)
 library(kableExtra)
 library(glue)
-library(RCurl)
-library(webshot2)
 library(ggridges)
-library(igraph)
-library(stringr)
 library(data.table)
-library(patchwork)
-library(ggdendro)
-library(pheatmap)
-library(RColorBrewer)
 
 # Bioconductor packages
-library(gprofiler2)
-library(GSA)
 library(fgsea)
 library(clusterProfiler)
 library(enrichplot)

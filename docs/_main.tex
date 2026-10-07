@@ -194,14 +194,12 @@ We perform differential expression analysis using a negative binomial generalize
 \DocumentationTok{\#\# List of CRAN packages}
 \NormalTok{cran\_packages }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
   \StringTok{"tidyverse"}\NormalTok{,}
-  \StringTok{"gprofiler2"}\NormalTok{,}
   \StringTok{"ggrepel"}
 \NormalTok{)}
 
 \CommentTok{\# List of Bioconductor packages}
 \NormalTok{bioc\_packages }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
-  \StringTok{"edgeR"}\NormalTok{,}
-  \StringTok{"fgsea"}
+  \StringTok{"edgeR"}
 \NormalTok{)}
 
 \CommentTok{\# Install CRAN packages if not already installed}
@@ -240,7 +238,6 @@ We perform differential expression analysis using a negative binomial generalize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{library}\NormalTok{(gprofiler2)}
 \FunctionTok{library}\NormalTok{(ggrepel)}
 \CommentTok{\# Bioconductor packages}
 \FunctionTok{library}\NormalTok{(edgeR)}
@@ -250,12 +247,6 @@ We perform differential expression analysis using a negative binomial generalize
 \begin{verbatim}
 ## Loading required package: limma
 \end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{library}\NormalTok{(fgsea)}
-\end{Highlighting}
-\end{Shaded}
 
 \section{Data used for this comparison}\label{data-used-for-this-comparison}
 
@@ -507,31 +498,27 @@ For this analysis, we are going to compare the Palbo-resistant cell lines (3 bio
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-##  [1] fgsea_1.28.0     edgeR_4.0.16     limma_3.58.1     ggrepel_0.9.8   
-##  [5] gprofiler2_0.2.4 lubridate_1.9.5  forcats_1.0.1    stringr_1.6.0   
-##  [9] dplyr_1.2.1      purrr_1.2.2      readr_2.2.0      tidyr_1.3.2     
-## [13] tibble_3.3.1     ggplot2_4.0.3    tidyverse_2.0.0 
+##  [1] edgeR_4.0.16    limma_3.58.1    ggrepel_0.9.8   lubridate_1.9.5
+##  [5] forcats_1.0.1   stringr_1.6.0   dplyr_1.2.1     purrr_1.2.2    
+##  [9] readr_2.2.0     tidyr_1.3.2     tibble_3.3.1    ggplot2_4.0.3  
+## [13] tidyverse_2.0.0
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] fastmatch_1.1-8     gtable_0.3.6        xfun_0.61          
-##  [4] htmlwidgets_1.6.4   lattice_0.22-7      tzdb_0.5.0         
-##  [7] vctrs_0.7.3         tools_4.3.2         generics_0.1.4     
-## [10] parallel_4.3.2      pkgconfig_2.0.3     Matrix_1.6-5       
-## [13] data.table_1.18.6.1 RColorBrewer_1.1-3  S7_0.2.2           
-## [16] lifecycle_1.0.5     compiler_4.3.2      farver_2.1.2       
-## [19] statmod_1.5.2       tinytex_0.61        codetools_0.2-20   
-## [22] htmltools_0.5.9     yaml_2.3.12         plotly_4.12.1      
-## [25] pillar_1.11.1       BiocParallel_1.36.0 tidyselect_1.2.1   
-## [28] locfit_1.5-9.12     digest_0.6.39       stringi_1.8.9      
-## [31] bookdown_0.48       splines_4.3.2       labeling_0.4.3     
-## [34] cowplot_1.2.0       fastmap_1.2.0       grid_4.3.2         
-## [37] cli_3.6.6           magrittr_2.0.5      withr_3.0.3        
-## [40] scales_1.4.0        timechange_0.4.0    rmarkdown_2.32     
-## [43] httr_1.4.9          otel_0.2.0          hms_1.1.4          
-## [46] evaluate_1.0.5      knitr_1.52          viridisLite_0.4.3  
-## [49] rlang_1.3.0         Rcpp_1.1.2          glue_1.8.1         
-## [52] BiocManager_1.30.27 renv_1.2.4          rstudioapi_0.19.0  
-## [55] jsonlite_2.0.0      R6_2.6.1
+##  [1] generics_0.1.4      renv_1.2.4          stringi_1.8.9      
+##  [4] lattice_0.22-7      hms_1.1.4           digest_0.6.39      
+##  [7] magrittr_2.0.5      evaluate_1.0.5      grid_4.3.2         
+## [10] timechange_0.4.0    RColorBrewer_1.1-3  bookdown_0.48      
+## [13] fastmap_1.2.0       tinytex_0.61        BiocManager_1.30.27
+## [16] scales_1.4.0        cli_3.6.6           rlang_1.3.0        
+## [19] splines_4.3.2       withr_3.0.3         yaml_2.3.12        
+## [22] otel_0.2.0          tools_4.3.2         tzdb_0.5.0         
+## [25] locfit_1.5-9.12     vctrs_0.7.3         R6_2.6.1           
+## [28] lifecycle_1.0.5     pkgconfig_2.0.3     pillar_1.11.1      
+## [31] gtable_0.3.6        glue_1.8.1          Rcpp_1.1.2         
+## [34] statmod_1.5.2       xfun_0.61           tidyselect_1.2.1   
+## [37] rstudioapi_0.19.0   knitr_1.52          farver_2.1.2       
+## [40] htmltools_0.5.9     labeling_0.4.3      rmarkdown_2.32     
+## [43] compiler_4.3.2      S7_0.2.2
 \end{verbatim}
 
 \chapter*{Defined genelist}\label{defined-genelist}
@@ -573,33 +560,17 @@ This exercise requires the file ``edgeR\_resistant\_vs\_parental\_all\_genes.csv
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# CRAN and Bioconductor setup}
-\ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{requireNamespace}\NormalTok{(}\StringTok{"BiocManager"}\NormalTok{, }\AttributeTok{quietly =} \ConstantTok{TRUE}\NormalTok{))}
-  \FunctionTok{install.packages}\NormalTok{(}\StringTok{"BiocManager"}\NormalTok{)}
 \CommentTok{\# List of CRAN packages}
 \NormalTok{cran\_packages }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
   \StringTok{"tidyverse"}\NormalTok{,}
   \StringTok{"knitr"}\NormalTok{,}
   \StringTok{"kableExtra"}\NormalTok{,}
   \StringTok{"glue"}\NormalTok{,}
-  \StringTok{"RCurl"}\NormalTok{,}
-  \StringTok{"webshot2"}\NormalTok{,}
-  \StringTok{"ggridges"}\NormalTok{,}
-  \StringTok{"igraph"}\NormalTok{,}
-  \StringTok{"stringr"}\NormalTok{,}
-  \StringTok{"data.table"}\NormalTok{,}
   \StringTok{"patchwork"}\NormalTok{,}
   \StringTok{"ggdendro"}\NormalTok{,}
   \StringTok{"pheatmap"}\NormalTok{,}
-  \StringTok{"RColorBrewer"}
-\NormalTok{)}
-\CommentTok{\# List of Bioconductor packages}
-\NormalTok{bioc\_packages }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
   \StringTok{"gprofiler2"}\NormalTok{,}
-  \StringTok{"GSA"}\NormalTok{,}
-  \StringTok{"fgsea"}\NormalTok{,}
-  \StringTok{"clusterProfiler"}\NormalTok{,}
-  \StringTok{"enrichplot"}
+  \StringTok{"GSA"}
 \NormalTok{)}
 \CommentTok{\# Install CRAN packages if not already installed}
 \ControlFlowTok{for}\NormalTok{ (pkg }\ControlFlowTok{in}\NormalTok{ cran\_packages) \{}
@@ -607,34 +578,16 @@ This exercise requires the file ``edgeR\_resistant\_vs\_parental\_all\_genes.csv
     \FunctionTok{install.packages}\NormalTok{(pkg)}
 \NormalTok{  \}}
 \NormalTok{\}}
-\CommentTok{\# Install Bioconductor packages if not already installed}
-\ControlFlowTok{for}\NormalTok{ (pkg }\ControlFlowTok{in}\NormalTok{ bioc\_packages) \{}
-  \ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{requireNamespace}\NormalTok{(pkg, }\AttributeTok{quietly =} \ConstantTok{TRUE}\NormalTok{)) \{}
-\NormalTok{    BiocManager}\SpecialCharTok{::}\FunctionTok{install}\NormalTok{(pkg)}
-\NormalTok{  \}}
-\NormalTok{\}}
 \CommentTok{\# Load the libraries}
 \FunctionTok{library}\NormalTok{(tidyverse)}
 \FunctionTok{library}\NormalTok{(knitr)}
 \FunctionTok{library}\NormalTok{(kableExtra)}
 \FunctionTok{library}\NormalTok{(glue)}
-\FunctionTok{library}\NormalTok{(RCurl)}
-\FunctionTok{library}\NormalTok{(webshot2)}
-\FunctionTok{library}\NormalTok{(ggridges)}
-\FunctionTok{library}\NormalTok{(igraph)}
-\FunctionTok{library}\NormalTok{(stringr)}
-\FunctionTok{library}\NormalTok{(data.table)}
 \FunctionTok{library}\NormalTok{(patchwork)}
 \FunctionTok{library}\NormalTok{(ggdendro)}
 \FunctionTok{library}\NormalTok{(pheatmap)}
-\FunctionTok{library}\NormalTok{(RColorBrewer)}
-
-\CommentTok{\# Bioconductor packages}
 \FunctionTok{library}\NormalTok{(gprofiler2)}
 \FunctionTok{library}\NormalTok{(GSA)}
-\FunctionTok{library}\NormalTok{(fgsea)}
-\FunctionTok{library}\NormalTok{(clusterProfiler)}
-\FunctionTok{library}\NormalTok{(enrichplot)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -739,13 +692,13 @@ For this query we are specifying -
 ## 4 regulation of multicellular organismal development                 16180
 ## 5                                        coagulation                 16180
 ## 6                         collagen metabolic process                 16180
-##   source_order      parents
-## 1         8374 GO:00072....
-## 2          542 GO:00487....
-## 3        12418 GO:00508....
-## 4        23538 GO:00072....
-## 5        12417   GO:0032501
-## 6         7434   GO:0008152
+##   source_order                            parents
+## 1         8374             GO:0007275, GO:0048856
+## 2          542             GO:0048731, GO:0072359
+## 3        12418             GO:0050817, GO:0051239
+## 4        23538 GO:0007275, GO:0050793, GO:0051239
+## 5        12417                         GO:0032501
+## 6         7434                         GO:0008152
 \end{verbatim}
 
 \subsubsection{YOUR TURN: run g:Profiler with the down genes (use same parameters as above)}\label{your-turn-run-gprofiler-with-the-down-genes-use-same-parameters-as-above}
@@ -905,27 +858,27 @@ query & significant & p\_value & term\_size & query\_size & intersection\_size &
 \hline
 query\_1 & TRUE & 0.0000077 & 298 & 57 & 12 & 0.2105263 & 0.0402685 & REAC:R-HSA-1474244 & REAC & Extracellular matrix organization & 11056 & 930 & REAC:0000000\\
 \hline
-query\_1 & TRUE & 0.0008208 & 89 & 57 & 6 & 0.1052632 & 0.0674157 & REAC:R-HSA-1474290 & REAC & Collagen formation & 11056 & 403 & REAC:R-H....\\
+query\_1 & TRUE & 0.0008208 & 89 & 57 & 6 & 0.1052632 & 0.0674157 & REAC:R-HSA-1474290 & REAC & Collagen formation & 11056 & 403 & REAC:R-HSA-1474244\\
 \hline
-query\_1 & TRUE & 0.0021054 & 67 & 57 & 5 & 0.0877193 & 0.0746269 & REAC:R-HSA-1650814 & REAC & Collagen biosynthesis and modifying enzymes & 11056 & 400 & REAC:R-H....\\
+query\_1 & TRUE & 0.0021054 & 67 & 57 & 5 & 0.0877193 & 0.0746269 & REAC:R-HSA-1650814 & REAC & Collagen biosynthesis and modifying enzymes & 11056 & 400 & REAC:R-HSA-1474290\\
 \hline
-query\_1 & TRUE & 0.0029160 & 76 & 57 & 5 & 0.0877193 & 0.0657895 & REAC:R-HSA-3000178 & REAC & ECM proteoglycans & 11056 & 851 & REAC:R-H....\\
+query\_1 & TRUE & 0.0029160 & 76 & 57 & 5 & 0.0877193 & 0.0657895 & REAC:R-HSA-3000178 & REAC & ECM proteoglycans & 11056 & 851 & REAC:R-HSA-1474244\\
 \hline
-query\_1 & TRUE & 0.0033756 & 44 & 57 & 4 & 0.0701754 & 0.0909091 & REAC:R-HSA-1566948 & REAC & Elastic fibre formation & 11056 & 875 & REAC:R-H....\\
+query\_1 & TRUE & 0.0033756 & 44 & 57 & 4 & 0.0701754 & 0.0909091 & REAC:R-HSA-1566948 & REAC & Elastic fibre formation & 11056 & 875 & REAC:R-HSA-1474244\\
 \hline
-query\_1 & TRUE & 0.0033756 & 84 & 57 & 5 & 0.0877193 & 0.0595238 & REAC:R-HSA-216083 & REAC & Integrin cell surface interactions & 11056 & 1267 & REAC:R-H....\\
+query\_1 & TRUE & 0.0033756 & 84 & 57 & 5 & 0.0877193 & 0.0595238 & REAC:R-HSA-216083 & REAC & Integrin cell surface interactions & 11056 & 1267 & REAC:R-HSA-1474244\\
 \hline
-query\_1 & TRUE & 0.0097759 & 60 & 57 & 4 & 0.0701754 & 0.0666667 & REAC:R-HSA-2022090 & REAC & Assembly of collagen fibrils and other multimeric structures & 11056 & 186 & REAC:R-H....\\
+query\_1 & TRUE & 0.0097759 & 60 & 57 & 4 & 0.0701754 & 0.0666667 & REAC:R-HSA-2022090 & REAC & Assembly of collagen fibrils and other multimeric structures & 11056 & 186 & REAC:R-HSA-1474290\\
 \hline
-query\_1 & TRUE & 0.0256174 & 140 & 57 & 5 & 0.0877193 & 0.0357143 & REAC:R-HSA-1474228 & REAC & Degradation of the extracellular matrix & 11056 & 748 & REAC:R-H....\\
+query\_1 & TRUE & 0.0256174 & 140 & 57 & 5 & 0.0877193 & 0.0357143 & REAC:R-HSA-1474228 & REAC & Degradation of the extracellular matrix & 11056 & 748 & REAC:R-HSA-1474244\\
 \hline
-query\_1 & TRUE & 0.0316913 & 39 & 57 & 3 & 0.0526316 & 0.0769231 & REAC:R-HSA-140877 & REAC & Formation of Fibrin Clot (Clotting Cascade) & 11056 & 986 & REAC:R-H....\\
+query\_1 & TRUE & 0.0316913 & 39 & 57 & 3 & 0.0526316 & 0.0769231 & REAC:R-HSA-140877 & REAC & Formation of Fibrin Clot (Clotting Cascade) & 11056 & 986 & REAC:R-HSA-109582\\
 \hline
-query\_1 & TRUE & 0.0322168 & 42 & 57 & 3 & 0.0526316 & 0.0714286 & REAC:R-HSA-419037 & REAC & NCAM1 interactions & 11056 & 1577 & REAC:R-H....\\
+query\_1 & TRUE & 0.0322168 & 42 & 57 & 3 & 0.0526316 & 0.0714286 & REAC:R-HSA-419037 & REAC & NCAM1 interactions & 11056 & 1577 & REAC:R-HSA-375165\\
 \hline
-query\_1 & TRUE & 0.0322168 & 516 & 57 & 9 & 0.1578947 & 0.0174419 & REAC:R-HSA-9006934 & REAC & Signaling by Receptor Tyrosine Kinases & 11056 & 2399 & REAC:R-H....\\
+query\_1 & TRUE & 0.0322168 & 516 & 57 & 9 & 0.1578947 & 0.0174419 & REAC:R-HSA-9006934 & REAC & Signaling by Receptor Tyrosine Kinases & 11056 & 2399 & REAC:R-HSA-162582\\
 \hline
-query\_1 & TRUE & 0.0338224 & 44 & 57 & 3 & 0.0526316 & 0.0681818 & REAC:R-HSA-8948216 & REAC & Collagen chain trimerization & 11056 & 401 & REAC:R-H....\\
+query\_1 & TRUE & 0.0338224 & 44 & 57 & 3 & 0.0526316 & 0.0681818 & REAC:R-HSA-8948216 & REAC & Collagen chain trimerization & 11056 & 401 & REAC:R-HSA-1650814\\
 \hline
 query\_1 & TRUE & 0.0449470 & 675 & 57 & 10 & 0.1754386 & 0.0148148 & REAC:R-HSA-109582 & REAC & Hemostasis & 11056 & 1168 & REAC:0000000\\
 \hline
@@ -1112,12 +1065,12 @@ Note: it took about 2 minutes to run this chunck of code.
 \end{Shaded}
 
 \begin{verbatim}
-## Your custom annotations ID is gp__XHdU_bGa3_9gI.
+## Your custom annotations ID is gp__bf5h_TyxC_hDg.
 ## You can use this ID as an 'organism' name in all the related enrichment tests against this custom source.
 \end{verbatim}
 
 \begin{verbatim}
-## Just use: gost(my_genes, organism = 'gp__XHdU_bGa3_9gI')
+## Just use: gost(my_genes, organism = 'gp__bf5h_TyxC_hDg')
 \end{verbatim}
 
 \begin{Shaded}
@@ -1405,12 +1358,12 @@ addgenes: helper function to add gene list to enrichment result table
 ## 9  Collagen biosynthesis and modifying enzymes                 17710
 ## 55                            tube development                 17710
 ##    source_order parents    score
-## 18         3114         5.603592
-## 2          1083         3.290313
-## 12         2582         2.696776
-## 42        14756         2.365313
-## 9          3202         2.296079
-## 55         9957         2.167739
+## 18         3114    NULL 5.603592
+## 2          1083    NULL 3.290313
+## 12         2582    NULL 2.696776
+## 42        14756    NULL 2.365313
+## 9          3202    NULL 2.296079
+## 55         9957    NULL 2.167739
 ##                                                                           genes
 ## 18 FBLN1,FBN1,SNTB1,ITGA5,TIMP2,P3H2,P3H3,LOX,COL6A2,COL6A1,COL5A1,SERPINE1,BGN
 ## 2                                         COL6A1,FBN1,ITGA5,TGFBI,COL5A1,COL6A2
@@ -1459,17 +1412,6 @@ We convert these scores into distances (1 − score) and use them to group simil
 \NormalTok{  \}}
 \NormalTok{\}}
 
-\FunctionTok{library}\NormalTok{(corrplot)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## corrplot 0.95 loaded
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{library}\NormalTok{(RColorBrewer)}
 
 \NormalTok{labs }\OtherTok{\textless{}{-}}\NormalTok{ formatted\_results}\SpecialCharTok{$}\NormalTok{term\_name}
 \NormalTok{labs }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{nchar}\NormalTok{(labs) }\SpecialCharTok{\textgreater{}} \DecValTok{30}\NormalTok{, }\FunctionTok{paste0}\NormalTok{(}\FunctionTok{substr}\NormalTok{(labs, }\DecValTok{1}\NormalTok{, }\DecValTok{27}\NormalTok{), }\StringTok{"..."}\NormalTok{), labs)}
@@ -1775,21 +1717,11 @@ This exercise requires the file ``edgeR\_resistant\_vs\_parental\_all\_genes.csv
   \StringTok{"knitr"}\NormalTok{,}
   \StringTok{"kableExtra"}\NormalTok{,}
   \StringTok{"glue"}\NormalTok{,}
-  \StringTok{"RCurl"}\NormalTok{,}
-  \StringTok{"webshot2"}\NormalTok{,}
   \StringTok{"ggridges"}\NormalTok{,}
-  \StringTok{"igraph"}\NormalTok{,}
-  \StringTok{"stringr"}\NormalTok{,}
-  \StringTok{"data.table"}\NormalTok{,}
-  \StringTok{"patchwork"}\NormalTok{,}
-  \StringTok{"ggdendro"}\NormalTok{,}
-  \StringTok{"pheatmap"}\NormalTok{,}
-  \StringTok{"RColorBrewer"}
+  \StringTok{"data.table"}
 \NormalTok{)}
 \CommentTok{\# List of Bioconductor packages}
 \NormalTok{bioc\_packages }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
-  \StringTok{"gprofiler2"}\NormalTok{,}
-  \StringTok{"GSA"}\NormalTok{,}
   \StringTok{"fgsea"}\NormalTok{,}
   \StringTok{"clusterProfiler"}\NormalTok{,}
   \StringTok{"enrichplot"}
@@ -1811,20 +1743,10 @@ This exercise requires the file ``edgeR\_resistant\_vs\_parental\_all\_genes.csv
 \FunctionTok{library}\NormalTok{(knitr)}
 \FunctionTok{library}\NormalTok{(kableExtra)}
 \FunctionTok{library}\NormalTok{(glue)}
-\FunctionTok{library}\NormalTok{(RCurl)}
-\FunctionTok{library}\NormalTok{(webshot2)}
 \FunctionTok{library}\NormalTok{(ggridges)}
-\FunctionTok{library}\NormalTok{(igraph)}
-\FunctionTok{library}\NormalTok{(stringr)}
 \FunctionTok{library}\NormalTok{(data.table)}
-\FunctionTok{library}\NormalTok{(patchwork)}
-\FunctionTok{library}\NormalTok{(ggdendro)}
-\FunctionTok{library}\NormalTok{(pheatmap)}
-\FunctionTok{library}\NormalTok{(RColorBrewer)}
 
 \CommentTok{\# Bioconductor packages}
-\FunctionTok{library}\NormalTok{(gprofiler2)}
-\FunctionTok{library}\NormalTok{(GSA)}
 \FunctionTok{library}\NormalTok{(fgsea)}
 \FunctionTok{library}\NormalTok{(clusterProfiler)}
 \FunctionTok{library}\NormalTok{(enrichplot)}
