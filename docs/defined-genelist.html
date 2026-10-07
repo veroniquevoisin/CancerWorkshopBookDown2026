@@ -1582,9 +1582,9 @@ Note: it took about 2 minutes to run this chunck of code.</p>
 <span id="cb44-2"><a href="defined-genelist.html#cb44-2" tabindex="-1"></a></span>
 <span id="cb44-3"><a href="defined-genelist.html#cb44-3" tabindex="-1"></a>custom_gmt_max500 <span class="ot">&lt;-</span> <span class="fu">upload_GMT_file</span>(</span>
 <span id="cb44-4"><a href="defined-genelist.html#cb44-4" tabindex="-1"></a>                        <span class="at">gmtfile=</span>dest_gmt_file_500)</span></code></pre></div>
-<pre><code>## Your custom annotations ID is gp__hqtr_vJOx_v4Q.
+<pre><code>## Your custom annotations ID is gp__wMy2_ZtkJ_hRA.
 ## You can use this ID as an &#39;organism&#39; name in all the related enrichment tests against this custom source.</code></pre>
-<pre><code>## Just use: gost(my_genes, organism = &#39;gp__hqtr_vJOx_v4Q&#39;)</code></pre>
+<pre><code>## Just use: gost(my_genes, organism = &#39;gp__wMy2_ZtkJ_hRA&#39;)</code></pre>
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="defined-genelist.html#cb47-1" tabindex="-1"></a>UPgenes <span class="ot">&lt;-</span> res<span class="sc">$</span>gene[res<span class="sc">$</span>logFC<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">&amp;</span>  res<span class="sc">$</span>FDR <span class="sc">&lt;=</span> <span class="fl">0.001</span>]</span>
 <span id="cb47-2"><a href="defined-genelist.html#cb47-2" tabindex="-1"></a>DOWNgenes <span class="ot">&lt;-</span> res<span class="sc">$</span>gene[res<span class="sc">$</span>logFC<span class="sc">&lt;</span><span class="dv">0</span> <span class="sc">&amp;</span>  res<span class="sc">$</span>FDR <span class="sc">&lt;=</span> <span class="fl">0.001</span>]</span>
 <span id="cb47-3"><a href="defined-genelist.html#cb47-3" tabindex="-1"></a></span>
@@ -2854,7 +2854,7 @@ Figure 3: Jaccard and overlap coefficients for two gene sets.
 <span id="cb60-64"><a href="defined-genelist.html#cb60-64" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
 <span id="cb60-65"><a href="defined-genelist.html#cb60-65" tabindex="-1"></a>      <span class="at">panel.grid.major.y =</span> <span class="fu">element_blank</span>(),</span>
 <span id="cb60-66"><a href="defined-genelist.html#cb60-66" tabindex="-1"></a>      <span class="at">axis.text.y        =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
-<span id="cb60-67"><a href="defined-genelist.html#cb60-67" tabindex="-1"></a>      <span class="at">legend.position    =</span> <span class="st">&quot;bottom&quot;</span></span>
+<span id="cb60-67"><a href="defined-genelist.html#cb60-67" tabindex="-1"></a>      <span class="at">legend.position    =</span> <span class="st">&quot;right&quot;</span></span>
 <span id="cb60-68"><a href="defined-genelist.html#cb60-68" tabindex="-1"></a>    )</span>
 <span id="cb60-69"><a href="defined-genelist.html#cb60-69" tabindex="-1"></a></span>
 <span id="cb60-70"><a href="defined-genelist.html#cb60-70" tabindex="-1"></a>  <span class="co">#  Dendrogram </span></span>
@@ -2919,7 +2919,7 @@ Figure 3: Jaccard and overlap coefficients for two gene sets.
 <h4><span class="header-section-number">0.13.2.4</span> Running the function on the top 20 pathways<a href="defined-genelist.html#running-the-function-on-the-top-20-pathways" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="defined-genelist.html#cb61-1" tabindex="-1"></a>enrichment_results_UPgenes <span class="ot">&lt;-</span> gprofiler_results_custom_max500_UPgenes<span class="sc">$</span>result</span>
 <span id="cb61-2"><a href="defined-genelist.html#cb61-2" tabindex="-1"></a></span>
-<span id="cb61-3"><a href="defined-genelist.html#cb61-3" tabindex="-1"></a>hc_plots <span class="ot">&lt;-</span> <span class="fu">plot_hclust_enrichment</span>(<span class="at">enrichment_results =</span> enrichment_results_UPgenes, <span class="at">n_top =</span> <span class="dv">500</span>, <span class="at">n_clusters =</span> <span class="dv">10</span>)</span></code></pre></div>
+<span id="cb61-3"><a href="defined-genelist.html#cb61-3" tabindex="-1"></a>hc_plots <span class="ot">&lt;-</span> <span class="fu">plot_hclust_enrichment</span>(<span class="at">enrichment_results =</span> enrichment_results_UPgenes, <span class="at">n_top =</span> <span class="dv">20</span>, <span class="at">n_clusters =</span> <span class="dv">10</span>)</span></code></pre></div>
 <p>The figure height grows with the number of pathways (combined plot) and the number of clusters (top term per branch), so the bars do not overlap.</p>
 <div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="defined-genelist.html#cb62-1" tabindex="-1"></a>hc_plots<span class="sc">$</span>combined</span></code></pre></div>
 <p><img src="_main_files/figure-html/unnamed-chunk-33-1.png" alt="" width="960" /></p>

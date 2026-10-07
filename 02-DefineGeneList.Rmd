@@ -688,7 +688,7 @@ plot_hclust_enrichment = function(enrichment_results, n_top = 20, n_clusters = 8
     theme(
       panel.grid.major.y = element_blank(),
       axis.text.y        = element_text(size = 8),
-      legend.position    = "bottom"
+      legend.position    = "right"
     )
 
   #  Dendrogram 
@@ -756,15 +756,15 @@ plot_hclust_enrichment = function(enrichment_results, n_top = 20, n_clusters = 8
 
 enrichment_results_UPgenes <- gprofiler_results_custom_max500_UPgenes$result
 
-hc_plots <- plot_hclust_enrichment(enrichment_results = enrichment_results_UPgenes, n_top = 500, n_clusters = 10)
+hc_plots <- plot_hclust_enrichment(enrichment_results = enrichment_results_UPgenes, n_top = 20, n_clusters = 10)
 ```
 
 The figure height grows with the number of pathways (combined plot) and the number of clusters (top term per branch), so the bars do not overlap.
-```{r echo=TRUE, fig.width=10, fig.height=max(5, 0.15 * hc_plots$n_terms + 1.5)}
+```{r echo=TRUE, fig.width=10, fig.height=if (exists("hc_plots")) max(5, 0.15 * hc_plots$n_terms + 1.5) else 5}
 hc_plots$combined
 ```
 
-```{r echo=TRUE, fig.width=8, fig.height=max(3, 0.35 * hc_plots$n_clusters + 1.5)}
+```{r echo=TRUE, fig.width=8, fig.height=if (exists("hc_plots")) max(3, 0.35 * hc_plots$n_clusters + 1.5) else 5}
 hc_plots$top_per_branch
 ```
 
@@ -776,11 +776,11 @@ enrichment_results_UPgenes <- gprofiler_results_custom_max500_UPgenes$result
 hc_plots <- plot_hclust_enrichment(enrichment_results = enrichment_results_UPgenes, n_top = XXXX, n_clusters = XXXX)
 ```
 
-```{r eval=FALSE, include=FALSE, fig.width=10, fig.height=max(5, 0.15 * hc_plots$n_terms + 1.5)}
+```{r eval=FALSE, include=FALSE, fig.width=10, fig.height=if (exists("hc_plots")) max(5, 0.15 * hc_plots$n_terms + 1.5) else 5}
 hc_plots$combined
 ```
 
-```{r eval=FALSE, include=FALSE, fig.width=8, fig.height=max(3, 0.35 * hc_plots$n_clusters + 1.5)}
+```{r eval=FALSE, include=FALSE, fig.width=8, fig.height=if (exists("hc_plots")) max(3, 0.35 * hc_plots$n_clusters + 1.5) else 5}
 hc_plots$top_per_branch
 ```
 

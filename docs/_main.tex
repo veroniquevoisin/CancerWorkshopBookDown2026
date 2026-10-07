@@ -1075,12 +1075,12 @@ Note: it took about 2 minutes to run this chunck of code.
 \end{Shaded}
 
 \begin{verbatim}
-## Your custom annotations ID is gp__qMlb_6yat_H08.
+## Your custom annotations ID is gp__twiy_ALwk_UL0.
 ## You can use this ID as an 'organism' name in all the related enrichment tests against this custom source.
 \end{verbatim}
 
 \begin{verbatim}
-## Just use: gost(my_genes, organism = 'gp__qMlb_6yat_H08')
+## Just use: gost(my_genes, organism = 'gp__twiy_ALwk_UL0')
 \end{verbatim}
 
 \begin{Shaded}
@@ -1565,7 +1565,7 @@ plot\_hclust\_enrichment: helper function to cluster the top enriched pathways b
     \FunctionTok{theme}\NormalTok{(}
       \AttributeTok{panel.grid.major.y =} \FunctionTok{element\_blank}\NormalTok{(),}
       \AttributeTok{axis.text.y        =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{8}\NormalTok{),}
-      \AttributeTok{legend.position    =} \StringTok{"bottom"}
+      \AttributeTok{legend.position    =} \StringTok{"right"}
 \NormalTok{    )}
 
   \CommentTok{\#  Dendrogram }
@@ -1634,7 +1634,7 @@ plot\_hclust\_enrichment: helper function to cluster the top enriched pathways b
 \begin{Highlighting}[]
 \NormalTok{enrichment\_results\_UPgenes }\OtherTok{\textless{}{-}}\NormalTok{ gprofiler\_results\_custom\_max500\_UPgenes}\SpecialCharTok{$}\NormalTok{result}
 
-\NormalTok{hc\_plots }\OtherTok{\textless{}{-}} \FunctionTok{plot\_hclust\_enrichment}\NormalTok{(}\AttributeTok{enrichment\_results =}\NormalTok{ enrichment\_results\_UPgenes, }\AttributeTok{n\_top =} \DecValTok{500}\NormalTok{, }\AttributeTok{n\_clusters =} \DecValTok{10}\NormalTok{)}
+\NormalTok{hc\_plots }\OtherTok{\textless{}{-}} \FunctionTok{plot\_hclust\_enrichment}\NormalTok{(}\AttributeTok{enrichment\_results =}\NormalTok{ enrichment\_results\_UPgenes, }\AttributeTok{n\_top =} \DecValTok{20}\NormalTok{, }\AttributeTok{n\_clusters =} \DecValTok{10}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
