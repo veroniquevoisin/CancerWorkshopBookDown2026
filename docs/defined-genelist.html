@@ -239,7 +239,7 @@ We wil also upload our custom geneset file.</p>
 </div>
 <div id="exercise-1-defined" class="section level2 hasAnchor" number="0.12">
 <h2><span class="header-section-number">0.12</span> Exercise 1 - prepare the gene lists<a href="defined-genelist.html#exercise-1-defined" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>This exercise requires the file “edgeR_resistant_vs_parental_all_genes.csv” located in the results folder.</p>
+<p>This exercise requires the file “edgeR_resistant_vs_parental_all_genes.csv” located in the data folder.</p>
 <div id="step-1---install-and-load-libraries" class="section level3 hasAnchor" number="0.12.1">
 <h3><span class="header-section-number">0.12.1</span> Step 1 - Install and Load libraries<a href="defined-genelist.html#step-1---install-and-load-libraries" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="defined-genelist.html#cb27-1" tabindex="-1"></a><span class="co"># List of CRAN packages</span></span>
@@ -276,7 +276,7 @@ We wil also upload our custom geneset file.</p>
 </div>
 <div id="step-2---prepare-the-define-gene-lists" class="section level3 hasAnchor" number="0.12.2">
 <h3><span class="header-section-number">0.12.2</span> Step 2 - Prepare the define gene lists<a href="defined-genelist.html#step-2---prepare-the-define-gene-lists" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="defined-genelist.html#cb28-1" tabindex="-1"></a>res <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;results/edgeR_resistant_vs_parental_all_genes.csv&quot;</span>)</span>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="defined-genelist.html#cb28-1" tabindex="-1"></a>res <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/edgeR_resistant_vs_parental_all_genes.csv&quot;</span>)</span>
 <span id="cb28-2"><a href="defined-genelist.html#cb28-2" tabindex="-1"></a></span>
 <span id="cb28-3"><a href="defined-genelist.html#cb28-3" tabindex="-1"></a>UPgenes <span class="ot">&lt;-</span> res<span class="sc">$</span>gene[res<span class="sc">$</span>logFC<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">&amp;</span>  res<span class="sc">$</span>FDR <span class="sc">&lt;=</span> <span class="fl">0.001</span>]</span>
 <span id="cb28-4"><a href="defined-genelist.html#cb28-4" tabindex="-1"></a>DOWNgenes <span class="ot">&lt;-</span> res<span class="sc">$</span>gene[res<span class="sc">$</span>logFC<span class="sc">&lt;</span><span class="dv">0</span> <span class="sc">&amp;</span>  res<span class="sc">$</span>FDR <span class="sc">&lt;=</span> <span class="fl">0.001</span>]</span></code></pre></div>
@@ -1582,9 +1582,9 @@ Note: it took about 2 minutes to run this chunck of code.</p>
 <span id="cb44-2"><a href="defined-genelist.html#cb44-2" tabindex="-1"></a></span>
 <span id="cb44-3"><a href="defined-genelist.html#cb44-3" tabindex="-1"></a>custom_gmt_max500 <span class="ot">&lt;-</span> <span class="fu">upload_GMT_file</span>(</span>
 <span id="cb44-4"><a href="defined-genelist.html#cb44-4" tabindex="-1"></a>                        <span class="at">gmtfile=</span>dest_gmt_file_500)</span></code></pre></div>
-<pre><code>## Your custom annotations ID is gp__wMy2_ZtkJ_hRA.
+<pre><code>## Your custom annotations ID is gp__R9EP_g2yx_9gM.
 ## You can use this ID as an &#39;organism&#39; name in all the related enrichment tests against this custom source.</code></pre>
-<pre><code>## Just use: gost(my_genes, organism = &#39;gp__wMy2_ZtkJ_hRA&#39;)</code></pre>
+<pre><code>## Just use: gost(my_genes, organism = &#39;gp__R9EP_g2yx_9gM&#39;)</code></pre>
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="defined-genelist.html#cb47-1" tabindex="-1"></a>UPgenes <span class="ot">&lt;-</span> res<span class="sc">$</span>gene[res<span class="sc">$</span>logFC<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">&amp;</span>  res<span class="sc">$</span>FDR <span class="sc">&lt;=</span> <span class="fl">0.001</span>]</span>
 <span id="cb47-2"><a href="defined-genelist.html#cb47-2" tabindex="-1"></a>DOWNgenes <span class="ot">&lt;-</span> res<span class="sc">$</span>gene[res<span class="sc">$</span>logFC<span class="sc">&lt;</span><span class="dv">0</span> <span class="sc">&amp;</span>  res<span class="sc">$</span>FDR <span class="sc">&lt;=</span> <span class="fl">0.001</span>]</span>
 <span id="cb47-3"><a href="defined-genelist.html#cb47-3" tabindex="-1"></a></span>

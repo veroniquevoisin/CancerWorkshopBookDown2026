@@ -31,7 +31,7 @@ g:Profiler requires a list of genes. For this analysis, we used genes we found t
 
 ## Exercise 1 - prepare the gene lists {#exercise-1-defined}
 
-This exercise requires the file "edgeR_resistant_vs_parental_all_genes.csv" located in the results folder.
+This exercise requires the file "edgeR_resistant_vs_parental_all_genes.csv" located in the data folder.
 
 
 ### Step 1 - Install and Load libraries
@@ -72,7 +72,7 @@ dir.create("results", showWarnings = FALSE)
 
 ### Step 2 - Prepare the define gene lists
 ```{r}
-res = read.csv("results/edgeR_resistant_vs_parental_all_genes.csv")
+res = read.csv("data/edgeR_resistant_vs_parental_all_genes.csv")
 
 UPgenes <- res$gene[res$logFC>0 &  res$FDR <= 0.001]
 DOWNgenes <- res$gene[res$logFC<0 &  res$FDR <= 0.001]

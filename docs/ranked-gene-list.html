@@ -252,7 +252,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="exercise-1-ranked" class="section level2 hasAnchor" number="0.18">
 <h2><span class="header-section-number">0.18</span> Exercise 1 - prepare the gene lists<a href="ranked-gene-list.html#exercise-1-ranked" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>This exercise requires the file “edgeR_resistant_vs_parental_all_genes.csv” located in the results folder.</p>
+<p>This exercise requires the file “edgeR_resistant_vs_parental_all_genes.csv” located in the data folder.</p>
 <div id="step-1---install-and-load-libraries-1" class="section level3 hasAnchor" number="0.18.1">
 <h3><span class="header-section-number">0.18.1</span> Step 1 - Install and Load libraries<a href="ranked-gene-list.html#step-1---install-and-load-libraries-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="ranked-gene-list.html#cb64-1" tabindex="-1"></a><span class="co"># CRAN and Bioconductor setup</span></span>
@@ -319,7 +319,7 @@ power when calculating the ES scores. Equivalent to the weight in the
 original GSEA algorithm.
 </p>
 </div>
-<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="ranked-gene-list.html#cb65-1" tabindex="-1"></a>res <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;results/edgeR_resistant_vs_parental_all_genes.csv&quot;</span>)</span>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="ranked-gene-list.html#cb65-1" tabindex="-1"></a>res <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/edgeR_resistant_vs_parental_all_genes.csv&quot;</span>)</span>
 <span id="cb65-2"><a href="ranked-gene-list.html#cb65-2" tabindex="-1"></a></span>
 <span id="cb65-3"><a href="ranked-gene-list.html#cb65-3" tabindex="-1"></a>gmtfile <span class="ot">=</span> <span class="st">&quot;data/Human_GOBP_AllPathways_noPFOCR_no_GO_iea_September_14_2026_symbol.gmt&quot;</span></span>
 <span id="cb65-4"><a href="ranked-gene-list.html#cb65-4" tabindex="-1"></a>pathways <span class="ot">&lt;-</span> fgsea<span class="sc">::</span><span class="fu">gmtPathways</span>(gmtfile)</span>

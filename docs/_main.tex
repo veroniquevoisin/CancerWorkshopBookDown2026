@@ -561,7 +561,7 @@ g:Profiler requires a list of genes. For this analysis, we used genes we found t
 
 \section{Exercise 1 - prepare the gene lists}\label{exercise-1-defined}
 
-This exercise requires the file ``edgeR\_resistant\_vs\_parental\_all\_genes.csv'' located in the results folder.
+This exercise requires the file ``edgeR\_resistant\_vs\_parental\_all\_genes.csv'' located in the data folder.
 
 \subsection{Step 1 - Install and Load libraries}\label{step-1---install-and-load-libraries}
 
@@ -605,7 +605,7 @@ This exercise requires the file ``edgeR\_resistant\_vs\_parental\_all\_genes.csv
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{res }\OtherTok{=} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"results/edgeR\_resistant\_vs\_parental\_all\_genes.csv"}\NormalTok{)}
+\NormalTok{res }\OtherTok{=} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/edgeR\_resistant\_vs\_parental\_all\_genes.csv"}\NormalTok{)}
 
 \NormalTok{UPgenes }\OtherTok{\textless{}{-}}\NormalTok{ res}\SpecialCharTok{$}\NormalTok{gene[res}\SpecialCharTok{$}\NormalTok{logFC}\SpecialCharTok{\textgreater{}}\DecValTok{0} \SpecialCharTok{\&}\NormalTok{  res}\SpecialCharTok{$}\NormalTok{FDR }\SpecialCharTok{\textless{}=} \FloatTok{0.001}\NormalTok{]}
 \NormalTok{DOWNgenes }\OtherTok{\textless{}{-}}\NormalTok{ res}\SpecialCharTok{$}\NormalTok{gene[res}\SpecialCharTok{$}\NormalTok{logFC}\SpecialCharTok{\textless{}}\DecValTok{0} \SpecialCharTok{\&}\NormalTok{  res}\SpecialCharTok{$}\NormalTok{FDR }\SpecialCharTok{\textless{}=} \FloatTok{0.001}\NormalTok{]}
@@ -1075,12 +1075,12 @@ Note: it took about 2 minutes to run this chunck of code.
 \end{Shaded}
 
 \begin{verbatim}
-## Your custom annotations ID is gp__twiy_ALwk_UL0.
+## Your custom annotations ID is gp__nABF_GfbN_HKw.
 ## You can use this ID as an 'organism' name in all the related enrichment tests against this custom source.
 \end{verbatim}
 
 \begin{verbatim}
-## Just use: gost(my_genes, organism = 'gp__twiy_ALwk_UL0')
+## Just use: gost(my_genes, organism = 'gp__nABF_GfbN_HKw')
 \end{verbatim}
 
 \begin{Shaded}
@@ -1712,7 +1712,7 @@ To generate a rank file (.rnk), a score (-log10(pvalue) * sign(logFC)) was calcu
 
 \section{Exercise 1 - prepare the gene lists}\label{exercise-1-ranked}
 
-This exercise requires the file ``edgeR\_resistant\_vs\_parental\_all\_genes.csv'' located in the results folder.
+This exercise requires the file ``edgeR\_resistant\_vs\_parental\_all\_genes.csv'' located in the data folder.
 
 \subsection{Step 1 - Install and Load libraries}\label{step-1---install-and-load-libraries-1}
 
@@ -1794,7 +1794,7 @@ GSEA algorithm.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{res }\OtherTok{=} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"results/edgeR\_resistant\_vs\_parental\_all\_genes.csv"}\NormalTok{)}
+\NormalTok{res }\OtherTok{=} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/edgeR\_resistant\_vs\_parental\_all\_genes.csv"}\NormalTok{)}
 
 \NormalTok{gmtfile }\OtherTok{=} \StringTok{"data/Human\_GOBP\_AllPathways\_noPFOCR\_no\_GO\_iea\_September\_14\_2026\_symbol.gmt"}
 \NormalTok{pathways }\OtherTok{\textless{}{-}}\NormalTok{ fgsea}\SpecialCharTok{::}\FunctionTok{gmtPathways}\NormalTok{(gmtfile)}

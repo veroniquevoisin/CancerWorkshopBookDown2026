@@ -38,7 +38,7 @@ To generate a rank file (.rnk),  a score (-log10(pvalue) * sign(logFC)) was calc
 
 ## Exercise 1 - prepare the gene lists {#exercise-1-ranked}
 
-This exercise requires the file "edgeR_resistant_vs_parental_all_genes.csv" located in the results folder.
+This exercise requires the file "edgeR_resistant_vs_parental_all_genes.csv" located in the data folder.
 
 
 ### Step 1 - Install and Load libraries
@@ -108,7 +108,7 @@ gseaParam - GSEA parameter value.  All ranks will be raised to this power when c
 ```
 
 ```{r}
-res = read.csv("results/edgeR_resistant_vs_parental_all_genes.csv")
+res = read.csv("data/edgeR_resistant_vs_parental_all_genes.csv")
 
 gmtfile = "data/Human_GOBP_AllPathways_noPFOCR_no_GO_iea_September_14_2026_symbol.gmt"
 pathways <- fgsea::gmtPathways(gmtfile)
