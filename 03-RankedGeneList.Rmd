@@ -85,6 +85,9 @@ library(data.table)
 library(fgsea)
 library(clusterProfiler)
 library(enrichplot)
+
+# create the results folder (if it does not exist yet) to save the outputs
+dir.create("results", showWarnings = FALSE)
 ```
 
 

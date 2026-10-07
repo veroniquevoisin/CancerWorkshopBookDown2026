@@ -248,6 +248,13 @@ We perform differential expression analysis using a negative binomial generalize
 ## Loading required package: limma
 \end{verbatim}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# create the results folder (if it does not exist yet) to save the outputs}
+\FunctionTok{dir.create}\NormalTok{(}\StringTok{"results"}\NormalTok{, }\AttributeTok{showWarnings =} \ConstantTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
 \section{Data used for this comparison}\label{data-used-for-this-comparison}
 
 For this analysis, we are going to compare the Palbo-resistant cell lines (3 biological replicates) versus the parental cell lines (3 biological replicates)
@@ -588,6 +595,9 @@ This exercise requires the file ``edgeR\_resistant\_vs\_parental\_all\_genes.csv
 \FunctionTok{library}\NormalTok{(pheatmap)}
 \FunctionTok{library}\NormalTok{(gprofiler2)}
 \FunctionTok{library}\NormalTok{(GSA)}
+
+\CommentTok{\# create the results folder (if it does not exist yet) to save the outputs}
+\FunctionTok{dir.create}\NormalTok{(}\StringTok{"results"}\NormalTok{, }\AttributeTok{showWarnings =} \ConstantTok{FALSE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1065,12 +1075,12 @@ Note: it took about 2 minutes to run this chunck of code.
 \end{Shaded}
 
 \begin{verbatim}
-## Your custom annotations ID is gp__bf5h_TyxC_hDg.
+## Your custom annotations ID is gp__qMlb_6yat_H08.
 ## You can use this ID as an 'organism' name in all the related enrichment tests against this custom source.
 \end{verbatim}
 
 \begin{verbatim}
-## Just use: gost(my_genes, organism = 'gp__bf5h_TyxC_hDg')
+## Just use: gost(my_genes, organism = 'gp__qMlb_6yat_H08')
 \end{verbatim}
 
 \begin{Shaded}
@@ -1750,6 +1760,9 @@ This exercise requires the file ``edgeR\_resistant\_vs\_parental\_all\_genes.csv
 \FunctionTok{library}\NormalTok{(fgsea)}
 \FunctionTok{library}\NormalTok{(clusterProfiler)}
 \FunctionTok{library}\NormalTok{(enrichplot)}
+
+\CommentTok{\# create the results folder (if it does not exist yet) to save the outputs}
+\FunctionTok{dir.create}\NormalTok{(}\StringTok{"results"}\NormalTok{, }\AttributeTok{showWarnings =} \ConstantTok{FALSE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
