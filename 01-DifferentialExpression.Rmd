@@ -49,6 +49,10 @@ dir.create("results", showWarnings = FALSE)
 
 ```
 
+```{block, type="rmd-caution"}
+In the Ubuntu (course server) session, the `dir.create()` line above and every `write.csv()` line in this lab use `~/workspace/Module8/results` instead of `results`, so your results are saved in `~/workspace/Module8/results`.
+```
+
 ## Data used for this comparison
 For this analysis, we are going to compare the Palbo-resistant cell lines (3 biological replicates) versus the parental cell lines (3 biological replicates)
 ```{r dataset, echo=FALSE, fig.cap="GEO dataset", out.width="60%"}

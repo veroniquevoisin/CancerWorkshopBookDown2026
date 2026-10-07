@@ -300,6 +300,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb64-43"><a href="ranked-gene-list.html#cb64-43" tabindex="-1"></a></span>
 <span id="cb64-44"><a href="ranked-gene-list.html#cb64-44" tabindex="-1"></a><span class="co"># create the results folder (if it does not exist yet) to save the outputs</span></span>
 <span id="cb64-45"><a href="ranked-gene-list.html#cb64-45" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">&quot;results&quot;</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="rmd-caution">
+<p>
+In the Ubuntu (course server) session, the <code>dir.create()</code>
+line above and every <code>write.csv()</code> line in this lab use
+<code>~/workspace/Module8/results</code> instead of
+<code>results</code>, so your results are saved in
+<code>~/workspace/Module8/results</code>.
+</p>
+</div>
 </div>
 <div id="step-2---prepare-the-rank-file-upload-the-gmt-file-and-run-fgsea" class="section level3 hasAnchor" number="0.18.2">
 <h3><span class="header-section-number">0.18.2</span> Step 2 - Prepare the rank file , upload the gmt file and run fgsea<a href="ranked-gene-list.html#step-2---prepare-the-rank-file-upload-the-gmt-file-and-run-fgsea" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -852,7 +861,7 @@ GRHL2, M….
 <span id="cb86-2"><a href="ranked-gene-list.html#cb86-2" tabindex="-1"></a><span class="cf">for</span> (figure <span class="cf">in</span> <span class="fu">head</span>(all_figures, <span class="dv">3</span>)) {</span>
 <span id="cb86-3"><a href="ranked-gene-list.html#cb86-3" tabindex="-1"></a>  <span class="fu">print</span>(figure)</span>
 <span id="cb86-4"><a href="ranked-gene-list.html#cb86-4" tabindex="-1"></a>}</span></code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-46-1.png" alt="" width="672" /><img src="_main_files/figure-html/unnamed-chunk-46-2.png" alt="" width="672" /><img src="_main_files/figure-html/unnamed-chunk-46-3.png" alt="" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-49-1.png" alt="" width="672" /><img src="_main_files/figure-html/unnamed-chunk-49-2.png" alt="" width="672" /><img src="_main_files/figure-html/unnamed-chunk-49-3.png" alt="" width="672" /></p>
 </div>
 <div id="bar-plots" class="section level4 hasAnchor" number="0.18.5.2">
 <h4><span class="header-section-number">0.18.5.2</span> Bar plots<a href="ranked-gene-list.html#bar-plots" class="anchor-section" aria-label="Anchor link to header"></a></h4>
@@ -886,7 +895,7 @@ GRHL2, M….
 <span id="cb87-25"><a href="ranked-gene-list.html#cb87-25" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
 <span id="cb87-26"><a href="ranked-gene-list.html#cb87-26" tabindex="-1"></a></span>
 <span id="cb87-27"><a href="ranked-gene-list.html#cb87-27" tabindex="-1"></a>p</span></code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-47-1.png" alt="" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-50-1.png" alt="" width="672" /></p>
 <div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="ranked-gene-list.html#cb88-1" tabindex="-1"></a><span class="do">##YOUR TURN##</span></span>
 <span id="cb88-2"><a href="ranked-gene-list.html#cb88-2" tabindex="-1"></a></span>
 <span id="cb88-3"><a href="ranked-gene-list.html#cb88-3" tabindex="-1"></a><span class="do">## Generate the same bar plot for the top 20 Palbo-resistant results.</span></span>
@@ -918,7 +927,7 @@ GRHL2, M….
 <span id="cb89-18"><a href="ranked-gene-list.html#cb89-18" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>)</span>
 <span id="cb89-19"><a href="ranked-gene-list.html#cb89-19" tabindex="-1"></a>  )</span>
 <span id="cb89-20"><a href="ranked-gene-list.html#cb89-20" tabindex="-1"></a>p</span></code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-49-1.png" alt="" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-52-1.png" alt="" width="672" /></p>
 <div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="ranked-gene-list.html#cb90-1" tabindex="-1"></a><span class="do">##YOUR TURN##</span></span>
 <span id="cb90-2"><a href="ranked-gene-list.html#cb90-2" tabindex="-1"></a></span>
 <span id="cb90-3"><a href="ranked-gene-list.html#cb90-3" tabindex="-1"></a><span class="do">## Generate the same dot plot for the top 20 Palbo-resistant results.</span></span>
@@ -977,7 +986,7 @@ GRHL2, M….
 <span id="cb91-45"><a href="ranked-gene-list.html#cb91-45" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Gene-level Statistic&quot;</span>,</span>
 <span id="cb91-46"><a href="ranked-gene-list.html#cb91-46" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Pathway&quot;</span></span>
 <span id="cb91-47"><a href="ranked-gene-list.html#cb91-47" tabindex="-1"></a>  )</span></code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-51-1.png" alt="" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-54-1.png" alt="" width="672" /></p>
 
 </div>
 </div>

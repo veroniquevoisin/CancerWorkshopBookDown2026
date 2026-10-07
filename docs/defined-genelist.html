@@ -273,6 +273,15 @@ We wil also upload our custom geneset file.</p>
 <span id="cb27-29"><a href="defined-genelist.html#cb27-29" tabindex="-1"></a></span>
 <span id="cb27-30"><a href="defined-genelist.html#cb27-30" tabindex="-1"></a><span class="co"># create the results folder (if it does not exist yet) to save the outputs</span></span>
 <span id="cb27-31"><a href="defined-genelist.html#cb27-31" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">&quot;results&quot;</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="rmd-caution">
+<p>
+In the Ubuntu (course server) session, the <code>dir.create()</code>
+line above and every <code>write.csv()</code> line in this lab use
+<code>~/workspace/Module8/results</code> instead of
+<code>results</code>, so your results are saved in
+<code>~/workspace/Module8/results</code>.
+</p>
+</div>
 </div>
 <div id="step-2---prepare-the-define-gene-lists" class="section level3 hasAnchor" number="0.12.2">
 <h3><span class="header-section-number">0.12.2</span> Step 2 - Prepare the define gene lists<a href="defined-genelist.html#step-2---prepare-the-define-gene-lists" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -385,7 +394,7 @@ For detailed descriptions of all the parameters that can be specified for the go
 <span id="cb35-7"><a href="defined-genelist.html#cb35-7" tabindex="-1"></a><span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;condensed&quot;</span>), <span class="at">font_size =</span> <span class="dv">10</span>)</span></code></pre></div>
 <table class="table table-striped table-condensed" style="font-size: 10px; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
-<span id="tab:unnamed-chunk-16">Table 1: </span><span id="tab:unnamed-chunk-16">Table 2: </span>Enrichment Result
+<span id="tab:unnamed-chunk-18">Table 1: </span><span id="tab:unnamed-chunk-18">Table 2: </span>Enrichment Result
 </caption>
 <thead>
 <tr>
@@ -842,7 +851,7 @@ If we look at the top table only, we are only going to see the results of <a hre
 <span id="cb39-7"><a href="defined-genelist.html#cb39-7" tabindex="-1"></a><span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;condensed&quot;</span>), <span class="at">font_size =</span> <span class="dv">10</span>)</span></code></pre></div>
 <table class="table table-striped table-condensed" style="font-size: 10px; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
-<span id="tab:unnamed-chunk-18">Table 3: </span><span id="tab:unnamed-chunk-18">Table 4: </span>Enrichment Result
+<span id="tab:unnamed-chunk-20">Table 3: </span><span id="tab:unnamed-chunk-20">Table 4: </span>Enrichment Result
 </caption>
 <thead>
 <tr>
@@ -1582,9 +1591,9 @@ Note: it took about 2 minutes to run this chunck of code.</p>
 <span id="cb44-2"><a href="defined-genelist.html#cb44-2" tabindex="-1"></a></span>
 <span id="cb44-3"><a href="defined-genelist.html#cb44-3" tabindex="-1"></a>custom_gmt_max500 <span class="ot">&lt;-</span> <span class="fu">upload_GMT_file</span>(</span>
 <span id="cb44-4"><a href="defined-genelist.html#cb44-4" tabindex="-1"></a>                        <span class="at">gmtfile=</span>dest_gmt_file_500)</span></code></pre></div>
-<pre><code>## Your custom annotations ID is gp__R9EP_g2yx_9gM.
+<pre><code>## Your custom annotations ID is gp__RCAf_ZbhA_Wxw.
 ## You can use this ID as an &#39;organism&#39; name in all the related enrichment tests against this custom source.</code></pre>
-<pre><code>## Just use: gost(my_genes, organism = &#39;gp__R9EP_g2yx_9gM&#39;)</code></pre>
+<pre><code>## Just use: gost(my_genes, organism = &#39;gp__RCAf_ZbhA_Wxw&#39;)</code></pre>
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="defined-genelist.html#cb47-1" tabindex="-1"></a>UPgenes <span class="ot">&lt;-</span> res<span class="sc">$</span>gene[res<span class="sc">$</span>logFC<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">&amp;</span>  res<span class="sc">$</span>FDR <span class="sc">&lt;=</span> <span class="fl">0.001</span>]</span>
 <span id="cb47-2"><a href="defined-genelist.html#cb47-2" tabindex="-1"></a>DOWNgenes <span class="ot">&lt;-</span> res<span class="sc">$</span>gene[res<span class="sc">$</span>logFC<span class="sc">&lt;</span><span class="dv">0</span> <span class="sc">&amp;</span>  res<span class="sc">$</span>FDR <span class="sc">&lt;=</span> <span class="fl">0.001</span>]</span>
 <span id="cb47-3"><a href="defined-genelist.html#cb47-3" tabindex="-1"></a></span>
@@ -1609,7 +1618,7 @@ Note: it took about 2 minutes to run this chunck of code.</p>
 <span id="cb49-10"><a href="defined-genelist.html#cb49-10" tabindex="-1"></a><span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;condensed&quot;</span>), <span class="at">font_size =</span> <span class="dv">10</span>)</span></code></pre></div>
 <table class="table table-striped table-condensed" style="font-size: 10px; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
-<span id="tab:unnamed-chunk-22">Table 5: </span><span id="tab:unnamed-chunk-22">Table 6: </span>Enrichment Result
+<span id="tab:unnamed-chunk-24">Table 5: </span><span id="tab:unnamed-chunk-24">Table 6: </span>Enrichment Result
 </caption>
 <thead>
 <tr>
@@ -2570,7 +2579,7 @@ positive regulation of coagulation
 <span id="cb52-17"><a href="defined-genelist.html#cb52-17" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
 <span id="cb52-18"><a href="defined-genelist.html#cb52-18" tabindex="-1"></a></span>
 <span id="cb52-19"><a href="defined-genelist.html#cb52-19" tabindex="-1"></a>p</span></code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-24-1.png" alt="" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-26-1.png" alt="" width="672" /></p>
 <div id="step-2---dot-plot-with-segment" class="section level3 hasAnchor" number="0.13.1">
 <h3><span class="header-section-number">0.13.1</span> Step 2 - Dot plot with segment<a href="defined-genelist.html#step-2---dot-plot-with-segment" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="defined-genelist.html#cb53-1" tabindex="-1"></a>enrichmentTop20 <span class="ot">&lt;-</span> enrichment <span class="sc">%&gt;%</span></span>
@@ -2598,7 +2607,7 @@ positive regulation of coagulation
 <span id="cb53-23"><a href="defined-genelist.html#cb53-23" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>)</span>
 <span id="cb53-24"><a href="defined-genelist.html#cb53-24" tabindex="-1"></a>  )</span>
 <span id="cb53-25"><a href="defined-genelist.html#cb53-25" tabindex="-1"></a>p</span></code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-25-1.png" alt="" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-27-1.png" alt="" width="672" /></p>
 </div>
 <div id="step-4---hierarchical-cluster" class="section level3 hasAnchor" number="0.13.2">
 <h3><span class="header-section-number">0.13.2</span> Step 4 - Hierarchical Cluster<a href="defined-genelist.html#step-4---hierarchical-cluster" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -2752,7 +2761,7 @@ Figure 3: Jaccard and overlap coefficients for two gene sets.
 <span id="cb58-41"><a href="defined-genelist.html#cb58-41" tabindex="-1"></a>  <span class="at">angle_col       =</span> <span class="dv">45</span>,</span>
 <span id="cb58-42"><a href="defined-genelist.html#cb58-42" tabindex="-1"></a>  <span class="at">main            =</span> <span class="st">&quot;Jaccard coefficient (20 random gene sets)&quot;</span></span>
 <span id="cb58-43"><a href="defined-genelist.html#cb58-43" tabindex="-1"></a>)</span></code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-29-1.png" alt="" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-31-1.png" alt="" width="672" /></p>
 <p>##Illustration with Overlap Coefficient</p>
 <div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="defined-genelist.html#cb59-1" tabindex="-1"></a><span class="co"># Calculate Overlap coefficient matrix (reuses gene_lists and n from above)</span></span>
 <span id="cb59-2"><a href="defined-genelist.html#cb59-2" tabindex="-1"></a>overlap_mat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, n, n)</span>
@@ -2785,7 +2794,7 @@ Figure 3: Jaccard and overlap coefficients for two gene sets.
 <span id="cb59-29"><a href="defined-genelist.html#cb59-29" tabindex="-1"></a>  <span class="at">angle_col       =</span> <span class="dv">45</span>,</span>
 <span id="cb59-30"><a href="defined-genelist.html#cb59-30" tabindex="-1"></a>  <span class="at">main            =</span> <span class="st">&quot;Overlap coefficient (20 random gene sets)&quot;</span></span>
 <span id="cb59-31"><a href="defined-genelist.html#cb59-31" tabindex="-1"></a>)</span></code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-30-1.png" alt="" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-32-1.png" alt="" width="672" /></p>
 <p>##Hierarchical Clustering</p>
 <p>plot_hclust_enrichment: helper function to cluster the top enriched pathways by gene overlap (Jaccard distance) and plot them next to the dendrogram</p>
 <div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="defined-genelist.html#cb60-1" tabindex="-1"></a>plot_hclust_enrichment <span class="ot">=</span> <span class="cf">function</span>(enrichment_results, <span class="at">n_top =</span> <span class="dv">20</span>, <span class="at">n_clusters =</span> <span class="dv">8</span>) {</span>
@@ -2922,9 +2931,9 @@ Figure 3: Jaccard and overlap coefficients for two gene sets.
 <span id="cb61-3"><a href="defined-genelist.html#cb61-3" tabindex="-1"></a>hc_plots <span class="ot">&lt;-</span> <span class="fu">plot_hclust_enrichment</span>(<span class="at">enrichment_results =</span> enrichment_results_UPgenes, <span class="at">n_top =</span> <span class="dv">20</span>, <span class="at">n_clusters =</span> <span class="dv">10</span>)</span></code></pre></div>
 <p>The figure height grows with the number of pathways (combined plot) and the number of clusters (top term per branch), so the bars do not overlap.</p>
 <div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="defined-genelist.html#cb62-1" tabindex="-1"></a>hc_plots<span class="sc">$</span>combined</span></code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-33-1.png" alt="" width="960" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-35-1.png" alt="" width="960" /></p>
 <div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="defined-genelist.html#cb63-1" tabindex="-1"></a>hc_plots<span class="sc">$</span>top_per_branch</span></code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-34-1.png" alt="" width="768" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-36-1.png" alt="" width="768" /></p>
 </div>
 <div id="your-turn-running-the-function-with-your-defined-number-of-pathways-and-clusters" class="section level4 hasAnchor" number="0.13.2.5">
 <h4><span class="header-section-number">0.13.2.5</span> YOUR TURN Running the function with your defined number of pathways and clusters<a href="defined-genelist.html#your-turn-running-the-function-with-your-defined-number-of-pathways-and-clusters" class="anchor-section" aria-label="Anchor link to header"></a></h4>

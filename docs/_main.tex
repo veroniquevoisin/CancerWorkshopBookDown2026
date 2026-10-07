@@ -255,6 +255,14 @@ We perform differential expression analysis using a negative binomial generalize
 \end{Highlighting}
 \end{Shaded}
 
+\begin{rmd-caution}
+In the Ubuntu (course server) session, the \texttt{dir.create()} line
+above and every \texttt{write.csv()} line in this lab use
+\texttt{\textasciitilde{}/workspace/Module8/results} instead of
+\texttt{results}, so your results are saved in
+\texttt{\textasciitilde{}/workspace/Module8/results}.
+\end{rmd-caution}
+
 \section{Data used for this comparison}\label{data-used-for-this-comparison}
 
 For this analysis, we are going to compare the Palbo-resistant cell lines (3 biological replicates) versus the parental cell lines (3 biological replicates)
@@ -340,7 +348,7 @@ For this analysis, we are going to compare the Palbo-resistant cell lines (3 bio
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{_main_files/figure-latex/unnamed-chunk-5-1.pdf}
+\includegraphics{_main_files/figure-latex/unnamed-chunk-6-1.pdf}
 
 \section{Design (\textasciitilde0 + group) and named contrast}\label{design-0-group-and-named-contrast}
 
@@ -379,7 +387,7 @@ For this analysis, we are going to compare the Palbo-resistant cell lines (3 bio
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{_main_files/figure-latex/unnamed-chunk-7-1.pdf}
+\includegraphics{_main_files/figure-latex/unnamed-chunk-8-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -418,7 +426,7 @@ For this analysis, we are going to compare the Palbo-resistant cell lines (3 bio
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{_main_files/figure-latex/unnamed-chunk-9-1.pdf}
+\includegraphics{_main_files/figure-latex/unnamed-chunk-10-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -601,6 +609,14 @@ This exercise requires the file ``edgeR\_resistant\_vs\_parental\_all\_genes.csv
 \end{Highlighting}
 \end{Shaded}
 
+\begin{rmd-caution}
+In the Ubuntu (course server) session, the \texttt{dir.create()} line
+above and every \texttt{write.csv()} line in this lab use
+\texttt{\textasciitilde{}/workspace/Module8/results} instead of
+\texttt{results}, so your results are saved in
+\texttt{\textasciitilde{}/workspace/Module8/results}.
+\end{rmd-caution}
+
 \subsection{Step 2 - Prepare the define gene lists}\label{step-2---prepare-the-define-gene-lists}
 
 \begin{Shaded}
@@ -762,7 +778,7 @@ The results are ordered by significance, from the most significant pathway (lowe
 
 \begin{table}
 \centering
-\caption{\label{tab:unnamed-chunk-16}Enrichment Result}
+\caption{\label{tab:unnamed-chunk-18}Enrichment Result}
 \centering
 \fontsize{10}{12}\selectfont
 \begin{tabular}[t]{l|l|r|r|r|l}
@@ -859,7 +875,7 @@ If we look at the top table only, we are only going to see the results of \url{G
 
 \begin{table}
 \centering
-\caption{\label{tab:unnamed-chunk-18}Enrichment Result}
+\caption{\label{tab:unnamed-chunk-20}Enrichment Result}
 \centering
 \fontsize{10}{12}\selectfont
 \begin{tabular}[t]{l|l|r|r|r|r|r|r|l|l|l|r|r|l}
@@ -1075,12 +1091,12 @@ Note: it took about 2 minutes to run this chunck of code.
 \end{Shaded}
 
 \begin{verbatim}
-## Your custom annotations ID is gp__nABF_GfbN_HKw.
+## Your custom annotations ID is gp__et5x_GqJ0_Ibc.
 ## You can use this ID as an 'organism' name in all the related enrichment tests against this custom source.
 \end{verbatim}
 
 \begin{verbatim}
-## Just use: gost(my_genes, organism = 'gp__nABF_GfbN_HKw')
+## Just use: gost(my_genes, organism = 'gp__et5x_GqJ0_Ibc')
 \end{verbatim}
 
 \begin{Shaded}
@@ -1120,7 +1136,7 @@ Note: it took about 2 minutes to run this chunck of code.
 
 \begin{table}
 \centering
-\caption{\label{tab:unnamed-chunk-22}Enrichment Result}
+\caption{\label{tab:unnamed-chunk-24}Enrichment Result}
 \centering
 \fontsize{10}{12}\selectfont
 \begin{tabular}[t]{l|l|r|r|r|r|r|r|l|l|l|r|r|l}
@@ -1233,7 +1249,7 @@ We will use clusterProfiler style visualization.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{_main_files/figure-latex/unnamed-chunk-24-1.pdf}
+\includegraphics{_main_files/figure-latex/unnamed-chunk-26-1.pdf}
 
 \subsection{Step 2 - Dot plot with segment}\label{step-2---dot-plot-with-segment}
 
@@ -1267,7 +1283,7 @@ We will use clusterProfiler style visualization.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{_main_files/figure-latex/unnamed-chunk-25-1.pdf}
+\includegraphics{_main_files/figure-latex/unnamed-chunk-27-1.pdf}
 
 \subsection{Step 4 - Hierarchical Cluster}\label{step-4---hierarchical-cluster}
 
@@ -1451,7 +1467,7 @@ We convert these scores into distances (1 − score) and use them to group simil
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{_main_files/figure-latex/unnamed-chunk-29-1.pdf}
+\includegraphics{_main_files/figure-latex/unnamed-chunk-31-1.pdf}
 
 \#\#Illustration with Overlap Coefficient
 
@@ -1491,7 +1507,7 @@ We convert these scores into distances (1 − score) and use them to group simil
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{_main_files/figure-latex/unnamed-chunk-30-1.pdf}
+\includegraphics{_main_files/figure-latex/unnamed-chunk-32-1.pdf}
 
 \#\#Hierarchical Clustering
 
@@ -1646,7 +1662,7 @@ The figure height grows with the number of pathways (combined plot) and the numb
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{_main_files/figure-latex/unnamed-chunk-33-1.pdf}
+\includegraphics{_main_files/figure-latex/unnamed-chunk-35-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1654,7 +1670,7 @@ The figure height grows with the number of pathways (combined plot) and the numb
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{_main_files/figure-latex/unnamed-chunk-34-1.pdf}
+\includegraphics{_main_files/figure-latex/unnamed-chunk-36-1.pdf}
 
 \subsubsection{YOUR TURN Running the function with your defined number of pathways and clusters}\label{your-turn-running-the-function-with-your-defined-number-of-pathways-and-clusters}
 
@@ -1765,6 +1781,14 @@ This exercise requires the file ``edgeR\_resistant\_vs\_parental\_all\_genes.csv
 \FunctionTok{dir.create}\NormalTok{(}\StringTok{"results"}\NormalTok{, }\AttributeTok{showWarnings =} \ConstantTok{FALSE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
+
+\begin{rmd-caution}
+In the Ubuntu (course server) session, the \texttt{dir.create()} line
+above and every \texttt{write.csv()} line in this lab use
+\texttt{\textasciitilde{}/workspace/Module8/results} instead of
+\texttt{results}, so your results are saved in
+\texttt{\textasciitilde{}/workspace/Module8/results}.
+\end{rmd-caution}
 
 \subsection{Step 2 - Prepare the rank file , upload the gmt file and run fgsea}\label{step-2---prepare-the-rank-file-upload-the-gmt-file-and-run-fgsea}
 
@@ -2149,7 +2173,7 @@ Print out a few of the top enrichment plots
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{_main_files/figure-latex/unnamed-chunk-46-1.pdf} \includegraphics{_main_files/figure-latex/unnamed-chunk-46-2.pdf} \includegraphics{_main_files/figure-latex/unnamed-chunk-46-3.pdf}
+\includegraphics{_main_files/figure-latex/unnamed-chunk-49-1.pdf} \includegraphics{_main_files/figure-latex/unnamed-chunk-49-2.pdf} \includegraphics{_main_files/figure-latex/unnamed-chunk-49-3.pdf}
 
 \subsubsection{Bar plots}\label{bar-plots}
 
@@ -2191,7 +2215,7 @@ Print out a few of the top enrichment plots
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{_main_files/figure-latex/unnamed-chunk-47-1.pdf}
+\includegraphics{_main_files/figure-latex/unnamed-chunk-50-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2236,7 +2260,7 @@ Print out a few of the top enrichment plots
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{_main_files/figure-latex/unnamed-chunk-49-1.pdf}
+\includegraphics{_main_files/figure-latex/unnamed-chunk-52-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2308,7 +2332,7 @@ Print out a few of the top enrichment plots
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{_main_files/figure-latex/unnamed-chunk-51-1.pdf}
+\includegraphics{_main_files/figure-latex/unnamed-chunk-54-1.pdf}
 
 Dataset is coming from :
 \url{https://pubmed.ncbi.nlm.nih.gov/37384539/}
